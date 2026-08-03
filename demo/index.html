@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ReplyGraph — Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f7f7f8;
+    --card: #ffffff;
+    --ink: #0d0d12;
+    --ink-2: #2a2a33;
+    --muted: #6a6a76;
+    --faint: #9b9ba6;
+    --line: #ececef;
+    --line-2: #e2e2e6;
+    --pop: #2b50f6;
+    --pop-soft: #eef1ff;
+    --pop-ink: #1a39c9;
+    --panel: #f4f4f6;
+    --good: #1f9d6b;
+    --shadow-sm: 0 1px 2px rgba(16,18,30,.04), 0 1px 3px rgba(16,18,30,.06);
+    --shadow-md: 0 2px 6px rgba(16,18,30,.05), 0 6px 20px rgba(16,18,30,.06);
+    --r: 14px;
+    --r-sm: 9px;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--font);
+    font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .app { display: flex; height: 100vh; overflow: hidden; }
+  ::selection { background: var(--pop); color: #fff; }
+
+  /* Sidebar */
+  .side { width: 236px; min-width: 236px; background: var(--card); border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 22px 16px; }
+  .brand { display: flex; align-items: center; gap: 10px; padding: 6px 8px 24px; }
+  .brand .mark { width: 26px; height: 26px; border-radius: 8px; background: var(--ink); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .brand .mark span { width: 9px; height: 9px; border-radius: 50%; background: var(--pop); }
+  .brand h1 { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+  .brand h1 b { font-weight: 800; }
+  .nav { display: flex; flex-direction: column; gap: 2px; }
+  .nav button {
+    display: flex; align-items: center; gap: 11px; width: 100%; padding: 9px 11px; border: none; background: none;
+    font-family: var(--font); font-size: 13px; font-weight: 550; color: var(--muted); cursor: pointer; text-align: left;
+    border-radius: var(--r-sm); transition: color .14s, background .14s; position: relative;
+  }
+  .nav button .ic { width: 17px; height: 17px; flex-shrink: 0; opacity: .65; }
+  .nav button:hover { color: var(--ink); background: var(--panel); }
+  .nav button.active { color: var(--ink); background: var(--pop-soft); font-weight: 650; }
+  .nav button.active .ic { opacity: 1; color: var(--pop); }
+  .side-foot { margin-top: auto; padding-top: 18px; }
+  .status { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--muted); margin-bottom: 12px; padding: 0 4px; }
+  .status .ring { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); box-shadow: 0 0 0 3px rgba(155,155,166,.18); }
+  .sync {
+    width: 100%; padding: 10px; border: none; background: var(--ink); color: #fff;
+    font-family: var(--font); font-size: 12px; font-weight: 650; letter-spacing: 0.01em;
+    cursor: pointer; border-radius: var(--r-sm); transition: transform .12s, background .14s;
+  }
+  .sync:hover { background: #1c1c24; transform: translateY(-1px); }
+  .sync:active { transform: translateY(0); }
+
+  /* Main */
+  .main { flex: 1; overflow-y: auto; }
+  .topbar { display: flex; align-items: center; gap: 10px; padding: 10px 28px; background: rgba(247,247,248,.85); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); font-size: 12px; color: var(--muted); position: sticky; top: 0; z-index: 20; }
+  .demo-pill { font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; color: var(--pop); background: var(--pop-soft); padding: 3px 9px; border-radius: 100px; }
+  .wrap { max-width: 1160px; padding: 36px 40px 60px; }
+  .head { margin-bottom: 28px; }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: var(--pop); margin-bottom: 9px; }
+  .head h2 { font-size: 27px; font-weight: 800; letter-spacing: -0.025em; }
+  .head p { color: var(--muted); margin-top: 7px; font-size: 13.5px; }
+
+  .muted { color: var(--muted); } .faint { color: var(--faint); }
+  .sm { font-size: 12px; } .xs { font-size: 11px; }
+  .row { display: flex; } .between { justify-content: space-between; align-items: flex-start; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
+  .rule-strong { border-top: 1px solid var(--line-2); }
+  .sec-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); margin-bottom: 13px; }
+
+  /* Cards */
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-sm); }
+
+  /* Dashboard */
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 16px; }
+  .tile { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-sm); padding: 18px 18px 16px; transition: box-shadow .16s, transform .16s; }
+  .tile:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .tile .k { font-size: 11px; font-weight: 650; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+  .tile .k .ic { width: 15px; height: 15px; opacity: .55; }
+  .tile .n { font-size: 38px; font-weight: 800; letter-spacing: -0.04em; margin-top: 12px; line-height: 1; }
+  .tile .n.pop { color: var(--pop); }
+  .tile .cap { font-size: 12px; color: var(--faint); margin-top: 8px; }
+
+  .dash-cols { display: grid; grid-template-columns: 1.55fr 1fr; gap: 16px; align-items: start; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-sm); overflow: hidden; }
+  .panel + .panel { margin-top: 16px; }
+  .panel-h { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+  .panel-h h3 { font-size: 13px; font-weight: 700; }
+  .panel-h .more { font-size: 12px; color: var(--pop); cursor: pointer; font-weight: 600; }
+  .lrow { display: flex; align-items: flex-start; gap: 12px; padding: 13px 18px; border-bottom: 1px solid var(--line); cursor: pointer; transition: background .12s; }
+  .lrow:last-child { border-bottom: none; }
+  .lrow:hover { background: var(--panel); }
+  .lrow .av { width: 30px; height: 30px; border-radius: 9px; background: var(--panel); border: 1px solid var(--line-2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--ink-2); flex-shrink: 0; }
+  .lrow .lr-body { flex: 1; min-width: 0; }
+  .lrow .lr-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .lrow .lr-name { font-weight: 650; font-size: 13px; }
+  .lrow .lr-when { font-size: 10.5px; color: var(--faint); white-space: nowrap; }
+  .lrow .lr-prev { font-size: 12px; color: var(--muted); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lrow .lr-meta { margin-top: 7px; display: flex; gap: 6px; }
+  .empty-row { padding: 22px 18px; color: var(--faint); font-size: 12.5px; }
+
+  /* Tags */
+  .tag { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 650; letter-spacing: 0.02em; padding: 3px 9px; border-radius: 100px; border: 1px solid var(--line-2); color: var(--muted); white-space: nowrap; }
+  .tag.solid { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .tag.pop { background: var(--pop-soft); color: var(--pop-ink); border-color: transparent; }
+  .tag.flag { background: #fff4ec; color: #b5561a; border-color: #f6e0cf; }
+  .tag.good { background: #eafaf2; color: var(--good); border-color: #cfeedd; }
+
+  /* Inbox */
+  .inbox { display: grid; grid-template-columns: 340px 1fr; height: calc(100vh - 41px); }
+  .threads { border-right: 1px solid var(--line); overflow-y: auto; background: var(--card); }
+  .threads-head { padding: 22px 22px 14px; position: sticky; top: 0; background: var(--card); z-index: 2; border-bottom: 1px solid var(--line); }
+  .threads-head h3 { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
+  .filters { display: flex; gap: 7px; margin-top: 14px; flex-wrap: wrap; }
+  .chip { font-size: 11.5px; font-weight: 600; padding: 6px 12px; border: 1px solid var(--line-2); background: var(--card); border-radius: 100px; cursor: pointer; color: var(--muted); font-family: var(--font); transition: all .12s; }
+  .chip:hover { border-color: var(--faint); color: var(--ink); }
+  .chip.on { border-color: var(--ink); color: var(--ink); background: var(--panel); font-weight: 650; }
+  .thread { padding: 15px 22px; border-bottom: 1px solid var(--line); cursor: pointer; border-left: 2px solid transparent; transition: background .12s; }
+  .thread:hover { background: var(--panel); }
+  .thread.active { border-left: 2px solid var(--pop); background: var(--pop-soft); }
+  .thread .t-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .thread .name { font-weight: 700; font-size: 13.5px; }
+  .thread .when { font-size: 10.5px; color: var(--faint); white-space: nowrap; }
+  .thread .prev { font-size: 12.5px; color: var(--muted); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .thread .t-meta { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+
+  .detail { overflow-y: auto; padding: 30px 38px; }
+  .d-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 8px; }
+  .d-head h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+  .convo { display: flex; flex-direction: column; gap: 8px; margin: 22px 0; max-height: 300px; overflow-y: auto; padding-right: 6px; }
+  .msg { max-width: 76%; }
+  .msg.me { align-self: flex-end; } .msg.them { align-self: flex-start; }
+  .bubble { padding: 10px 14px; font-size: 13.5px; line-height: 1.45; border-radius: 16px; }
+  .me .bubble { background: var(--ink); color: #fff; border-bottom-right-radius: 5px; }
+  .them .bubble { background: var(--card); border: 1px solid var(--line-2); border-bottom-left-radius: 5px; }
+  .msg .time { font-size: 9.5px; color: var(--faint); margin-top: 4px; }
+  .me .time { text-align: right; }
+
+  .draft-card { background: var(--card); border: 1px solid var(--line-2); border-radius: var(--r); box-shadow: var(--shadow-sm); padding: 18px; }
+  .draft-card textarea { width: 100%; border: none; outline: none; resize: vertical; min-height: 76px; font-family: var(--font); font-size: 15px; line-height: 1.6; color: var(--ink); background: none; }
+  .reason { font-size: 12.5px; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 9px; }
+  .rw-label { font-size: 10.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--faint); margin: 20px 0 9px; }
+  .rewrites { display: flex; flex-wrap: wrap; gap: 7px; }
+  .rw { font-size: 12px; padding: 6px 12px; border: 1px solid var(--line-2); background: var(--card); border-radius: 100px; cursor: pointer; color: var(--muted); font-family: var(--font); transition: all .12s; }
+  .rw:hover { border-color: var(--pop); color: var(--pop); background: var(--pop-soft); }
+  .actions { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 22px; }
+  .btn { font-family: var(--font); font-size: 12.5px; font-weight: 650; padding: 10px 16px; border-radius: var(--r-sm); cursor: pointer; border: 1px solid var(--line-2); background: var(--card); color: var(--ink); transition: all .12s; }
+  .btn:hover { background: var(--panel); border-color: var(--faint); }
+  .btn.primary { background: var(--pop); border-color: var(--pop); color: #fff; }
+  .btn.primary:hover { background: var(--pop-ink); }
+  .btn.solid { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .btn.solid:hover { background: #1c1c24; }
+  .flags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .notice { background: #fff8f1; border: 1px solid #f6e0cf; border-radius: var(--r-sm); padding: 12px 14px; font-size: 12.5px; color: #8a481c; margin-top: 14px; }
+  .notice b { color: #6f3a16; }
+
+  /* Follow-ups */
+  .fu { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 15px 18px; border-bottom: 1px solid var(--line); }
+  .fu:last-child { border-bottom: none; }
+  .fu .task { font-weight: 600; font-size: 13.5px; }
+  .fu .fu-meta { display: flex; gap: 11px; margin-top: 6px; flex-wrap: wrap; align-items: center; }
+  .dir { font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 8px; border-radius: 5px; background: var(--panel); border: 1px solid var(--line-2); color: var(--ink-2); }
+  .conf { font-size: 10.5px; color: var(--faint); font-style: italic; }
+  .empty { color: var(--faint); padding: 50px 0; text-align: center; font-size: 13px; }
+
+  /* Analytics */
+  .acard { padding: 20px; margin-bottom: 14px; }
+  .acard .a-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; }
+  .a-name { font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
+  .a-meta { display: flex; gap: 9px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .stat .k { font-size: 10.5px; font-weight: 650; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); }
+  .stat .v { font-weight: 700; font-size: 14px; margin-top: 5px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); padding: 0 14px 12px 0; }
+  td { padding: 13px 14px 13px 0; border-top: 1px solid var(--line); }
+
+  /* Settings */
+  .ssection { margin-bottom: 30px; }
+  .srow { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--line); gap: 24px; }
+  .srow:last-child { border-bottom: none; }
+  .srow .s-label { font-weight: 650; font-size: 13.5px; }
+  .srow .s-desc { font-size: 12px; color: var(--muted); margin-top: 3px; max-width: 460px; }
+  .sinput { border: 1px solid var(--line-2); border-radius: var(--r-sm); padding: 9px 12px; font-family: var(--font); font-size: 13px; width: 280px; outline: none; background: var(--card); transition: border-color .12s; }
+  .sinput:focus { border-color: var(--pop); box-shadow: 0 0 0 3px var(--pop-soft); }
+  .tog { width: 42px; height: 24px; border: 1px solid var(--line-2); background: var(--panel); border-radius: 100px; position: relative; cursor: pointer; flex-shrink: 0; transition: all .15s; }
+  .tog::after { content: ''; position: absolute; width: 18px; height: 18px; background: #fff; box-shadow: var(--shadow-sm); border-radius: 50%; top: 2px; left: 2px; transition: .15s; }
+  .tog.on { background: var(--pop); border-color: var(--pop); }
+  .tog.on::after { left: 21px; }
+
+  /* Toast */
+  .toasts { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 8px; z-index: 60; }
+  .toast { background: var(--ink); color: #fff; padding: 12px 18px; border-radius: var(--r-sm); font-size: 12.5px; font-weight: 600; box-shadow: var(--shadow-md); animation: pop .18s ease; }
+  @keyframes pop { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-thumb { background: #dadadf; border-radius: 5px; border: 2px solid var(--bg); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--faint); }
+
+  .mobile-nav { display: none; }
+  .mobile-back { display: none; }
+
+  @media (max-width: 760px) {
+    .app { flex-direction: column; height: auto; min-height: 100vh; overflow: visible; }
+    .side { display: none; }
+    .main { height: auto; min-height: 100vh; padding-bottom: 76px; }
+    .topbar { padding: 9px 16px; font-size: 11px; line-height: 1.4; }
+    .wrap { max-width: 100%; padding: 22px 16px 44px; }
+    .head { margin-bottom: 20px; }
+    .head h2 { font-size: 23px; }
+    .stat-row { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px; }
+    .tile { padding: 15px; }
+    .tile .n { font-size: 30px; margin-top: 8px; }
+    .dash-cols { grid-template-columns: 1fr; gap: 14px; }
+
+    /* Inbox becomes single column with list <-> detail */
+    .inbox { grid-template-columns: 1fr; height: auto; }
+    .threads { border-right: none; }
+    .threads-head { position: static; }
+    .detail { padding: 18px 16px 44px; }
+    .inbox.show-list .detail { display: none; }
+    .inbox.show-detail .threads { display: none; }
+    .mobile-back { display: inline-flex; align-items: center; gap: 5px; margin-bottom: 14px; padding: 7px 12px; }
+    .convo { max-height: none; }
+    .d-head { flex-wrap: wrap; gap: 10px; }
+    .d-head h2 { font-size: 20px; }
+    .actions { gap: 8px; }
+    .actions .btn { flex: 1 1 calc(50% - 8px); }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+
+    /* Native-style bottom tab bar */
+    .mobile-nav {
+      display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
+      background: rgba(255,255,255,.92); backdrop-filter: blur(16px) saturate(1.3);
+      border-top: 1px solid var(--line);
+      padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+    }
+    .mobile-nav button {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+      background: none; border: none; cursor: pointer; padding: 5px 2px;
+      font-family: var(--font); font-size: 9.5px; font-weight: 600; color: var(--faint);
+    }
+    .mobile-nav button span { white-space: nowrap; }
+    .mobile-nav button .ic { width: 21px; height: 21px; opacity: .55; }
+    .mobile-nav button.active { color: var(--pop); }
+    .mobile-nav button.active .ic { opacity: 1; }
+  }
+
+  @media (max-width: 400px) {
+    .stat-row { gap: 8px; }
+    .tile .n { font-size: 27px; }
+    .mobile-nav button { font-size: 9px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="mark"><span></span></span><h1>Reply<b>Graph</b></h1></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <div class="status"><span class="ring"></span> Demo mode — not connected</div>
+      <button class="sync" onclick="toast('Sync runs on your Mac in the real app')">Sync Messages</button>
+    </div>
+  </aside>
+  <main class="main" id="main"></main>
+</div>
+<nav class="mobile-nav" id="mnav"></nav>
+<div class="toasts" id="toasts"></div>
+
+<script>
+// ---------- Icons ----------
+const IC = {
+  dashboard:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>',
+  inbox:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
+  followups:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+  analytics:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+  exports:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+  settings:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+  bell:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
+  flag:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>',
+  clock:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+  heart:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>',
+};
+
+// ---------- Sample data ----------
+const NOW = new Date('2026-06-28T18:30:00');
+function ago(mins){ return new Date(NOW.getTime() - mins*60000); }
+function tfmt(d){ return d.toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}); }
+function initials(n){ return n.replace(/\(.*\)/,'').trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+
+const THREADS = [
+  { id:1, name:'Sarah Chen', priority:'urgent', urgency:'high', needs:true, tone:'tense', trend:'declining', conf:'high', risk:[],
+    last:'so are we still on for friday or not? you keep leaving me on read',
+    msgs:[
+      {me:false,t:'hey did you get my message about friday?',at:ago(2880)},
+      {me:false,t:'just need to know if dinner is happening',at:ago(1440)},
+      {me:false,t:'so are we still on for friday or not? you keep leaving me on read',at:ago(180)},
+    ],
+    draft:{text:"you're right, sorry for the silence — friday works, 8pm at the usual place?",reason:'Repeated unanswered messages; some friction. Keep it short and own the delay once.',risk:[],conf:'medium'},
+    fu:[{task:'confirm friday dinner 8pm',dir:'user_owes_them',due:'friday',conf:'high'}] },
+  { id:2, name:'Dr. Patel office', priority:'risky_to_answer_fast', urgency:'high', needs:true, tone:'logistical', trend:'stable', conf:'medium', risk:['medical'],
+    last:'Please confirm your appointment and whether you want the lab results sent over.',
+    msgs:[
+      {me:false,t:'Reminder: follow-up appointment Tue 10:00am.',at:ago(4320)},
+      {me:false,t:'Please confirm your appointment and whether you want the lab results sent over.',at:ago(600)},
+    ],
+    draft:{text:"Hi — confirming Tuesday 10am works. Yes, please send the lab results. Thank you.",reason:'Medical topic flagged — review carefully before copying. Kept factual.',risk:['medical'],conf:'medium'},
+    fu:[{task:'confirm appt tue 10am',dir:'user_owes_them',due:'tuesday',conf:'high'},{task:'decide on lab results',dir:'unanswered_question',due:null,conf:'medium'}] },
+  { id:3, name:'Dad', priority:'emotional', urgency:'medium', needs:true, tone:'warm', trend:'stable', conf:'high', risk:[],
+    last:'miss you kiddo, call me when you get a chance ❤️',
+    msgs:[
+      {me:false,t:'how did the presentation go??',at:ago(2000)},
+      {me:true,t:'went well! tell you about it soon',at:ago(1900)},
+      {me:false,t:'miss you kiddo, call me when you get a chance ❤️',at:ago(300)},
+    ],
+    draft:{text:"miss you too — i'll call tonight after work, promise. love you",reason:'Warm family thread. Simple and caring; gives a concrete time.',risk:[],conf:'high'},
+    fu:[{task:'call dad tonight',dir:'user_owes_them',due:'tonight',conf:'high'}] },
+  { id:4, name:'Priya (work)', priority:'work_admin', urgency:'medium', needs:true, tone:'logistical', trend:'stable', conf:'medium', risk:['work_risk'],
+    last:'can you send the revised budget before the client call tomorrow?',
+    msgs:[
+      {me:false,t:'great work on the deck',at:ago(800)},
+      {me:false,t:'can you send the revised budget before the client call tomorrow?',at:ago(120)},
+    ],
+    draft:{text:"Will do — I'll have the revised budget to you by EOD today.",reason:'Work request with a deadline. Direct, commits to a clear time.',risk:['work_risk'],conf:'medium'},
+    fu:[{task:'send revised budget before client call',dir:'user_owes_them',due:'tomorrow',conf:'high'}] },
+  { id:5, name:'Jules', priority:'logistical', urgency:'medium', needs:true, tone:'playful', trend:'stable', conf:'medium', risk:[],
+    last:'are you free this weekend? thinking we could do that hike finally lol',
+    msgs:[
+      {me:false,t:'are you free this weekend? thinking we could do that hike finally lol',at:ago(420)},
+    ],
+    draft:{text:"haha yes let's actually do it — saturday morning? i can drive",reason:'Casual scheduling. Matches the light tone, proposes a concrete time.',risk:[],conf:'medium'},
+    fu:[{task:'plan weekend hike',dir:'scheduling_loop',due:'this weekend',conf:'medium'}] },
+  { id:6, name:'Alex', priority:'low_priority', urgency:'low', needs:false, tone:'neutral', trend:'stable', conf:'low', risk:[],
+    last:'sounds good, talk soon!',
+    msgs:[
+      {me:false,t:'thanks for the recommendation',at:ago(6000)},
+      {me:true,t:'anytime!',at:ago(5990)},
+      {me:false,t:'sounds good, talk soon!',at:ago(5980)},
+    ],
+    draft:{text:"No reply needed here — the thread looks wrapped up.",reason:'Last message was a sign-off; nothing outstanding.',risk:[],conf:'medium'},
+    fu:[] },
+];
+
+const ANALYTICS = [
+  { name:'Sarah Chen', tone:'tense', trend:'declining', conf:'high', vol:42, last:'Jun 28', resp:'~6h', waitThem:false, waitYou:true, topics:['plans','food'], loops:['so are we still on for friday or not?'] },
+  { name:'Dad', tone:'warm', trend:'stable', conf:'high', vol:128, last:'Jun 28', resp:'~2h', waitThem:false, waitYou:true, topics:['family','health'], loops:['call me when you get a chance'] },
+  { name:'Priya (work)', tone:'logistical', trend:'stable', conf:'medium', vol:67, last:'Jun 28', resp:'~1h', waitThem:false, waitYou:true, topics:['work','money'], loops:['send the revised budget?'] },
+  { name:'Jules', tone:'playful', trend:'stable', conf:'medium', vol:23, last:'Jun 28', resp:'~4h', waitThem:false, waitYou:true, topics:['plans'], loops:[] },
+];
+
+const TOKENS = [
+  { op:'draft_generation', n:14, inp:18400, out:2800, cost:0.0259 },
+  { op:'rewrite', n:9, inp:6200, out:1350, cost:0.0104 },
+  { op:'relationship_analytics', n:4, inp:9100, out:1600, cost:0.0137 },
+  { op:'followup_extraction', n:6, inp:4300, out:900, cost:0.0070 },
+];
+
+const DIR_LABEL = { user_owes_them:'I owe them', they_owe_user:'They owe me', scheduling_loop:'Scheduling', unanswered_question:'Open question' };
+
+// ---------- State ----------
+let state = { tab:'dashboard', thread:1, filter:'needs', drafts:{}, completed:new Set(), inboxPane:'list' };
+const MTAB = { dashboard:'Home', inbox:'Inbox', followups:'Tasks', analytics:'Stats', exports:'Export', settings:'Settings' };
+THREADS.forEach(t => state.drafts[t.id] = t.draft.text);
+let toggles = { local:true, llm:false };
+
+const TABS = [
+  ['dashboard','Dashboard'], ['inbox','Inbox'], ['followups','Follow-ups'],
+  ['analytics','Analytics'], ['exports','Exports'], ['settings','Settings'],
+];
+
+// ---------- Render ----------
+function renderNav(){
+  document.getElementById('nav').innerHTML = TABS.map(([id,label]) =>
+    `<button class="${state.tab===id?'active':''}" onclick="go('${id}')">${IC[id]}<span>${label}</span></button>`).join('');
+  document.getElementById('mnav').innerHTML = TABS.map(([id,label]) =>
+    `<button class="${state.tab===id?'active':''}" onclick="go('${id}')">${IC[id]}<span>${MTAB[id]||label}</span></button>`).join('');
+}
+function go(tab){ state.tab = tab; if(tab==='inbox') state.inboxPane='list'; renderNav(); renderMain(); document.getElementById('main').scrollTop = 0; window.scrollTo(0,0); }
+function renderMain(){
+  const m = document.getElementById('main');
+  const views = { dashboard:viewDashboard, inbox:viewInbox, followups:viewFollowups, analytics:viewAnalytics, exports:viewExports, settings:viewSettings };
+  m.innerHTML = (state.tab==='inbox' ? '' : topbar()) + views[state.tab]();
+}
+function topbar(){ return `<div class="topbar"><span class="demo-pill">DEMO</span> Sample data — the real app reads your iMessages locally on your Mac. Nothing is ever sent for you.</div>`; }
+
+function allFollowups(){
+  const out = [];
+  THREADS.forEach(t => t.fu.forEach((f,i) => out.push({...f, key:t.id+'-'+i, who:t.name})));
+  return out.filter(f => !state.completed.has(f.key));
+}
+
+function viewDashboard(){
+  const needs = THREADS.filter(t=>t.needs);
+  const risk = THREADS.filter(t=>t.priority==='risky_to_answer_fast' || t.risk.length);
+  const emo = THREADS.filter(t=>t.priority==='emotional');
+  const fu = allFollowups();
+  const lrow = t => `<div class="lrow" onclick="go('inbox');setTimeout(()=>pick(${t.id}),0)">
+      <div class="av">${initials(t.name)}</div>
+      <div class="lr-body">
+        <div class="lr-top"><span class="lr-name">${t.name}</span><span class="lr-when">${tfmt(t.msgs[t.msgs.length-1].at)}</span></div>
+        <div class="lr-prev">${t.last}</div>
+        <div class="lr-meta">
+          ${t.priority==='urgent'?'<span class="tag solid">Urgent</span>':''}
+          ${t.risk.length?`<span class="tag flag">${t.risk[0]}</span>`:''}
+          ${t.priority==='emotional'?'<span class="tag pop">Emotional</span>':''}
+        </div>
+      </div>
+    </div>`;
+  return `<div class="wrap">
+    <div class="head"><div class="eyebrow">Overview</div><h2>Good evening</h2><p>${needs.length} conversations need a reply · ${fu.length} open follow-ups · ${risk.length} flagged to review</p></div>
+    <div class="stat-row">
+      <div class="tile"><div class="k">${IC.bell} Needs reply</div><div class="n pop">${needs.length}</div><div class="cap">people waiting on you</div></div>
+      <div class="tile"><div class="k">${IC.flag} Flagged</div><div class="n">${risk.length}</div><div class="cap">review before sending</div></div>
+      <div class="tile"><div class="k">${IC.followups} Follow-ups</div><div class="n">${fu.length}</div><div class="cap">open loops tracked</div></div>
+      <div class="tile"><div class="k">${IC.heart} Emotional</div><div class="n">${emo.length}</div><div class="cap">handle with care</div></div>
+    </div>
+    <div class="dash-cols">
+      <div class="panel">
+        <div class="panel-h"><h3>Needs reply</h3><span class="more" onclick="go('inbox')">Open inbox →</span></div>
+        ${needs.map(lrow).join('') || '<div class="empty-row">All caught up 🎉</div>'}
+      </div>
+      <div>
+        <div class="panel">
+          <div class="panel-h"><h3>Open follow-ups</h3><span class="more" onclick="go('followups')">All →</span></div>
+          ${fu.slice(0,4).map(f=>`<div class="lrow" onclick="go('followups')"><div class="lr-body"><div class="lr-name" style="font-size:12.5px">${f.task}</div><div class="lr-meta"><span class="dir">${DIR_LABEL[f.dir]}</span>${f.due?`<span class="conf" style="font-style:normal;color:var(--pop)">${f.due}</span>`:''}</div></div></div>`).join('') || '<div class="empty-row">No open items</div>'}
+        </div>
+        <div class="panel">
+          <div class="panel-h"><h3>iMessage sync</h3></div>
+          <div style="padding:16px 18px"><div class="tag good">Read-only · local</div><p class="sm muted" style="margin-top:10px">Connects to <b>chat.db</b> on your Mac. Never writes, never auto-sends.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function viewInbox(){
+  let list = THREADS;
+  if(state.filter==='needs') list = THREADS.filter(t=>t.needs);
+  else if(state.filter==='risk') list = THREADS.filter(t=>t.priority==='risky_to_answer_fast'||t.risk.length);
+  const t = THREADS.find(x=>x.id===state.thread) || THREADS[0];
+  const filt = (id,label) => `<button class="chip ${state.filter===id?'on':''}" onclick="setFilter('${id}')">${label}</button>`;
+  const threadList = list.map(x=>`
+    <div class="thread ${x.id===state.thread?'active':''}" onclick="pick(${x.id})">
+      <div class="t-top"><span class="name">${x.name}</span><span class="when">${tfmt(x.msgs[x.msgs.length-1].at)}</span></div>
+      <div class="prev">${x.last}</div>
+      <div class="t-meta">
+        ${x.priority==='urgent'?'<span class="tag solid">Urgent</span>':''}
+        ${x.risk.length?`<span class="tag flag">${x.risk[0]}</span>`:''}
+        ${x.needs?'<span class="tag pop">Reply</span>':'<span class="tag good">Caught up</span>'}
+      </div>
+    </div>`).join('');
+  const highRisk = t.risk.some(f=>['medical','money','legal','conflict','work_risk'].includes(f));
+  const dtext = state.drafts[t.id];
+  const detail = `
+    <button class="mobile-back btn" onclick="backToList()">‹ All threads</button>
+    <div class="d-head">
+      <div>
+        <div class="eyebrow">${t.priority.replace(/_/g,' ')}</div>
+        <h2>${t.name}</h2>
+        <div class="a-meta">
+          <span class="tag">${t.tone} · ${t.conf} conf</span>
+          ${t.risk.map(f=>`<span class="tag flag">${f}</span>`).join('')}
+        </div>
+      </div>
+      <button class="btn" onclick="toast('Marked: no reply needed')">No reply needed</button>
+    </div>
+    <div class="convo">
+      ${t.msgs.map(mm=>`<div class="msg ${mm.me?'me':'them'}"><div class="bubble">${mm.t}</div><div class="time">${tfmt(mm.at)}</div></div>`).join('')}
+    </div>
+    <hr class="rule-strong"/>
+    <div class="rw-label" style="margin-top:0">Draft reply</div>
+    <div class="reason">${t.draft.reason}<span class="tag">${t.draft.conf} conf</span></div>
+    <div class="draft-card"><textarea id="draft" oninput="state.drafts[${t.id}]=this.value">${dtext}</textarea></div>
+    ${highRisk?`<div class="notice"><b>Review carefully</b> — this touches a sensitive topic (${t.risk.join(', ')}). Copy-to-clipboard only; nothing is ever sent for you.</div>`:''}
+    ${t.draft.risk.length?`<div class="flags">${t.draft.risk.map(f=>`<span class="tag flag">${f}</span>`).join('')}</div>`:''}
+    <div class="rw-label">Rewrite</div>
+    <div class="rewrites">
+      ${['shorter','nicer','more direct','less fake','more adult','casual','professional','say no politely','buy time','one clear question','calmer','less defensive','less apologetic'].map(r=>`<button class="rw" onclick="rewrite(${t.id},'${r}')">${r}</button>`).join('')}
+    </div>
+    <div class="actions">
+      <button class="btn solid" onclick="toast('Approved & saved to decisions')">✓ Approve</button>
+      <button class="btn" onclick="toast('Edited draft saved')">Save edit</button>
+      <button class="btn primary" onclick="copyDraft(${t.id})">Copy to clipboard</button>
+      <button class="btn" onclick="toast('Denied — noted for style learning')">Deny</button>
+    </div>`;
+  return `<div class="inbox ${state.inboxPane==='detail'?'show-detail':'show-list'}">
+    <div class="threads">
+      <div class="threads-head">
+        <div class="eyebrow">Inbox</div><h3>Threads</h3>
+        <div class="filters">${filt('needs','Needs reply')}${filt('all','All')}${filt('risk','Flagged')}</div>
+      </div>
+      ${threadList}
+    </div>
+    <div class="detail">${detail}</div>
+  </div>`;
+}
+
+function viewFollowups(){
+  const fu = allFollowups();
+  const groups = {};
+  fu.forEach(f=>{ (groups[f.dir]=groups[f.dir]||[]).push(f); });
+  const body = Object.keys(groups).length ? Object.entries(groups).map(([dir,items])=>`
+    <div class="sec-title" style="margin-top:24px">${DIR_LABEL[dir]||dir}</div>
+    <div class="panel">${items.map(f=>`<div class="fu">
+      <div><div class="task">${f.task}</div>
+        <div class="fu-meta"><span class="dir">${DIR_LABEL[f.dir]}</span><span class="sm muted">${f.who}</span>${f.due?`<span class="sm" style="color:var(--pop)">Due: ${f.due}</span>`:''}<span class="conf">${f.conf} conf</span></div>
+      </div>
+      <button class="btn" onclick="complete('${f.key}')">Done</button>
+    </div>`).join('')}</div>`).join('') : '<div class="empty">No open follow-ups 🎉</div>';
+  return `<div class="wrap">
+    <div class="head"><div class="eyebrow">Tasks</div><h2>Follow-ups</h2><p>${fu.length} open items pulled from your conversations</p></div>
+    ${body}
+  </div>`;
+}
+
+function viewAnalytics(){
+  const cards = ANALYTICS.map(a=>`
+    <div class="card acard">
+      <div class="a-top">
+        <div>
+          <div class="a-name">${a.name}</div>
+          <div class="a-meta">
+            <span class="tag">${a.tone}</span>
+            <span class="sm muted">${a.trend==='declining'?'↓ higher-friction lately':a.trend==='improving'?'↑ warming up':'→ stable'}</span>
+            <span class="conf">${a.conf} conf</span>
+          </div>
+        </div>
+        <div class="sm muted" style="text-align:right">${a.vol} messages<br/>${a.last}</div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="k">Avg response</div><div class="v">${a.resp}</div></div>
+        <div class="stat"><div class="k">You're waiting</div><div class="v">${a.waitYou?'Yes':'No'}</div></div>
+        <div class="stat"><div class="k">Topics</div><div class="v" style="font-size:12.5px">${a.topics.join(', ')}</div></div>
+        ${a.loops.length?`<div class="stat"><div class="k">Open loop</div><div class="v" style="font-size:12.5px;color:var(--pop)">${a.loops[0].slice(0,38)}…</div></div>`:''}
+      </div>
+    </div>`).join('');
+  const tokenRows = TOKENS.map(r=>`<tr><td>${r.op}</td><td class="muted">${r.n}</td><td class="muted">${r.inp.toLocaleString()}</td><td class="muted">${r.out.toLocaleString()}</td><td style="color:var(--pop);font-weight:700">$${r.cost.toFixed(4)}</td></tr>`).join('');
+  return `<div class="wrap">
+    <div class="head"><div class="eyebrow">Estimates</div><h2>Analytics</h2><p>Heuristic estimates from text patterns — not facts, not psychology. Confidence shows how much data was available.</p></div>
+    <div class="notice" style="margin-bottom:22px">These are <b>estimates</b>. Low confidence means take it lightly. ReplyGraph describes threads ("higher-friction lately") — it does not judge people.</div>
+    ${cards}
+    <div class="sec-title" style="margin-top:32px">Token usage estimate</div>
+    <div class="card" style="padding:20px"><table><thead><tr><th>Operation</th><th>Runs</th><th>Input</th><th>Output</th><th>Est. cost</th></tr></thead><tbody>${tokenRows}</tbody></table>
+    <p class="sm muted" style="margin-top:12px">Prices come from your editable settings and may not match real billing.</p></div>
+  </div>`;
+}
+
+function viewExports(){
+  return `<div class="wrap">
+    <div class="head"><div class="eyebrow">Output</div><h2>Exports</h2><p>Summaries only by default — never raw message dumps. User-triggered, timestamped, with confidence labels.</p></div>
+    <div class="dash-cols">
+      <div class="card" style="padding:22px"><h3 style="font-size:14px;font-weight:700">Markdown</h3><p class="sm muted" style="margin:10px 0 18px">Daily digest, follow-ups, and analytics as local .md files.</p><button class="btn solid" onclick="toast('Wrote 3 markdown files (demo)')">Export Markdown</button></div>
+      <div class="card" style="padding:22px"><h3 style="font-size:14px;font-weight:700">Obsidian</h3><p class="sm muted" style="margin:10px 0 18px">Writes into /ReplyGraph/ with YAML frontmatter and [[wiki links]].</p><button class="btn solid" onclick="toast('Set a vault path in Settings (demo)')">Export to Obsidian</button></div>
+    </div>
+    <div class="sec-title" style="margin-top:30px">Recent exports</div>
+    <div class="panel">
+      <div class="fu"><div><span class="tag">daily_digest</span> <span class="sm muted" style="margin-left:8px">~/ReplyGraph/daily_digest_2026-06-28.md</span></div><span class="sm faint">just now</span></div>
+      <div class="fu"><div><span class="tag">followups</span> <span class="sm muted" style="margin-left:8px">~/ReplyGraph/followups_2026-06-28.md</span></div><span class="sm faint">just now</span></div>
+    </div>
+  </div>`;
+}
+
+function viewSettings(){
+  const tog = (k) => `<div class="tog ${toggles[k]?'on':''}" onclick="flip('${k}')"></div>`;
+  return `<div class="wrap">
+    <div class="head"><div class="eyebrow">Configuration</div><h2>Settings</h2><p>All local. Nothing leaves your machine unless you add an API key and turn local-only mode off.</p></div>
+    <div class="ssection"><div class="sec-title">iMessage</div><div class="card">
+      <div class="srow"><div><div class="s-label">Database status</div><div class="s-desc">Reads ~/Library/Messages/chat.db (read-only). Needs Full Disk Access for Terminal on macOS.</div></div><span class="tag">Demo — not connected</span></div>
+      <div class="srow"><div><div class="s-label">Max threads</div><div class="s-desc">How many recent conversations to pull per sync.</div></div><input class="sinput" value="50" style="width:90px"/></div>
+      <div class="srow"><div><div class="s-label">Max messages / thread</div><div class="s-desc">How far back to read in each conversation.</div></div><input class="sinput" value="50" style="width:90px"/></div>
+    </div></div>
+    <div class="ssection"><div class="sec-title">Privacy & LLM</div><div class="card">
+      <div class="srow"><div><div class="s-label">Local-only mode</div><div class="s-desc">When on, drafts use offline heuristics and no message text is ever sent anywhere.</div></div>${tog('local')}</div>
+      <div class="srow"><div><div class="s-label">Use LLM drafts</div><div class="s-desc">Optional. Sends the conversation to Claude to write better drafts. Off by default.</div></div>${tog('llm')}</div>
+      <div class="srow"><div><div class="s-label">API key</div><div class="s-desc">Stored locally. Only used if LLM drafts are on.</div></div><input class="sinput" type="password" placeholder="sk-ant-…"/></div>
+      <div class="srow"><div><div class="s-label">Model</div><div class="s-desc">Stronger models for risky rewrites, cheaper ones for routine drafts.</div></div><input class="sinput" value="claude-haiku-4-5" style="width:200px"/></div>
+    </div></div>
+    <div class="ssection"><div class="sec-title">Export</div><div class="card">
+      <div class="srow"><div><div class="s-label">Obsidian vault path</div><div class="s-desc">Where /ReplyGraph/ notes get written.</div></div><input class="sinput" placeholder="~/Documents/MyVault"/></div>
+    </div></div>
+    <div class="ssection"><div class="sec-title">Data</div><div class="card">
+      <div class="srow"><div><div class="s-label">Rebuild analytics</div><div class="s-desc">Recompute tone & relationship estimates from stored messages.</div></div><button class="btn" onclick="toast('Rebuilt (demo)')">Rebuild</button></div>
+      <div class="srow"><div><div class="s-label">Clear local database</div><div class="s-desc">Deletes all synced messages and analysis from this machine.</div></div><button class="btn" onclick="toast('Demo: nothing was deleted')">Clear</button></div>
+    </div></div>
+  </div>`;
+}
+
+// ---------- Actions ----------
+function pick(id){ state.thread=id; state.inboxPane='detail'; renderMain(); }
+function backToList(){ state.inboxPane='list'; renderMain(); }
+function setFilter(f){ state.filter=f; renderMain(); }
+function flip(k){ toggles[k]=!toggles[k]; renderMain(); }
+function complete(key){ state.completed.add(key); renderMain(); toast('Marked complete'); }
+
+function rewrite(id, type){
+  let t = state.drafts[id]; const words = t.split(/\s+/);
+  if(type==='shorter') t = words.slice(0, Math.max(4, Math.ceil(words.length/2))).join(' ');
+  else if(type==='casual') t = t.toLowerCase().replace(/[.!]+$/,'') + ' :)';
+  else if(type==='professional') t = t.charAt(0).toUpperCase()+t.slice(1).replace(/\s*:\)$/,'').replace(/[!]+/,'');
+  else if(type==='less apologetic') t = t.replace(/\b(sorry|i apologize|my bad|my fault)[,]?\s*/gi,'').replace(/^./,c=>c.toUpperCase());
+  else if(type==='calmer') t = t.replace(/\b(ridiculous|insane|unacceptable|crazy)\b/gi,'frustrating');
+  else if(type==='say no politely') t = "Thanks for thinking of me — I can't make this one work, but I appreciate the ask.";
+  else if(type==='buy time') t = "Thanks for this — I need a little time to think it through. I'll get back to you shortly.";
+  else if(type==='one clear question') t = t.replace(/[?.!]+$/,'') + '. What works best for you?';
+  else if(type==='nicer') t = t.replace(/^./,c=>c.toUpperCase()) + ' 🙂';
+  else if(type==='more direct') t = t.replace(/^(hey|hi|so|well|um|i think|maybe)[, ]+/i,'').replace(/^./,c=>c.toUpperCase());
+  else if(type==='less fake') t = t.replace(/!+/g,'').replace(/\bso (excited|happy|thrilled)\b/gi,'glad');
+  else if(type==='more adult') t = t.replace(/\blol\b/gi,'').replace(/\bhaha\b/gi,'').trim().replace(/^./,c=>c.toUpperCase());
+  else if(type==='less defensive') t = t.replace(/\b(i was just|i didn'?t mean|for the record|to be clear)\b[, ]*/gi,'').replace(/^./,c=>c.toUpperCase());
+  state.drafts[id]=t.trim(); renderMain(); toast('Rewritten: '+type);
+}
+function copyDraft(id){
+  const text = state.drafts[id];
+  if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>toast('Copied to clipboard')).catch(()=>toast('Copied (demo)')); }
+  else toast('Copied (demo)');
+}
+function toast(msg){
+  const c = document.getElementById('toasts');
+  const el = document.createElement('div'); el.className='toast'; el.textContent=msg;
+  c.appendChild(el); setTimeout(()=>el.remove(), 2600);
+}
+
+// ---------- Boot ----------
+renderNav(); renderMain();
+</script>
+</body>
+</html>

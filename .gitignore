@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Local data (never commit messages or the live DB)
+backend/data/replygraph.db
+backend/data/exports/*.md
+backend/data/exports/*.txt
+
+# Secrets
+.env
+*.local
+
+# OS
+.DS_Store
+
+# Demo render artifacts
+demo/shot_*.png
+
+# Mobile render artifacts
+demo/m_*.png
+
+# Frontend screenshot artifacts
+frontend/app_*.png
+frontend/dist/
+
+# Local settings (may contain an API key)
+backend/data/app_settings.json

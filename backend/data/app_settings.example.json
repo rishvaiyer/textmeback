@@ -1,0 +1,16 @@
+{
+  "max_threads": 50,
+  "max_messages_per_thread": 50,
+  "local_only_mode": true,
+  "llm_provider": "anthropic",
+  "llm_model": "claude-haiku-4-5-20251001",
+  "llm_api_key": "",
+  "obsidian_vault_path": "",
+  "export_folder_path": "./backend/data/exports",
+  "token_pricing": {
+    "claude-haiku-4-5-20251001": {"input_per_1m": 0.80, "output_per_1m": 4.00},
+    "claude-sonnet-4-6": {"input_per_1m": 3.00, "output_per_1m": 15.00},
+    "claude-opus-4-8": {"input_per_1m": 15.00, "output_per_1m": 75.00}
+  },
+  "imessage_db_path": "~/Library/Messages/chat.db"
+}

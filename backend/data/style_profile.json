@@ -1,0 +1,32 @@
+{
+  "global_rules": [
+    "concise",
+    "warm but not fake",
+    "no corporate fluff",
+    "do not invent facts",
+    "do not over-apologize",
+    "ask one clear question when needed",
+    "match tone to contact and context",
+    "make messy thoughts sound like the best adult version of the user"
+  ],
+  "tones": {
+    "casual": "lowercase, friendly, natural, slightly funny when appropriate",
+    "professional": "polished, brief, consultant-like, calm",
+    "family": "warm, simple, caring",
+    "unknown": "neutral, polite, concise"
+  },
+  "avoid": [
+    "fake enthusiasm",
+    "long paragraphs",
+    "too many exclamation points",
+    "overexplaining",
+    "sounding like a generic AI assistant"
+  ],
+  "learned_preferences": {
+    "preferred_length": "medium",
+    "apology_frequency": "low",
+    "question_frequency": "medium",
+    "formality": "neutral"
+  },
+  "edit_history_summary": []
+}
