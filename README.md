@@ -1,5 +1,7 @@
 # ReplyGraph
 
+![ReplyGraph dashboard](docs/preview.png)
+
 A private, local-first macOS app that reads your own iMessage history, ranks
 which conversations need attention, drafts replies in your voice, flags risky
 tone, extracts follow-ups, and exports summaries to Markdown / Obsidian.
