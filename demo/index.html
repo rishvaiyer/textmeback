@@ -151,9 +151,23 @@
   .msg .time { font-size: 9.5px; color: var(--faint); margin-top: 4px; }
   .me .time { text-align: right; }
 
-  .draft-card { background: var(--card); border: 1px solid var(--line-2); border-radius: var(--r); box-shadow: var(--shadow-sm); padding: 18px; }
+  .draft-card { background: var(--card); border: 1px solid var(--line-2); border-radius: var(--r); box-shadow: var(--shadow-sm); padding: 18px; animation: fadeSwap .28s ease; }
   .draft-card textarea { width: 100%; border: none; outline: none; resize: vertical; min-height: 76px; font-family: var(--font); font-size: 15px; line-height: 1.6; color: var(--ink); background: none; }
+  @keyframes fadeSwap { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
   .reason { font-size: 12.5px; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 9px; }
+
+  /* Tone dial */
+  .tone-dial { margin: 16px 0 4px; }
+  .tone-dial-label { font-size: 10.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--faint); margin-bottom: 8px; display: block; }
+  .tone-seg-group { display: inline-flex; border: 1px solid var(--line-2); border-radius: 100px; padding: 3px; background: var(--panel); gap: 2px; }
+  .tone-seg {
+    font-family: var(--font); font-size: 12px; font-weight: 650; padding: 7px 14px; border: none; background: transparent;
+    color: var(--muted); border-radius: 100px; cursor: pointer; transition: background .14s, color .14s, box-shadow .14s;
+  }
+  .tone-seg:hover { color: var(--ink); }
+  .tone-seg.on { background: var(--card); color: var(--ink); box-shadow: var(--shadow-sm); }
+  .tone-seg:focus-visible { outline: 2px solid var(--pop); outline-offset: 2px; }
+  .tone-caption { font-size: 12px; color: var(--faint); margin-top: 10px; font-style: italic; max-width: 480px; line-height: 1.5; }
   .rw-label { font-size: 10.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--faint); margin: 20px 0 9px; }
   .rewrites { display: flex; flex-wrap: wrap; gap: 7px; }
   .rw { font-size: 12px; padding: 6px 12px; border: 1px solid var(--line-2); background: var(--card); border-radius: 100px; cursor: pointer; color: var(--muted); font-family: var(--font); transition: all .12s; }
@@ -357,6 +371,34 @@ const THREADS = [
     fu:[] },
 ];
 
+const TONE_VARIANTS = {
+  1: { // Sarah Chen — "are we still on for friday"
+    casual: "yesss friday's still on, my bad for the radio silence 😅 8pm at the usual spot?",
+    warm: "Yes — Friday's still on! Sorry for leaving you hanging, I've just been buried. Excited to see you — 8pm at our usual spot?",
+    professional: "Confirming Friday works on my end — apologies for the delayed response. Shall we still say 8pm at the usual place?",
+  },
+  2: { // Dr. Patel office — appointment + lab results
+    casual: "hey! yep tuesday 10am works for me, and go ahead and send over the lab results, thanks!",
+    warm: "Hi there — Tuesday at 10am works great for me. Yes, please do send the lab results over — thank you for checking in.",
+    professional: "Confirming Tuesday at 10:00 AM works. Please send the lab results at your convenience. Thank you.",
+  },
+  3: { // Dad — miss you, call me
+    casual: "miss u too dad 🥺 calling tonight after work, promise!",
+    warm: "Miss you too, Dad — I'll call tonight after work, I promise. Love you so much.",
+    professional: "I miss you too and will call this evening after work without fail. Love you.",
+  },
+  4: { // Priya (work) — revised budget
+    casual: "on it! budget will be in your inbox by end of day 👍",
+    warm: "Thanks for the heads up — I'll get the revised budget over to you by end of day today!",
+    professional: "Understood — I will have the revised budget completed and sent to you by end of day.",
+  },
+  5: { // Jules — weekend hike
+    casual: "haha yes let's finally do this — sat morning? i'll drive",
+    warm: "Yes, let's finally make this happen! Saturday morning works great for me — happy to drive.",
+    professional: "Yes, I'd like to join for the hike. Saturday morning works, and I can provide transportation.",
+  },
+};
+
 const ANALYTICS = [
   { name:'Sarah Chen', tone:'tense', trend:'declining', conf:'high', vol:42, last:'Jun 28', resp:'~6h', waitThem:false, waitYou:true, topics:['plans','food'], loops:['so are we still on for friday or not?'] },
   { name:'Dad', tone:'warm', trend:'stable', conf:'high', vol:128, last:'Jun 28', resp:'~2h', waitThem:false, waitYou:true, topics:['family','health'], loops:['call me when you get a chance'] },
@@ -374,7 +416,7 @@ const TOKENS = [
 const DIR_LABEL = { user_owes_them:'I owe them', they_owe_user:'They owe me', scheduling_loop:'Scheduling', unanswered_question:'Open question' };
 
 // ---------- State ----------
-let state = { tab:'dashboard', thread:1, filter:'needs', drafts:{}, completed:new Set(), inboxPane:'list' };
+let state = { tab:'dashboard', thread:1, filter:'needs', drafts:{}, completed:new Set(), inboxPane:'list', tone:{} };
 const MTAB = { dashboard:'Home', inbox:'Inbox', followups:'Tasks', analytics:'Stats', exports:'Export', settings:'Settings' };
 THREADS.forEach(t => state.drafts[t.id] = t.draft.text);
 let toggles = { local:true, llm:false };
@@ -487,6 +529,7 @@ function viewInbox(){
     <div class="rw-label" style="margin-top:0">Draft reply</div>
     <div class="reason">${t.draft.reason}<span class="tag">${t.draft.conf} conf</span></div>
     <div class="draft-card"><textarea id="draft" oninput="state.drafts[${t.id}]=this.value">${dtext}</textarea></div>
+    ${TONE_VARIANTS[t.id] ? toneDialHTML(t.id) : ''}
     ${highRisk?`<div class="notice"><b>Review carefully</b> — this touches a sensitive topic (${t.risk.join(', ')}). Copy-to-clipboard only; nothing is ever sent for you.</div>`:''}
     ${t.draft.risk.length?`<div class="flags">${t.draft.risk.map(f=>`<span class="tag flag">${f}</span>`).join('')}</div>`:''}
     <div class="rw-label">Rewrite</div>
@@ -508,6 +551,18 @@ function viewInbox(){
       ${threadList}
     </div>
     <div class="detail">${detail}</div>
+  </div>`;
+}
+
+function toneDialHTML(id){
+  const tone = state.tone[id];
+  const seg = (key,label) => `<button type="button" class="tone-seg ${tone===key?'on':''}" aria-pressed="${tone===key}" onclick="setTone(${id},'${key}')" onkeydown="toneKeyNav(event)">${label}</button>`;
+  return `<div class="tone-dial">
+    <span class="tone-dial-label">Tone</span>
+    <div class="tone-seg-group" role="group" aria-label="Reply tone">
+      ${seg('casual','Casual')}${seg('warm','Warm')}${seg('professional','Professional')}
+    </div>
+    <p class="tone-caption">In the real app, tone variants are drafted locally in your voice. Nothing is sent for you.</p>
   </div>`;
 }
 
@@ -625,6 +680,25 @@ function rewrite(id, type){
   else if(type==='less defensive') t = t.replace(/\b(i was just|i didn'?t mean|for the record|to be clear)\b[, ]*/gi,'').replace(/^./,c=>c.toUpperCase());
   state.drafts[id]=t.trim(); renderMain(); toast('Rewritten: '+type);
 }
+function setTone(id, tone){
+  if(!TONE_VARIANTS[id] || !TONE_VARIANTS[id][tone]) return;
+  state.tone[id] = tone;
+  state.drafts[id] = TONE_VARIANTS[id][tone];
+  renderMain();
+  const el = document.querySelector(`.tone-seg[aria-pressed="true"]`);
+  if(el) el.focus();
+}
+function toneKeyNav(e){
+  if(e.key!=='ArrowRight' && e.key!=='ArrowLeft') return;
+  e.preventDefault();
+  const segs = Array.from(document.querySelectorAll('.tone-seg'));
+  const i = segs.indexOf(document.activeElement);
+  if(i===-1) return;
+  let next = e.key==='ArrowRight' ? i+1 : i-1;
+  if(next<0) next = segs.length-1;
+  if(next>=segs.length) next = 0;
+  segs[next].focus();
+}
 function copyDraft(id){
   const text = state.drafts[id];
   if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>toast('Copied to clipboard')).catch(()=>toast('Copied (demo)')); }
@@ -637,6 +711,26 @@ function toast(msg){
 }
 
 // ---------- Boot ----------
+// Optional #tab=inbox&thread=1&tone=casual hook, used to preselect a
+// tab/thread/tone for non-interactive screenshots (e.g. headless Chrome).
+function applyHashParams(){
+  if(!location.hash) return;
+  const params = new URLSearchParams(location.hash.slice(1));
+  const tab = params.get('tab');
+  const threadId = parseInt(params.get('thread'),10);
+  const tone = params.get('tone');
+  if(tab) state.tab = tab;
+  if(!isNaN(threadId) && THREADS.some(t=>t.id===threadId)){
+    state.thread = threadId;
+    state.inboxPane = 'detail';
+    if(!tab) state.tab = 'inbox';
+    if(tone && TONE_VARIANTS[threadId] && TONE_VARIANTS[threadId][tone]){
+      state.tone[threadId] = tone;
+      state.drafts[threadId] = TONE_VARIANTS[threadId][tone];
+    }
+  }
+}
+applyHashParams();
 renderNav(); renderMain();
 </script>
 </body>
