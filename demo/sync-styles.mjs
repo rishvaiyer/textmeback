@@ -28,7 +28,7 @@ if (startAt === -1 || endAt === -1) {
   process.exit(1);
 }
 
-const header = `${START} — generated from frontend/src/styles.css by demo/sync-styles.mjs. Do not edit here. */`;
+const header = `${START}: generated from frontend/src/styles.css by demo/sync-styles.mjs. Do not edit here. */`;
 const next = html.slice(0, startAt) + header + '\n' + css + '\n' + html.slice(endAt);
 
 if (process.argv.includes('--check')) {

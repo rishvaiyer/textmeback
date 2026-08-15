@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>ReplyGraph — Demo</title>
+<title>ReplyGraph Demo</title>
 <meta name="description" content="ReplyGraph reads your iMessages locally, shows which conversations are waiting on you, and drafts a reply in your voice. It never sends." />
 <meta name="theme-color" content="#fafafb" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#0a0c11" media="(prefers-color-scheme: dark)" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
@@ -21,7 +21,7 @@
   })();
 </script>
 <style id="rg-styles">
-/* RG-STYLES-START — generated from frontend/src/styles.css by demo/sync-styles.mjs. Do not edit here. */
+/* RG-STYLES-START: generated from frontend/src/styles.css by demo/sync-styles.mjs. Do not edit here. */
 /* ============================================================
    ReplyGraph design system
    Shared by the React app (frontend/) and the static demo.
@@ -47,13 +47,13 @@
   --line: #ebebf0;
   --line-2: #dedee6;
 
-  /* Accent: indigo, with a violet partner used only in the mark
-     and the pulse graph. Everything else stays neutral. */
-  --pop: #4b47f5;
-  --pop-2: #7a5af8;
-  --pop-ink: #3129c9;
-  --pop-soft: #eeedff;
-  --pop-ring: rgba(75, 71, 245, 0.28);
+  /* Accent: a deep signal blue, with a cyan partner used only in the
+     mark and the pulse graph. Everything else stays neutral. */
+  --pop: #0f62d6;
+  --pop-2: #12a5c4;
+  --pop-ink: #0a4aa6;
+  --pop-soft: #e7f0fd;
+  --pop-ring: rgba(15, 98, 214, 0.26);
 
   --good: #0f9a6a;
   --good-soft: #e8f8f1;
@@ -83,25 +83,25 @@
 }
 
 :root[data-theme='dark'] {
-  --bg: #0b0b10;
-  --bg-tint: #101017;
-  --card: #131320;
-  --raised: #1a1a29;
-  --panel: #1c1c2b;
+  --bg: #0a0c11;
+  --bg-tint: #0f1116;
+  --card: #12141a;
+  --raised: #191c24;
+  --panel: #1b1e27;
 
-  --ink: #f2f2f7;
-  --ink-2: #d3d3e0;
-  --muted: #9494a6;
-  --faint: #6b6b80;
+  --ink: #eef1f5;
+  --ink-2: #ccd2dc;
+  --muted: #8f97a5;
+  --faint: #67707f;
 
-  --line: #23233a;
-  --line-2: #2e2e48;
+  --line: #222732;
+  --line-2: #2d323f;
 
-  --pop: #8b83ff;
-  --pop-2: #a78bfa;
-  --pop-ink: #b6b0ff;
-  --pop-soft: #1e1b3d;
-  --pop-ring: rgba(139, 131, 255, 0.34);
+  --pop: #6ba6ff;
+  --pop-2: #4fd1e0;
+  --pop-ink: #9cc5ff;
+  --pop-soft: #0e1d33;
+  --pop-ring: rgba(107, 166, 255, 0.32);
 
   --good: #34d399;
   --good-soft: #10281f;
@@ -823,9 +823,9 @@ const IC = {
 };
 
 /* ============================================================
-   Sample data — nothing here comes from a real conversation.
+   Sample data. Nothing here comes from a real conversation.
    ============================================================ */
-const NOW = new Date('2026-06-28T18:30:00');
+const NOW = new Date('2026-09-15T18:40:00');
 const MIN = 60000;
 const ago = m => new Date(NOW.getTime() - m * MIN);
 const tfmt = d => d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
@@ -865,95 +865,95 @@ function history(seed, density, msgs, lastReply) {
 
 const THREADS = [
   {
-    id: 1, name: 'Sarah Chen', priority: 'urgent', urgency: 'high', needs: true,
+    id: 1, name: 'Maya Okonkwo', priority: 'urgent', urgency: 'high', needs: true,
     tone: 'tense', trend: 'declining', conf: 'high', risk: [],
-    last: 'so are we still on for friday or not? you keep leaving me on read',
+    last: 'did you even see my last two messages? just tell me if saturday is off',
     msgs: [
-      { me: false, t: 'hey did you get my message about friday?', at: ago(2880) },
-      { me: false, t: 'just need to know if dinner is happening', at: ago(1440) },
-      { me: false, t: 'so are we still on for friday or not? you keep leaving me on read', at: ago(180) },
+      { me: false, t: 'hey are we still doing the thing saturday?', at: ago(4320) },
+      { me: false, t: 'i already told rico we would be there so i need to know', at: ago(1500) },
+      { me: false, t: 'did you even see my last two messages? just tell me if saturday is off', at: ago(95) },
     ],
     draft: {
-      text: "you're right, sorry for the silence — friday works, 8pm at the usual place?",
-      reason: 'Three messages in a row with no reply from you. Own the delay once, then answer the actual question.',
+      text: "you're right, that one is on me. saturday is still on, i'll be there by 7.",
+      reason: 'Three messages with no answer from you. Own the delay once, then answer what they actually asked.',
       risk: [], conf: 'medium',
     },
-    fu: [{ task: 'confirm friday dinner 8pm', dir: 'user_owes_them', due: 'friday', conf: 'high' }],
+    fu: [{ task: 'confirm saturday plan with maya', dir: 'user_owes_them', due: 'saturday', conf: 'high' }],
   },
   {
-    id: 2, name: 'Dr. Patel office', priority: 'risky_to_answer_fast', urgency: 'high', needs: true,
+    id: 2, name: 'Northside Dental', priority: 'risky_to_answer_fast', urgency: 'high', needs: true,
     tone: 'logistical', trend: 'stable', conf: 'medium', risk: ['medical'],
-    last: 'Please confirm your appointment and whether you want the lab results sent over.',
+    last: 'Please confirm Thursday 8:30am and let us know if you want your x-rays forwarded to Dr. Reyes.',
     msgs: [
-      { me: false, t: 'Reminder: follow-up appointment Tue 10:00am.', at: ago(4320) },
-      { me: false, t: 'Please confirm your appointment and whether you want the lab results sent over.', at: ago(600) },
+      { me: false, t: 'Reminder: cleaning scheduled Thursday 8:30am.', at: ago(5760) },
+      { me: false, t: 'Please confirm Thursday 8:30am and let us know if you want your x-rays forwarded to Dr. Reyes.', at: ago(700) },
     ],
     draft: {
-      text: 'Hi — confirming Tuesday 10am works. Yes, please send the lab results. Thank you.',
-      reason: 'Medical topic. The draft stays factual and answers both questions without adding detail.',
+      text: 'Hi, confirming Thursday at 8:30am. Yes, please forward the x-rays to Dr. Reyes. Thank you.',
+      reason: 'Medical topic. The draft answers both questions and adds nothing else.',
       risk: ['medical'], conf: 'medium',
     },
     fu: [
-      { task: 'confirm appt tue 10am', dir: 'user_owes_them', due: 'tuesday', conf: 'high' },
-      { task: 'decide on lab results', dir: 'unanswered_question', due: null, conf: 'medium' },
+      { task: 'confirm cleaning thu 8:30am', dir: 'user_owes_them', due: 'thursday', conf: 'high' },
+      { task: 'decide on forwarding x-rays', dir: 'unanswered_question', due: null, conf: 'medium' },
     ],
   },
   {
-    id: 3, name: 'Dad', priority: 'emotional', urgency: 'medium', needs: true,
+    id: 3, name: 'Mom', priority: 'emotional', urgency: 'medium', needs: true,
     tone: 'warm', trend: 'stable', conf: 'high', risk: [],
-    last: 'miss you kiddo, call me when you get a chance ❤️',
+    last: 'no pressure sweetheart, i just want to hear your voice this week',
     msgs: [
-      { me: false, t: 'how did the presentation go??', at: ago(2000) },
-      { me: true, t: 'went well! tell you about it soon', at: ago(1900) },
-      { me: false, t: 'miss you kiddo, call me when you get a chance ❤️', at: ago(300) },
+      { me: false, t: 'did the move go okay??', at: ago(3300) },
+      { me: true, t: 'yes! still living out of boxes but it is good', at: ago(3100) },
+      { me: false, t: 'no pressure sweetheart, i just want to hear your voice this week', at: ago(260) },
     ],
     draft: {
-      text: "miss you too — i'll call tonight after work, promise. love you",
-      reason: 'Warm family thread. Short, affectionate, and commits to a specific time.',
+      text: "i'll call you wednesday night once the kitchen is unpacked. love you",
+      reason: 'Warm family thread with no ask beyond time. Short, affectionate, names a day.',
       risk: [], conf: 'high',
     },
-    fu: [{ task: 'call dad tonight', dir: 'user_owes_them', due: 'tonight', conf: 'high' }],
+    fu: [{ task: 'call mom wednesday night', dir: 'user_owes_them', due: 'wednesday', conf: 'high' }],
   },
   {
-    id: 4, name: 'Priya (work)', priority: 'work_admin', urgency: 'medium', needs: true,
+    id: 4, name: 'Tomas Vidal', priority: 'work_admin', urgency: 'medium', needs: true,
     tone: 'logistical', trend: 'stable', conf: 'medium', risk: ['work_risk'],
-    last: 'can you send the revised budget before the client call tomorrow?',
+    last: 'can you get me the Q3 forecast slides before the board sync tomorrow?',
     msgs: [
-      { me: false, t: 'great work on the deck', at: ago(800) },
-      { me: false, t: 'can you send the revised budget before the client call tomorrow?', at: ago(120) },
+      { me: false, t: 'the pricing section landed really well, nice work', at: ago(900) },
+      { me: false, t: 'can you get me the Q3 forecast slides before the board sync tomorrow?', at: ago(140) },
     ],
     draft: {
-      text: "Will do — I'll have the revised budget to you by EOD today.",
+      text: "Yes, I'll have the Q3 forecast slides over to you by 4pm today.",
       reason: 'A request with a deadline. Direct, and commits to a time earlier than the deadline.',
       risk: ['work_risk'], conf: 'medium',
     },
-    fu: [{ task: 'send revised budget before client call', dir: 'user_owes_them', due: 'tomorrow', conf: 'high' }],
+    fu: [{ task: 'send Q3 forecast slides before board sync', dir: 'user_owes_them', due: 'tomorrow', conf: 'high' }],
   },
   {
-    id: 5, name: 'Jules', priority: 'logistical', urgency: 'medium', needs: true,
-    tone: 'playful', trend: 'stable', conf: 'medium', risk: [],
-    last: 'are you free this weekend? thinking we could do that hike finally lol',
+    id: 5, name: 'Reggie', priority: 'logistical', urgency: 'medium', needs: true,
+    tone: 'playful', trend: 'improving', conf: 'medium', risk: [],
+    last: 'climbing gym thursday? i still owe you for the last belay lol',
     msgs: [
-      { me: false, t: 'are you free this weekend? thinking we could do that hike finally lol', at: ago(420) },
+      { me: false, t: 'climbing gym thursday? i still owe you for the last belay lol', at: ago(380) },
     ],
     draft: {
-      text: "haha yes let's actually do it — saturday morning? i can drive",
+      text: "ha yes thursday works. 6:30, and you're buying tacos after",
       reason: 'Casual scheduling. Matches the light tone and proposes a concrete time.',
       risk: [], conf: 'medium',
     },
-    fu: [{ task: 'plan weekend hike', dir: 'scheduling_loop', due: 'this weekend', conf: 'medium' }],
+    fu: [{ task: 'lock in climbing thursday', dir: 'scheduling_loop', due: 'thursday', conf: 'medium' }],
   },
   {
-    id: 6, name: 'Alex', priority: 'low_priority', urgency: 'low', needs: false,
+    id: 6, name: 'Nadia Farouk', priority: 'low_priority', urgency: 'low', needs: false,
     tone: 'neutral', trend: 'stable', conf: 'low', risk: [],
-    last: 'sounds good, talk soon!',
+    last: 'perfect, see you then!',
     msgs: [
-      { me: false, t: 'thanks for the recommendation', at: ago(6000) },
-      { me: true, t: 'anytime!', at: ago(5990) },
-      { me: false, t: 'sounds good, talk soon!', at: ago(5980) },
+      { me: false, t: 'thanks for connecting me with your framer', at: ago(7200) },
+      { me: true, t: 'of course, he does great work', at: ago(7180) },
+      { me: false, t: 'perfect, see you then!', at: ago(7150) },
     ],
     draft: {
-      text: 'No reply needed here — the thread looks wrapped up.',
+      text: 'No reply needed here. The thread looks wrapped up.',
       reason: 'The last message was a sign-off. Nothing is outstanding.',
       risk: [], conf: 'medium',
     },
@@ -961,9 +961,9 @@ const THREADS = [
   },
 ];
 
-const DENSITY = { 1: 1.6, 2: 0.4, 3: 1.3, 4: 0.9, 5: 0.6, 6: 0.35 };
+const DENSITY = { 1: 1.5, 2: 0.35, 3: 1.2, 4: 1.0, 5: 0.55, 6: 0.3 };
 // Minutes since you last sent a message in each thread.
-const LAST_REPLY = { 1: 5760, 2: 20161, 3: 1900, 4: 4300, 5: 8600, 6: 5990 };
+const LAST_REPLY = { 1: 4600, 2: 20161, 3: 3100, 4: 5200, 5: 9800, 6: 7180 };
 THREADS.forEach(t => {
   t.lastReply = LAST_REPLY[t.id];
   t.pulse = history(t.id * 17, DENSITY[t.id], t.msgs, t.lastReply);
@@ -971,44 +971,44 @@ THREADS.forEach(t => {
 
 const TONE_VARIANTS = {
   1: {
-    casual: "yesss friday's still on, my bad for the radio silence 😅 8pm at the usual spot?",
-    warm: "Yes — Friday's still on! Sorry for leaving you hanging, I've just been buried. Excited to see you — 8pm at our usual spot?",
-    professional: 'Confirming Friday works on my end — apologies for the delayed response. Shall we still say 8pm at the usual place?',
+    casual: "ugh you're right, my bad. saturday's still on, i'll be there by 7",
+    warm: "You're right, and I'm sorry for going quiet on you. Saturday is absolutely still on. I'll be there by 7, and tell Rico I said hi.",
+    professional: 'Apologies for the slow response. Saturday still works on my end. I plan to arrive by 7.',
   },
   2: {
-    casual: 'hey! yep tuesday 10am works for me, and go ahead and send over the lab results, thanks!',
-    warm: 'Hi there — Tuesday at 10am works great for me. Yes, please do send the lab results over — thank you for checking in.',
-    professional: 'Confirming Tuesday at 10:00 AM works. Please send the lab results at your convenience. Thank you.',
+    casual: 'hey! thursday 8:30 works for me, and yes please send the x-rays over to dr. reyes. thanks!',
+    warm: 'Hi there, Thursday at 8:30am works perfectly for me. And yes, please do forward the x-rays to Dr. Reyes. Thank you for following up.',
+    professional: 'Confirming Thursday at 8:30 AM. Please forward the x-rays to Dr. Reyes at your convenience. Thank you.',
   },
   3: {
-    casual: 'miss u too dad 🥺 calling tonight after work, promise!',
-    warm: "Miss you too, Dad — I'll call tonight after work, I promise. Love you so much.",
-    professional: 'I miss you too and will call this evening after work without fail. Love you.',
+    casual: 'calling you wednesday night once the kitchen is done, promise. love u',
+    warm: "I'll call you Wednesday night, once the kitchen is finally unpacked. I want to hear your voice too. Love you, Mom.",
+    professional: 'I will call Wednesday evening after I finish unpacking the kitchen. Love you.',
   },
   4: {
-    casual: 'on it! budget will be in your inbox by end of day 👍',
-    warm: "Thanks for the heads up — I'll get the revised budget over to you by end of day today!",
-    professional: 'Understood — I will have the revised budget completed and sent to you by end of day.',
+    casual: 'on it, slides will be in your inbox by 4',
+    warm: 'Thanks for the kind words on the pricing section! I will have the Q3 forecast slides to you by 4pm today.',
+    professional: 'Understood. I will deliver the Q3 forecast slides by 4:00 PM today, ahead of the board sync.',
   },
   5: {
-    casual: "haha yes let's finally do this — sat morning? i'll drive",
-    warm: "Yes, let's finally make this happen! Saturday morning works great for me — happy to drive.",
-    professional: "Yes, I'd like to join for the hike. Saturday morning works, and I can provide transportation.",
+    casual: 'ha yes thursday. 6:30 and you owe me tacos',
+    warm: 'Yes, Thursday sounds great! Let us say 6:30, and you can settle that belay debt in tacos afterward.',
+    professional: 'Thursday works for me. Shall we say 6:30 at the gym?',
   },
 };
 
 const ANALYTICS = [
-  { id: 1, name: 'Sarah Chen', tone: 'tense', trend: 'declining', conf: 'high', vol: 42, last: 'Jun 28', resp: '~6h', waitYou: true, topics: ['plans', 'food'], loops: ['so are we still on for friday or not?'] },
-  { id: 3, name: 'Dad', tone: 'warm', trend: 'stable', conf: 'high', vol: 128, last: 'Jun 28', resp: '~2h', waitYou: true, topics: ['family', 'health'], loops: ['call me when you get a chance'] },
-  { id: 4, name: 'Priya (work)', tone: 'logistical', trend: 'stable', conf: 'medium', vol: 67, last: 'Jun 28', resp: '~1h', waitYou: true, topics: ['work', 'money'], loops: ['send the revised budget?'] },
-  { id: 5, name: 'Jules', tone: 'playful', trend: 'stable', conf: 'medium', vol: 23, last: 'Jun 28', resp: '~4h', waitYou: true, topics: ['plans'], loops: [] },
+  { id: 1, name: 'Maya Okonkwo', tone: 'tense', trend: 'declining', conf: 'high', vol: 61, last: 'Sep 15', resp: '~7h', waitYou: true, topics: ['plans', 'friends'], loops: ['just tell me if saturday is off'] },
+  { id: 3, name: 'Mom', tone: 'warm', trend: 'stable', conf: 'high', vol: 214, last: 'Sep 15', resp: '~3h', waitYou: true, topics: ['family', 'moving'], loops: ['want to hear your voice this week'] },
+  { id: 4, name: 'Tomas Vidal', tone: 'logistical', trend: 'stable', conf: 'medium', vol: 88, last: 'Sep 15', resp: '~1h', waitYou: true, topics: ['work', 'deadlines'], loops: ['Q3 forecast slides before the sync?'] },
+  { id: 5, name: 'Reggie', tone: 'playful', trend: 'improving', conf: 'medium', vol: 37, last: 'Sep 15', resp: '~5h', waitYou: true, topics: ['climbing', 'plans'], loops: [] },
 ];
 
 const TOKENS = [
-  { op: 'draft_generation', n: 14, inp: 18400, out: 2800, cost: 0.0259, color: 'var(--pop)' },
-  { op: 'rewrite', n: 9, inp: 6200, out: 1350, cost: 0.0104, color: 'var(--pop-2)' },
-  { op: 'relationship_analytics', n: 4, inp: 9100, out: 1600, cost: 0.0137, color: 'var(--good)' },
-  { op: 'followup_extraction', n: 6, inp: 4300, out: 900, cost: 0.0070, color: 'var(--warn)' },
+  { op: 'draft_generation', n: 11, inp: 15200, out: 2350, cost: 0.0213, color: 'var(--pop)' },
+  { op: 'rewrite', n: 13, inp: 8900, out: 1980, cost: 0.0151, color: 'var(--pop-2)' },
+  { op: 'relationship_analytics', n: 3, inp: 7400, out: 1250, cost: 0.0110, color: 'var(--good)' },
+  { op: 'followup_extraction', n: 7, inp: 5100, out: 1040, cost: 0.0082, color: 'var(--warn)' },
 ];
 
 const DIR_LABEL = {
@@ -1052,7 +1052,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;',
 const $ = sel => document.querySelector(sel);
 
 /* ============================================================
-   The pulse graph — the signature element.
+   The pulse graph, the signature element.
    Their messages tick above the line, yours below. The stretch
    of silence since the last message glows at the right edge.
    ============================================================ */
@@ -1205,7 +1205,7 @@ function viewDashboard() {
 
   return `<div class="wrap">
     <div class="head">
-      <div class="eyebrow">Thursday evening</div>
+      <div class="eyebrow">${NOW.toLocaleDateString('en-US', { weekday: 'long' })} evening</div>
       <h2>${needs.length} conversations are waiting on you.</h2>
       <p>One has gone ${dur(waiting)} without a word from you. ${fu.length} follow-ups are still tracked, and ${risk.length} threads are flagged to read before you copy anything.</p>
     </div>
@@ -1558,7 +1558,7 @@ function viewAnalytics() {
     <div class="head">
       <div class="eyebrow">Estimates, not findings</div>
       <h2>Analytics</h2>
-      <p>These numbers come from counting words and timestamps. ReplyGraph describes a thread — “more friction lately” — and stops there. It does not diagnose people, and low confidence means take it lightly.</p>
+      <p>These numbers come from counting words and timestamps. ReplyGraph describes a thread, "more friction lately", and stops there. It does not diagnose people, and low confidence means take it lightly.</p>
     </div>
     ${cards}
     <div class="sec-title" style="margin-top:30px">Token usage estimate</div>
@@ -1595,8 +1595,8 @@ function viewExports() {
     </div>
     <div class="sec-title" style="margin-top:28px">Recent exports</div>
     <div class="panel">
-      <div class="fu"><div><span class="tag">daily digest</span> <span class="sm muted num" style="margin-left:8px">~/ReplyGraph/daily_digest_2026-06-28.md</span></div><span class="sm faint">just now</span></div>
-      <div class="fu"><div><span class="tag">follow-ups</span> <span class="sm muted num" style="margin-left:8px">~/ReplyGraph/followups_2026-06-28.md</span></div><span class="sm faint">just now</span></div>
+      <div class="fu"><div><span class="tag">daily digest</span> <span class="sm muted num" style="margin-left:8px">~/ReplyGraph/daily_digest_2026-09-15.md</span></div><span class="sm faint">just now</span></div>
+      <div class="fu"><div><span class="tag">follow-ups</span> <span class="sm muted num" style="margin-left:8px">~/ReplyGraph/followups_2026-09-15.md</span></div><span class="sm faint">just now</span></div>
     </div>
   </div>`;
 }
@@ -1616,7 +1616,7 @@ function viewSettings() {
     </div>
 
     <div class="ssection"><div class="sec-title">iMessage</div><div class="card">
-      ${row('Database status', 'Reads <span class="num">~/Library/Messages/chat.db</span> read-only. macOS requires Full Disk Access for your terminal.', '<span class="tag">Demo — not connected</span>')}
+      ${row('Database status', 'Reads <span class="num">~/Library/Messages/chat.db</span> read-only. macOS requires Full Disk Access for your terminal.', '<span class="tag">Demo, not connected</span>')}
       ${row('Threads per sync', 'How many recent conversations to pull.', '<input class="sinput" value="50" style="width:90px" aria-label="Threads per sync"/>')}
       ${row('Messages per thread', 'How far back to read in each conversation.', '<input class="sinput" value="50" style="width:90px" aria-label="Messages per thread"/>')}
     </div></div>
@@ -1634,7 +1634,7 @@ function viewSettings() {
 
     <div class="ssection"><div class="sec-title">Data</div><div class="card">
       ${row('Rebuild analytics', 'Recompute tone and relationship estimates from stored messages.', '<button class="btn" onclick="toast(\'Analytics rebuilt\')">Rebuild</button>')}
-      ${row('Clear local database', 'Deletes every synced message and analysis from this machine.', '<button class="btn" onclick="toast(\'Demo mode — nothing was deleted\')">Clear</button>')}
+      ${row('Clear local database', 'Deletes every synced message and analysis from this machine.', '<button class="btn" onclick="toast(\'Demo mode, nothing was deleted\')">Clear</button>')}
     </div></div>
   </div>`;
 }
@@ -1676,7 +1676,7 @@ function onDraftKey(e) {
   if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); copyDraft(state.thread); }
 }
 
-/* Type the new draft in rather than swapping it — it reads as composing.
+/* Type the new draft in rather than swapping it, so it reads as composing.
    Driven by elapsed time, so a throttled or backgrounded tab still lands on
    the complete text instead of stopping partway. */
 let typing = null;
@@ -1722,8 +1722,8 @@ function rewrite(id, type) {
   else if (type === 'professional') t = t.charAt(0).toUpperCase() + t.slice(1).replace(/\s*:\)$/, '').replace(/[!]+/, '');
   else if (type === 'less apologetic') t = t.replace(/\b(sorry|i apologize|my bad|my fault)[,]?\s*/gi, '').replace(/^./, c => c.toUpperCase());
   else if (type === 'calmer') t = t.replace(/\b(ridiculous|insane|unacceptable|crazy)\b/gi, 'frustrating');
-  else if (type === 'say no politely') t = "Thanks for thinking of me — I can't make this one work, but I appreciate the ask.";
-  else if (type === 'buy time') t = "Thanks for this — I need a little time to think it through. I'll get back to you shortly.";
+  else if (type === 'say no politely') t = "Thanks for thinking of me, but I can't make this one work. I appreciate the ask.";
+  else if (type === 'buy time') t = "Thanks for this. I need a little time to think it through, and I'll get back to you shortly.";
   else if (type === 'one clear question') t = t.replace(/[?.!]+$/, '') + '. What works best for you?';
   else if (type === 'nicer') t = t.replace(/^./, c => c.toUpperCase()) + ' 🙂';
   else if (type === 'more direct') t = t.replace(/^(hey|hi|so|well|um|i think|maybe)[, ]+/i, '').replace(/^./, c => c.toUpperCase());
@@ -1764,7 +1764,7 @@ function toneKeyNav(e) {
 
 function copyDraft(id) {
   const text = state.drafts[id];
-  const done = () => toast('Copied. Paste it wherever you like — ReplyGraph never sends.');
+  const done = () => toast('Copied. Paste it wherever you like. ReplyGraph never sends.');
   if (navigator.clipboard) navigator.clipboard.writeText(text).then(done).catch(done);
   else done();
 }

@@ -63,8 +63,8 @@ export default function Inbox({ ctx, initialThread }) {
     try {
       if (kind === 'approve') { await api.approve(selected, 'approved', draftText); ctx.toast('Approved & saved') }
       else if (kind === 'edit') { await api.approve(selected, 'edited_approved', draftText); ctx.toast('Edited draft saved') }
-      else if (kind === 'deny') { await api.deny(selected); ctx.toast('Denied — noted for style learning') }
-      else if (kind === 'none') { await api.noResponse(selected); ctx.toast('Marked: no reply needed') }
+      else if (kind === 'deny') { await api.deny(selected); ctx.toast('Denied, noted for style learning') }
+      else if (kind === 'none') { await api.noResponse(selected); ctx.toast('Marked as no reply needed') }
     } catch (e) { ctx.toast(e.message, 'error') }
   }
 

@@ -33,7 +33,7 @@ header, and each analytics card.
 
 | Key | Action |
 | --- | --- |
-| `⌘K` | Command palette — sections, threads, and actions |
+| `⌘K` | Command palette: sections, threads, and actions |
 | `/` | Search threads |
 | `G` then `D I F A E S` | Jump to a section |
 | `J` / `K` | Next / previous thread |
@@ -46,7 +46,7 @@ header, and each analytics card.
 **Everything else.** Light and dark themes that follow your system setting and
 persist your choice; drafts that type themselves in when you change tone or
 rewrite; counters that animate on the dashboard; live thread search with match
-highlighting; and full `prefers-reduced-motion` support — every animation is
+highlighting; and full `prefers-reduced-motion` support. Every animation is
 disabled when you ask for that, and the results still land correctly.
 
 ### Working on the UI
@@ -78,7 +78,7 @@ node demo/shot_mobile.mjs
 - Flags risky tone (defensive, apologetic, vague, cold, angry, …) with suggestions.
 - Extracts follow-ups (things you owe, things owed to you, scheduling loops, open questions).
 - Simple relationship analytics, labelled as **estimates** with confidence.
-- Approve / edit / deny / copy workflow — **copy-to-clipboard only**.
+- Approve / edit / deny / copy workflow, **copy-to-clipboard only**.
 - Customisable dashboard, Markdown + Obsidian export, token-usage estimates.
 - A pulse graph per thread showing two weeks of cadence and how long they have
   been waiting on you.
@@ -148,7 +148,7 @@ runs the backend (e.g. Terminal or iTerm):
 ### 4. Sync your messages
 
 Click **Sync Messages** in the sidebar (or `POST /sync/imessage`). ReplyGraph pulls
-the most recent threads (default 50 threads × 50 messages — configurable in Settings).
+the most recent threads (default 50 threads × 50 messages, configurable in Settings).
 If access fails, you get a clear permission error and the app keeps running.
 
 ---
@@ -165,33 +165,33 @@ python -m backend.dev_seed     # loads sample threads into the local DB
 uvicorn backend.main:app --port 8000
 ```
 
-This is **not** a product feature — it only exists to verify ranking, tone,
+This is **not** a product feature. It only exists to verify ranking, tone,
 follow-ups, drafts and analytics where a real Messages database is unavailable.
 
 ---
 
 ## How things work
 
-- **Drafts** — `draft_generator.py` runs in two modes. *Mock mode* (default, offline)
+- **Drafts**: `draft_generator.py` runs in two modes. *Mock mode* (default, offline)
   produces safe placeholder drafts from heuristics. *LLM mode* uses your configured
   Claude API key to draft in your voice, injecting your style profile into the prompt.
-- **Approve / edit / deny / copy** — every decision is stored. Copy puts the draft on
+- **Approve / edit / deny / copy**: every decision is stored. Copy puts the draft on
   your clipboard (browser Clipboard API, backend `pbcopy` fallback). Nothing is sent.
-- **Style learning** — when you edit or approve, `style_profile.py` updates simple,
+- **Style learning**: when you edit or approve, `style_profile.py` updates simple,
   transparent preferences (e.g. shorter replies, fewer apologies) and snapshots history.
   No model training.
-- **Tone risk** — `tone_risk_detector.py` flags defensive / apologetic / vague / cold /
+- **Tone risk**: `tone_risk_detector.py` flags defensive / apologetic / vague / cold /
   angry / needy drafts and offers a calmer rewrite. Sensitive flags (medical, money,
   legal, conflict, work) show *review carefully* and stay copy-only.
-- **Follow-ups** — `followup_extractor.py` pulls promises, requests, scheduling loops
+- **Follow-ups**: `followup_extractor.py` pulls promises, requests, scheduling loops
   and unanswered questions, each with a direction and confidence.
-- **Dashboard customisation** — show/hide and reorder widgets, compact/spacious density,
+- **Dashboard customisation**: show/hide and reorder widgets, compact/spacious density,
   pin contacts/threads, choose the default tab; stored locally with a reset button.
-- **Obsidian export** — set a vault path in Settings; ReplyGraph writes summaries into
+- **Obsidian export**: set a vault path in Settings; ReplyGraph writes summaries into
   `/ReplyGraph/Daily|Contacts|Followups|Analytics/` with YAML frontmatter and wiki links.
-- **Token strategy** — `token_estimator.py` estimates usage with editable pricing; the
+- **Token strategy**: `token_estimator.py` estimates usage with editable pricing; the
   app processes recent threads first and caches summaries rather than resending history.
-- **Pulse graph** — `frontend/src/components/Pulse.jsx` draws each thread's last
+- **Pulse graph**: `frontend/src/components/Pulse.jsx` draws each thread's last
   14 days from message timestamps alone. The shaded band starts at your most
   recent outgoing message, so it measures how long they have been waiting rather
   than how long since anyone spoke.
@@ -199,7 +199,7 @@ follow-ups, drafts and analytics where a real Messages database is unavailable.
 ## Known limitations
 
 - iMessage access depends on macOS Full Disk Access; some macOS versions are stricter.
-- Ranking, tone and analytics are **heuristics** — useful signals, not ground truth.
+- Ranking, tone and analytics are **heuristics**: useful signals, not ground truth.
 - Offline mock drafts are intentionally generic; real drafting needs an API key.
 - v1 is single-user, single-machine, no auth.
 
