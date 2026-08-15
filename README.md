@@ -15,6 +15,60 @@ tone, extracts follow-ups, and exports summaries to Markdown / Obsidian.
 
 ---
 
+## The interface
+
+ReplyGraph is a two-pane desktop app that collapses to a single column with a
+native-style tab bar on a phone. Both the real app and the demo share one
+stylesheet, so they look and behave the same.
+
+**The pulse graph.** Every thread gets a two-week strip: their messages tick
+above the line, yours below, and the shaded stretch on the right is everything
+since you last wrote back. A thread you have gone quiet on is visible at a
+glance, without reading a word of it. It appears in the thread list, the thread
+header, and each analytics card.
+
+![The inbox in dark mode](docs/preview-inbox.png)
+
+**Driven from the keyboard.**
+
+| Key | Action |
+| --- | --- |
+| `⌘K` | Command palette — sections, threads, and actions |
+| `/` | Search threads |
+| `G` then `D I F A E S` | Jump to a section |
+| `J` / `K` | Next / previous thread |
+| `1` `2` `3` | Casual / warm / professional tone (demo) |
+| `C` | Copy the draft |
+| `⌘↵` | Copy the draft from inside the composer |
+| `T` | Toggle theme |
+| `?` | Shortcut sheet |
+
+**Everything else.** Light and dark themes that follow your system setting and
+persist your choice; drafts that type themselves in when you change tone or
+rewrite; counters that animate on the dashboard; live thread search with match
+highlighting; and full `prefers-reduced-motion` support — every animation is
+disabled when you ask for that, and the results still land correctly.
+
+### Working on the UI
+
+`frontend/src/styles.css` is the single source of truth for the design system.
+The demo is a self-contained single file, so its copy of the CSS is generated:
+
+```bash
+node demo/sync-styles.mjs          # after editing styles.css
+node demo/sync-styles.mjs --check  # fails if the demo is stale
+```
+
+To regenerate the screenshots:
+
+```bash
+npm i -D playwright && npx playwright install chromium
+node demo/shot.mjs
+node demo/shot_mobile.mjs
+```
+
+---
+
 ## What it does
 
 - Reads recent iMessage threads from `~/Library/Messages/chat.db` (read-only).
@@ -26,6 +80,8 @@ tone, extracts follow-ups, and exports summaries to Markdown / Obsidian.
 - Simple relationship analytics, labelled as **estimates** with confidence.
 - Approve / edit / deny / copy workflow — **copy-to-clipboard only**.
 - Customisable dashboard, Markdown + Obsidian export, token-usage estimates.
+- A pulse graph per thread showing two weeks of cadence and how long they have
+  been waiting on you.
 
 ## What it does NOT do
 
@@ -135,6 +191,10 @@ follow-ups, drafts and analytics where a real Messages database is unavailable.
   `/ReplyGraph/Daily|Contacts|Followups|Analytics/` with YAML frontmatter and wiki links.
 - **Token strategy** — `token_estimator.py` estimates usage with editable pricing; the
   app processes recent threads first and caches summaries rather than resending history.
+- **Pulse graph** — `frontend/src/components/Pulse.jsx` draws each thread's last
+  14 days from message timestamps alone. The shaded band starts at your most
+  recent outgoing message, so it measures how long they have been waiting rather
+  than how long since anyone spoke.
 
 ## Known limitations
 

@@ -2,397 +2,995 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>ReplyGraph — Demo</title>
+<meta name="description" content="ReplyGraph reads your iMessages locally, shows which conversations are waiting on you, and drafts a reply in your voice. It never sends." />
+<meta name="theme-color" content="#fafafb" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --bg: #f7f7f8;
-    --card: #ffffff;
-    --ink: #0d0d12;
-    --ink-2: #2a2a33;
-    --muted: #6a6a76;
-    --faint: #9b9ba6;
-    --line: #ececef;
-    --line-2: #e2e2e6;
-    --pop: #2b50f6;
-    --pop-soft: #eef1ff;
-    --pop-ink: #1a39c9;
-    --panel: #f4f4f6;
-    --good: #1f9d6b;
-    --shadow-sm: 0 1px 2px rgba(16,18,30,.04), 0 1px 3px rgba(16,18,30,.06);
-    --shadow-md: 0 2px 6px rgba(16,18,30,.05), 0 6px 20px rgba(16,18,30,.06);
-    --r: 14px;
-    --r-sm: 9px;
-    --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<script>
+  // Set the theme before first paint so there is no flash.
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem('rg-theme'); } catch (e) {}
+    var dark = saved ? saved === 'dark'
+      : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  })();
+</script>
+<style id="rg-styles">
+/* RG-STYLES-START — generated from frontend/src/styles.css by demo/sync-styles.mjs. Do not edit here. */
+/* ============================================================
+   ReplyGraph design system
+   Shared by the React app (frontend/) and the static demo.
+   Edit this file, then run `node demo/sync-styles.mjs` to push
+   the same rules into demo/index.html.
+   ============================================================ */
+
+/* ---------- Tokens ---------- */
+:root {
+  /* Surfaces climb: page < card < raised */
+  --bg: #fafafb;
+  --bg-tint: #f2f2f6;
+  --card: #ffffff;
+  --raised: #ffffff;
+  --panel: #f4f4f7;
+
+  /* Ink descends */
+  --ink: #14141b;
+  --ink-2: #33333f;
+  --muted: #656572;
+  --faint: #9a9aa8;
+
+  --line: #ebebf0;
+  --line-2: #dedee6;
+
+  /* Accent: indigo, with a violet partner used only in the mark
+     and the pulse graph. Everything else stays neutral. */
+  --pop: #4b47f5;
+  --pop-2: #7a5af8;
+  --pop-ink: #3129c9;
+  --pop-soft: #eeedff;
+  --pop-ring: rgba(75, 71, 245, 0.28);
+
+  --good: #0f9a6a;
+  --good-soft: #e8f8f1;
+  --good-line: #c7ecdc;
+  --warn: #b8601c;
+  --warn-soft: #fdf3ea;
+  --warn-line: #f2ddc8;
+  --danger: #b3352f;
+
+  --shadow-sm: 0 1px 2px rgba(18, 18, 32, 0.04), 0 1px 3px rgba(18, 18, 32, 0.05);
+  --shadow-md: 0 2px 6px rgba(18, 18, 32, 0.05), 0 8px 24px rgba(18, 18, 32, 0.07);
+  --shadow-lg: 0 8px 20px rgba(18, 18, 32, 0.09), 0 28px 60px rgba(18, 18, 32, 0.14);
+
+  --r: 14px;
+  --r-sm: 10px;
+  --r-xs: 7px;
+
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --spring: cubic-bezier(0.34, 1.4, 0.5, 1);
+
+  --sidebar-w: 244px;
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #0b0b10;
+  --bg-tint: #101017;
+  --card: #131320;
+  --raised: #1a1a29;
+  --panel: #1c1c2b;
+
+  --ink: #f2f2f7;
+  --ink-2: #d3d3e0;
+  --muted: #9494a6;
+  --faint: #6b6b80;
+
+  --line: #23233a;
+  --line-2: #2e2e48;
+
+  --pop: #8b83ff;
+  --pop-2: #a78bfa;
+  --pop-ink: #b6b0ff;
+  --pop-soft: #1e1b3d;
+  --pop-ring: rgba(139, 131, 255, 0.34);
+
+  --good: #34d399;
+  --good-soft: #10281f;
+  --good-line: #1d4438;
+  --warn: #e5a35c;
+  --warn-soft: #2a1d10;
+  --warn-line: #4a341c;
+  --danger: #f08a80;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.45), 0 12px 32px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.5), 0 32px 70px rgba(0, 0, 0, 0.55);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv05' 1, 'cv08' 1, 'ss03' 1;
+}
+
+::selection { background: var(--pop); color: #fff; }
+
+:focus-visible {
+  outline: 2px solid var(--pop);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+button, input, textarea, select { font: inherit; color: inherit; }
+button { background: none; border: none; cursor: pointer; }
+
+/* Inline icons default to the text size they sit next to. */
+.ic { width: 16px; height: 16px; flex-shrink: 0; }
+
+/* ---------- Shell ---------- */
+.app { display: flex; height: 100vh; overflow: hidden; }
+
+.side {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  background: var(--bg-tint);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  padding: 18px 14px 16px;
+}
+
+.brand { display: flex; align-items: center; gap: 10px; padding: 6px 8px 22px; }
+.brand .mark {
+  width: 28px; height: 28px; border-radius: 9px; flex-shrink: 0;
+  background: linear-gradient(150deg, var(--pop) 0%, var(--pop-2) 100%);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px var(--pop-ring);
+}
+.brand .mark span { width: 8px; height: 8px; border-radius: 50%; background: #fff; }
+.brand h1 { font-size: 14.5px; font-weight: 600; letter-spacing: -0.015em; }
+.brand h1 b { font-weight: 800; }
+
+.nav { display: flex; flex-direction: column; gap: 1px; }
+.nav button {
+  display: flex; align-items: center; gap: 11px; width: 100%;
+  padding: 8px 10px; font-size: 13px; font-weight: 500;
+  color: var(--muted); text-align: left; border-radius: var(--r-sm);
+  transition: color 0.14s var(--ease), background 0.14s var(--ease);
+  position: relative;
+}
+.nav button .ic { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.6; }
+.nav button .count {
+  margin-left: auto; font-family: var(--mono); font-size: 11px;
+  color: var(--faint); font-variant-numeric: tabular-nums;
+}
+.nav button:hover { color: var(--ink); background: var(--panel); }
+.nav button.active { color: var(--ink); background: var(--card); box-shadow: var(--shadow-sm); font-weight: 600; }
+.nav button.active .ic { opacity: 1; color: var(--pop); }
+.nav button.active .count { color: var(--pop); }
+.nav button.active::before {
+  content: ''; position: absolute; left: -14px; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 18px; border-radius: 0 3px 3px 0; background: var(--pop);
+}
+
+.side-foot { margin-top: auto; padding-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+.trust {
+  display: flex; align-items: flex-start; gap: 9px; padding: 11px 12px;
+  border: 1px solid var(--line-2); border-radius: var(--r-sm); background: var(--card);
+}
+.trust .ring {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--good);
+  box-shadow: 0 0 0 3px var(--good-soft); margin-top: 5px; flex-shrink: 0;
+}
+.trust .ring.off { background: var(--faint); box-shadow: 0 0 0 3px var(--panel); }
+.trust b { display: block; font-size: 12px; font-weight: 600; letter-spacing: -0.01em; }
+.trust p { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+
+.status { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--muted); }
+.status .ring { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); }
+
+.sync {
+  width: 100%; padding: 10px; background: var(--ink); color: var(--bg);
+  font-size: 12.5px; font-weight: 600; letter-spacing: 0.005em;
+  border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: transform 0.14s var(--spring), opacity 0.14s var(--ease);
+}
+.sync:hover { transform: translateY(-1px); }
+.sync:active { transform: translateY(0) scale(0.99); }
+.sync:disabled { opacity: 0.6; cursor: default; transform: none; }
+.sync .spin { width: 13px; height: 13px; animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Main + topbar ---------- */
+.main { flex: 1; overflow-y: auto; position: relative; }
+
+.topbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 20px 0 26px; height: 52px;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border-bottom: 1px solid var(--line);
+  font-size: 12.5px; color: var(--muted);
+  position: sticky; top: 0; z-index: 30;
+}
+.topbar .note { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.topbar .note span.txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.topbar .spacer { margin-left: auto; }
+.topbar-tools { display: flex; align-items: center; gap: 8px; }
+
+.demo-pill {
+  font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  color: var(--pop); background: var(--pop-soft); padding: 4px 8px; border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.iconbtn {
+  width: 32px; height: 32px; border-radius: var(--r-sm); border: 1px solid transparent;
+  display: inline-flex; align-items: center; justify-content: center; color: var(--muted);
+  transition: background 0.14s var(--ease), color 0.14s var(--ease), border-color 0.14s var(--ease);
+}
+.iconbtn:hover { background: var(--panel); color: var(--ink); border-color: var(--line-2); }
+.iconbtn .ic { width: 16px; height: 16px; }
+
+.kbd-open {
+  display: inline-flex; align-items: center; gap: 9px; height: 32px; padding: 0 10px 0 11px;
+  border: 1px solid var(--line-2); border-radius: var(--r-sm); background: var(--card);
+  color: var(--faint); font-size: 12.5px;
+  transition: border-color 0.14s var(--ease), color 0.14s var(--ease);
+}
+.kbd-open:hover { border-color: var(--faint); color: var(--muted); }
+.kbd-open .ic { width: 14px; height: 14px; }
+kbd {
+  font-family: var(--mono); font-size: 10.5px; line-height: 1; padding: 4px 5px;
+  border: 1px solid var(--line-2); border-bottom-width: 2px; border-radius: 5px;
+  background: var(--panel); color: var(--muted);
+}
+
+/* ---------- Page furniture ---------- */
+.wrap { max-width: 1180px; padding: 34px 34px 72px; }
+.view { animation: viewIn 0.34s var(--ease); }
+@keyframes viewIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.head { margin-bottom: 26px; max-width: 720px; }
+.eyebrow {
+  font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--pop); margin-bottom: 10px;
+}
+.head h2 {
+  font-family: var(--display); font-size: 34px; font-weight: 600;
+  letter-spacing: -0.02em; line-height: 1.1;
+  font-variation-settings: 'wght' 600, 'SOFT' 0, 'WONK' 0, 'opsz' 40;
+}
+.head p { color: var(--muted); margin-top: 9px; font-size: 13.5px; line-height: 1.55; }
+
+.muted { color: var(--muted); }
+.faint { color: var(--faint); }
+.sm { font-size: 12px; }
+.xs { font-size: 11.5px; }
+.row { display: flex; }
+.between { justify-content: space-between; align-items: flex-start; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+hr { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
+.rule-strong { border-top: 1px solid var(--line-2); }
+
+.sec-title {
+  font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--faint); margin-bottom: 13px;
+}
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-sm); }
+
+/* ---------- Dashboard ---------- */
+.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; margin-bottom: 16px; }
+.tile {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+  box-shadow: var(--shadow-sm); padding: 16px 17px 15px; text-align: left; width: 100%;
+  transition: box-shadow 0.2s var(--ease), transform 0.2s var(--spring), border-color 0.2s var(--ease);
+}
+.tile:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--line-2); }
+.tile .k {
+  font-size: 11.5px; font-weight: 600; letter-spacing: 0.03em; color: var(--muted);
+  display: flex; align-items: center; gap: 7px;
+}
+.tile .k .ic { width: 14px; height: 14px; opacity: 0.55; }
+.tile .n {
+  font-family: var(--mono); font-size: 36px; font-weight: 600; letter-spacing: -0.045em;
+  margin-top: 12px; line-height: 1; font-variant-numeric: tabular-nums;
+}
+.tile .n.pop { color: var(--pop); }
+.tile .cap { font-size: 11.5px; color: var(--faint); margin-top: 7px; }
+
+.dash-cols { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; align-items: start; }
+
+.panel {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+  box-shadow: var(--shadow-sm); overflow: hidden;
+}
+.panel + .panel { margin-top: 16px; }
+.panel-h {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 17px; border-bottom: 1px solid var(--line);
+}
+.panel-h h3 { font-size: 13px; font-weight: 650; letter-spacing: -0.005em; }
+.panel-h .more {
+  font-size: 12px; color: var(--pop); cursor: pointer; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+}
+.panel-h .more .ic { width: 13px; height: 13px; }
+.panel-h .more:hover { text-decoration: underline; }
+
+.lrow {
+  display: flex; align-items: flex-start; gap: 12px; width: 100%; text-align: left;
+  padding: 13px 17px; border-bottom: 1px solid var(--line); cursor: pointer;
+  transition: background 0.14s var(--ease);
+}
+.lrow:last-child { border-bottom: none; }
+.lrow:hover { background: var(--bg-tint); }
+.lrow .av {
+  width: 32px; height: 32px; border-radius: 10px; background: var(--panel);
+  border: 1px solid var(--line-2); display: flex; align-items: center; justify-content: center;
+  font-size: 11.5px; font-weight: 700; color: var(--ink-2); flex-shrink: 0; letter-spacing: -0.01em;
+}
+.lrow .lr-body { flex: 1; min-width: 0; }
+.lrow .lr-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.lrow .lr-name { font-weight: 650; font-size: 13px; }
+.lrow .lr-when { font-family: var(--mono); font-size: 10.5px; color: var(--faint); white-space: nowrap; }
+.lrow .lr-prev { display: block; font-size: 12.5px; color: var(--muted); margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lrow .lr-meta { margin-top: 8px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.empty-row { padding: 22px 18px; color: var(--faint); font-size: 12.5px; }
+
+/* ---------- Tags ---------- */
+.tag {
+  display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 600;
+  letter-spacing: 0.01em; padding: 3px 8px; border-radius: 6px;
+  border: 1px solid var(--line-2); color: var(--muted); white-space: nowrap; background: var(--card);
+}
+.tag.solid { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tag.pop { background: var(--pop-soft); color: var(--pop-ink); border-color: transparent; }
+.tag.flag { background: var(--warn-soft); color: var(--warn); border-color: var(--warn-line); }
+.tag.good { background: var(--good-soft); color: var(--good); border-color: var(--good-line); }
+.tag .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+/* ---------- Pulse graph (signature) ----------
+   Their messages tick above the line, yours below.
+   The unanswered stretch at the end glows. */
+.pulse { display: block; width: 100%; overflow: visible; }
+.pulse .axis { stroke: var(--line-2); stroke-width: 1; }
+.pulse .tick-them { stroke: var(--ink-2); stroke-width: 2; stroke-linecap: round; }
+.pulse .tick-me { stroke: var(--faint); stroke-width: 2; stroke-linecap: round; }
+.pulse .gap { stroke: var(--pop); stroke-width: 1.5; stroke-linecap: round; stroke-dasharray: 2 4; opacity: 0.85; }
+.pulse .gap-glow { fill: url(#pulseFade); }
+.pulse .now { fill: var(--pop); }
+.pulse .now-halo { fill: var(--pop); opacity: 0.16; animation: halo 2.4s var(--ease) infinite; transform-origin: center; }
+@keyframes halo { 0%, 100% { opacity: 0.1; r: 5; } 50% { opacity: 0.22; r: 8; } }
+.pulse-legend {
+  display: flex; gap: 14px; font-family: var(--mono); font-size: 10px;
+  color: var(--faint); letter-spacing: 0.04em; text-transform: uppercase; margin-top: 6px;
+}
+.pulse-legend span { display: inline-flex; align-items: center; gap: 5px; }
+.pulse-legend i { width: 8px; height: 2px; border-radius: 2px; background: currentColor; display: inline-block; }
+.pulse-mini { width: 100%; height: 22px; margin-top: 9px; opacity: 0.9; }
+
+/* ---------- Inbox ---------- */
+.inbox { display: grid; grid-template-columns: 348px 1fr; height: 100vh; }
+.threads { border-right: 1px solid var(--line); overflow-y: auto; background: var(--bg-tint); }
+.threads-head {
+  padding: 18px 18px 14px; position: sticky; top: 0; z-index: 2;
+  background: color-mix(in srgb, var(--bg-tint) 88%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.threads-head h3 { font-family: var(--display); font-size: 22px; font-weight: 600; letter-spacing: -0.02em; font-variation-settings: 'wght' 600, 'SOFT' 0, 'WONK' 0, 'opsz' 28; }
+
+.search { position: relative; margin-top: 13px; }
+.search .ic { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--faint); pointer-events: none; }
+.search input {
+  width: 100%; padding: 9px 32px 9px 32px; border: 1px solid var(--line-2);
+  border-radius: var(--r-sm); background: var(--card); font-size: 13px; outline: none;
+  transition: border-color 0.14s var(--ease), box-shadow 0.14s var(--ease);
+}
+.search input::placeholder { color: var(--faint); }
+.search input:focus { border-color: var(--pop); box-shadow: 0 0 0 3px var(--pop-ring); }
+.search .clear { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; border-radius: 6px; color: var(--faint); display: none; align-items: center; justify-content: center; }
+.search.has-value .clear { display: flex; }
+.search .clear:hover { background: var(--panel); color: var(--ink); }
+
+.filters { display: flex; gap: 6px; margin-top: 11px; flex-wrap: wrap; }
+.chip {
+  font-size: 11.5px; font-weight: 600; padding: 5px 11px; border: 1px solid var(--line-2);
+  background: var(--card); border-radius: 100px; color: var(--muted);
+  transition: all 0.14s var(--ease); display: inline-flex; align-items: center; gap: 6px;
+}
+.chip:hover { border-color: var(--faint); color: var(--ink); }
+.chip.on { border-color: var(--ink); color: var(--bg); background: var(--ink); }
+.chip .n { font-family: var(--mono); font-size: 10.5px; opacity: 0.7; }
+
+.thread {
+  display: block; width: 100%; text-align: left;
+  padding: 14px 18px; border-bottom: 1px solid var(--line); cursor: pointer;
+  border-left: 2px solid transparent; transition: background 0.14s var(--ease);
+}
+.thread:hover { background: var(--panel); }
+.thread.active { border-left-color: var(--pop); background: var(--card); }
+.thread .t-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.thread .name { font-weight: 650; font-size: 13.5px; letter-spacing: -0.01em; }
+.thread .when { font-family: var(--mono); font-size: 10.5px; color: var(--faint); white-space: nowrap; }
+.thread .prev { display: block; font-size: 12.5px; color: var(--muted); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.thread .t-meta { display: flex; gap: 6px; margin-top: 9px; flex-wrap: wrap; align-items: center; }
+.thread mark { background: var(--pop-soft); color: var(--pop-ink); border-radius: 3px; padding: 0 1px; }
+
+.threads-empty { padding: 40px 22px; text-align: center; color: var(--faint); font-size: 12.5px; }
+
+.detail { overflow-y: auto; padding: 28px 34px 56px; }
+.detail-inner { max-width: 720px; }
+.d-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.d-head h2 { font-family: var(--display); font-size: 27px; font-weight: 600; letter-spacing: -0.02em; font-variation-settings: 'wght' 600, 'SOFT' 0, 'WONK' 0, 'opsz' 32; }
+.d-pulse { margin: 20px 0 4px; padding: 15px 16px 12px; border: 1px solid var(--line); border-radius: var(--r); background: var(--card); }
+.d-pulse .ph { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.d-pulse .ph b { font-size: 12px; font-weight: 650; }
+.d-pulse .ph span { font-family: var(--mono); font-size: 11px; color: var(--pop); }
+
+.convo { display: flex; flex-direction: column; gap: 10px; margin: 22px 0; max-height: 320px; overflow-y: auto; padding-right: 8px; }
+.msg { max-width: 78%; animation: msgIn 0.3s var(--ease) backwards; }
+.msg.me { align-self: flex-end; }
+.msg.them { align-self: flex-start; }
+@keyframes msgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.bubble { padding: 10px 14px; font-size: 13.5px; line-height: 1.5; border-radius: 16px; }
+.me .bubble { background: var(--ink); color: var(--bg); border-bottom-right-radius: 5px; }
+.them .bubble { background: var(--panel); border: 1px solid var(--line-2); border-bottom-left-radius: 5px; }
+.msg .time { font-family: var(--mono); font-size: 9.5px; color: var(--faint); margin-top: 4px; }
+.me .time { text-align: right; }
+.silence {
+  align-self: center; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--faint); display: flex; align-items: center; gap: 9px;
+  width: 100%; justify-content: center; margin: 2px 0;
+}
+.silence::before, .silence::after { content: ''; height: 1px; flex: 1; background: var(--line); max-width: 90px; }
+
+/* ---------- Draft composer ---------- */
+.composer { margin-top: 4px; }
+.reason {
+  font-size: 12.5px; color: var(--muted); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 9px; flex-wrap: wrap; line-height: 1.5;
+}
+.draft-card {
+  background: var(--card); border: 1px solid var(--line-2); border-radius: var(--r);
+  box-shadow: var(--shadow-sm); padding: 16px 16px 12px;
+  transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+.draft-card:focus-within { border-color: var(--pop); box-shadow: 0 0 0 4px var(--pop-ring); }
+.draft-card textarea {
+  width: 100%; border: none; outline: none; resize: none; min-height: 84px;
+  font-size: 15.5px; line-height: 1.6; color: var(--ink); background: none; letter-spacing: -0.005em;
+}
+.draft-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line);
+  font-family: var(--mono); font-size: 10.5px; color: var(--faint); letter-spacing: 0.03em;
+}
+.draft-card.writing textarea { color: var(--ink-2); }
+.caret { display: inline-block; width: 2px; height: 1em; background: var(--pop); vertical-align: -2px; animation: blink 1s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Tone dial */
+.tone-dial { margin: 18px 0 4px; }
+.tone-dial-label, .rw-label {
+  font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--faint); display: block; margin-bottom: 9px;
+}
+.rw-label { margin: 20px 0 9px; }
+.tone-seg-group {
+  display: inline-flex; border: 1px solid var(--line-2); border-radius: 100px;
+  padding: 3px; background: var(--panel); gap: 2px; position: relative;
+}
+.tone-seg {
+  font-size: 12px; font-weight: 600; padding: 7px 16px; color: var(--muted);
+  border-radius: 100px; transition: color 0.16s var(--ease); position: relative; z-index: 1;
+}
+.tone-seg:hover { color: var(--ink); }
+.tone-seg.on { color: var(--ink); }
+.tone-thumb {
+  position: absolute; top: 3px; bottom: 3px; border-radius: 100px; background: var(--card);
+  box-shadow: var(--shadow-sm); transition: transform 0.32s var(--spring), width 0.32s var(--spring);
+  z-index: 0; pointer-events: none; opacity: 0;
+}
+.tone-thumb.shown { opacity: 1; }
+.tone-caption { font-size: 12px; color: var(--faint); margin-top: 10px; max-width: 480px; line-height: 1.5; }
+
+.rewrites { display: flex; flex-wrap: wrap; gap: 6px; }
+.rw {
+  font-size: 12px; padding: 6px 12px; border: 1px solid var(--line-2); background: var(--card);
+  border-radius: 100px; color: var(--muted); transition: all 0.14s var(--ease);
+}
+.rw:hover { border-color: var(--pop); color: var(--pop); background: var(--pop-soft); transform: translateY(-1px); }
+.rw:active { transform: translateY(0); }
+.rw.used { border-color: var(--pop); color: var(--pop); }
+
+.actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 22px; }
+.btn {
+  font-size: 12.5px; font-weight: 600; padding: 10px 15px; border-radius: var(--r-sm);
+  border: 1px solid var(--line-2); background: var(--card); color: var(--ink);
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: all 0.14s var(--ease);
+}
+.btn .ic { width: 14px; height: 14px; }
+.btn:hover { background: var(--panel); border-color: var(--faint); }
+.btn:active { transform: scale(0.985); }
+.btn.primary { background: var(--pop); border-color: var(--pop); color: #fff; }
+.btn.primary:hover { background: var(--pop-ink); border-color: var(--pop-ink); }
+.btn.solid { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.btn.solid:hover { background: var(--ink-2); border-color: var(--ink-2); }
+.btn.ghost { border-color: transparent; background: none; color: var(--muted); }
+.btn.ghost:hover { background: var(--panel); color: var(--ink); }
+.btn.done { background: var(--good-soft); border-color: var(--good-line); color: var(--good); }
+
+.flags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+.notice {
+  background: var(--warn-soft); border: 1px solid var(--warn-line); border-radius: var(--r-sm);
+  padding: 12px 14px; font-size: 12.5px; color: var(--warn); margin-top: 14px; line-height: 1.55;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.notice .ic { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; }
+.notice b { color: var(--warn); font-weight: 700; }
+
+/* ---------- Follow-ups ---------- */
+.fu { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 17px; border-bottom: 1px solid var(--line); }
+.fu:last-child { border-bottom: none; }
+.fu.leaving { animation: fuOut 0.3s var(--ease) forwards; }
+@keyframes fuOut { to { opacity: 0; transform: translateX(14px); } }
+.fu .task { font-weight: 600; font-size: 13.5px; letter-spacing: -0.005em; }
+.fu .fu-meta { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; align-items: center; }
+.dir {
+  font-family: var(--mono); font-size: 9.5px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 3px 7px; border-radius: 5px;
+  background: var(--panel); border: 1px solid var(--line-2); color: var(--ink-2);
+}
+.conf { font-family: var(--mono); font-size: 10px; color: var(--faint); }
+.due { font-family: var(--mono); font-size: 11px; color: var(--pop); }
+.empty { color: var(--faint); padding: 56px 0; text-align: center; font-size: 13px; }
+.empty b { display: block; color: var(--ink); font-size: 15px; font-weight: 650; margin-bottom: 6px; }
+
+/* ---------- Analytics ---------- */
+.acard { padding: 19px 20px; margin-bottom: 13px; }
+.acard .a-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; }
+.a-name { font-size: 15px; font-weight: 700; letter-spacing: -0.015em; }
+.a-meta { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
+.stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--line); }
+.stat .k { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+.stat .v { font-weight: 650; font-size: 14px; margin-top: 5px; letter-spacing: -0.01em; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); padding: 0 14px 12px 0; }
+td { padding: 12px 14px 12px 0; border-top: 1px solid var(--line); }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+.usebar { display: flex; height: 10px; border-radius: 100px; overflow: hidden; background: var(--panel); margin-bottom: 14px; }
+.usebar span { display: block; height: 100%; transition: width 0.5s var(--ease); }
+.uselegend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 20px; font-size: 11.5px; color: var(--muted); }
+.uselegend i { width: 8px; height: 8px; border-radius: 3px; display: inline-block; margin-right: 6px; }
+
+/* ---------- Settings ---------- */
+.ssection { margin-bottom: 28px; }
+.srow { display: flex; align-items: center; justify-content: space-between; padding: 15px 17px; border-bottom: 1px solid var(--line); gap: 24px; }
+.srow:last-child { border-bottom: none; }
+.srow .s-label { font-weight: 650; font-size: 13.5px; letter-spacing: -0.005em; }
+.srow .s-desc { font-size: 12px; color: var(--muted); margin-top: 3px; max-width: 460px; line-height: 1.5; }
+.sinput {
+  border: 1px solid var(--line-2); border-radius: var(--r-sm); padding: 9px 12px;
+  font-size: 13px; width: 280px; outline: none; background: var(--card);
+  transition: border-color 0.14s var(--ease), box-shadow 0.14s var(--ease);
+}
+.sinput:focus { border-color: var(--pop); box-shadow: 0 0 0 3px var(--pop-ring); }
+
+.tog {
+  width: 44px; height: 26px; border: 1px solid var(--line-2); background: var(--panel);
+  border-radius: 100px; position: relative; flex-shrink: 0;
+  transition: background 0.22s var(--ease), border-color 0.22s var(--ease);
+}
+.tog::after {
+  content: ''; position: absolute; width: 20px; height: 20px; background: #fff;
+  box-shadow: var(--shadow-sm); border-radius: 50%; top: 2px; left: 2px;
+  transition: transform 0.28s var(--spring);
+}
+.tog.on { background: var(--pop); border-color: var(--pop); }
+.tog.on::after { transform: translateX(18px); }
+
+/* ---------- Toasts ---------- */
+.toasts { position: fixed; bottom: 22px; right: 22px; display: flex; flex-direction: column; gap: 8px; z-index: 200; align-items: flex-end; }
+.toast {
+  background: var(--raised); color: var(--ink); border: 1px solid var(--line-2);
+  padding: 11px 15px; border-radius: var(--r-sm); font-size: 12.5px; font-weight: 550;
+  box-shadow: var(--shadow-lg); animation: toastIn 0.28s var(--spring);
+  display: flex; align-items: center; gap: 9px; max-width: 340px;
+}
+.toast .ic { width: 15px; height: 15px; color: var(--good); flex-shrink: 0; }
+.toast.leaving { animation: toastOut 0.22s var(--ease) forwards; }
+.toast-error { border-color: var(--warn-line); }
+.toast-error .ic { color: var(--danger); }
+@keyframes toastIn { from { transform: translateY(10px) scale(0.97); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes toastOut { to { transform: translateY(6px); opacity: 0; } }
+
+/* ---------- Command palette ---------- */
+.scrim {
+  position: fixed; inset: 0; z-index: 300; background: rgba(12, 12, 20, 0.4);
+  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  display: flex; align-items: flex-start; justify-content: center; padding: 12vh 20px 20px;
+  animation: fade 0.16s var(--ease);
+}
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+.palette {
+  width: 100%; max-width: 560px; background: var(--raised); border: 1px solid var(--line-2);
+  border-radius: 16px; box-shadow: var(--shadow-lg); overflow: hidden;
+  animation: paletteIn 0.24s var(--spring);
+}
+@keyframes paletteIn { from { transform: translateY(-10px) scale(0.98); opacity: 0; } to { transform: none; opacity: 1; } }
+.palette-in { display: flex; align-items: center; gap: 11px; padding: 15px 17px; border-bottom: 1px solid var(--line); }
+.palette-in .ic { width: 16px; height: 16px; color: var(--faint); flex-shrink: 0; }
+.palette-in input { flex: 1; border: none; outline: none; background: none; font-size: 15px; letter-spacing: -0.01em; }
+.palette-in input::placeholder { color: var(--faint); }
+.palette-list { max-height: 340px; overflow-y: auto; padding: 6px; }
+.palette-group { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); padding: 10px 11px 6px; }
+.pitem {
+  display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
+  padding: 9px 11px; border-radius: var(--r-sm); font-size: 13.5px; color: var(--ink-2);
+}
+.pitem .ic { width: 15px; height: 15px; opacity: 0.6; flex-shrink: 0; }
+.pitem .hint { margin-left: auto; font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
+.pitem.sel { background: var(--pop-soft); color: var(--pop-ink); }
+.pitem.sel .ic { opacity: 1; color: var(--pop); }
+.pitem.sel .hint { color: var(--pop); }
+.palette-foot {
+  display: flex; gap: 16px; padding: 10px 17px; border-top: 1px solid var(--line);
+  font-size: 11px; color: var(--faint); background: var(--card);
+}
+.palette-foot span { display: inline-flex; align-items: center; gap: 6px; }
+.palette-empty { padding: 30px; text-align: center; color: var(--faint); font-size: 13px; }
+
+/* Shortcut sheet */
+.sheet {
+  width: 100%; max-width: 520px; background: var(--raised); border: 1px solid var(--line-2);
+  border-radius: 16px; box-shadow: var(--shadow-lg); padding: 24px 26px 22px;
+  animation: paletteIn 0.24s var(--spring);
+}
+.sheet h3 { font-family: var(--display); font-size: 21px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 4px; }
+.sheet p { font-size: 12.5px; color: var(--muted); margin-bottom: 18px; }
+.keys { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 26px; }
+.keys div { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12.5px; color: var(--ink-2); padding: 5px 0; border-bottom: 1px solid var(--line); }
+
+/* ---------- Skeletons ---------- */
+.skel { background: linear-gradient(90deg, var(--panel) 25%, var(--line) 37%, var(--panel) 63%); background-size: 400% 100%; animation: shimmer 1.3s linear infinite; border-radius: 6px; }
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
+.loading { color: var(--faint); padding: 44px; text-align: center; font-size: 13px; }
+
+/* ---------- Scrollbars ---------- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 6px; border: 3px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--faint); background-clip: content-box; }
+
+/* ---------- Mobile ---------- */
+.mobile-nav { display: none; }
+.mobile-back { display: none; }
+
+@media (max-width: 860px) {
+  .stat-row { grid-template-columns: repeat(2, 1fr); }
+  .dash-cols { grid-template-columns: 1fr; }
+  .inbox { grid-template-columns: 300px 1fr; }
+}
+
+@media (max-width: 760px) {
+  .app { flex-direction: column; height: auto; min-height: 100vh; overflow: visible; }
+  .side { display: none; }
+  .main { height: auto; min-height: 100vh; padding-bottom: 78px; }
+  .topbar { padding: 0 14px; height: 48px; gap: 8px; }
+  .topbar .note span.txt { display: none; }
+  .kbd-open { display: none; }
+  .wrap { max-width: 100%; padding: 22px 16px 40px; }
+  .head { margin-bottom: 20px; }
+  .head h2 { font-size: 27px; }
+  .stat-row { gap: 10px; margin-bottom: 12px; }
+  .tile { padding: 14px; }
+  .tile .n { font-size: 29px; margin-top: 8px; }
+
+  .inbox { grid-template-columns: 1fr; height: auto; }
+  .threads { border-right: none; }
+  .threads-head { position: sticky; }
+  .detail { padding: 16px 16px 40px; }
+  .inbox.show-list .detail { display: none; }
+  .inbox.show-detail .threads { display: none; }
+  .mobile-back { display: inline-flex; align-items: center; gap: 5px; margin-bottom: 14px; padding: 7px 12px; }
+  .convo { max-height: none; }
+  .d-head { flex-wrap: wrap; gap: 10px; }
+  .d-head h2 { font-size: 22px; }
+  .actions .btn { flex: 1 1 calc(50% - 8px); justify-content: center; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .keys { grid-template-columns: 1fr; }
+  .scrim { padding: 6vh 12px 12px; }
+  .toasts { left: 14px; right: 14px; bottom: 84px; align-items: stretch; }
+  .toast { max-width: none; }
+
+  .mobile-nav {
+    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(18px) saturate(1.5); -webkit-backdrop-filter: blur(18px) saturate(1.5);
+    border-top: 1px solid var(--line);
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; }
-  body {
-    background: var(--bg); color: var(--ink); font-family: var(--font);
-    font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+  .mobile-nav button {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    padding: 5px 2px; font-size: 10px; font-weight: 600; color: var(--faint);
+    transition: color 0.14s var(--ease);
   }
-  .app { display: flex; height: 100vh; overflow: hidden; }
-  ::selection { background: var(--pop); color: #fff; }
+  .mobile-nav button span { white-space: nowrap; }
+  .mobile-nav button .ic { width: 20px; height: 20px; opacity: 0.6; transition: transform 0.24s var(--spring); }
+  .mobile-nav button.active { color: var(--pop); }
+  .mobile-nav button.active .ic { opacity: 1; transform: translateY(-1px) scale(1.08); }
+}
 
-  /* Sidebar */
-  .side { width: 236px; min-width: 236px; background: var(--card); border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 22px 16px; }
-  .brand { display: flex; align-items: center; gap: 10px; padding: 6px 8px 24px; }
-  .brand .mark { width: 26px; height: 26px; border-radius: 8px; background: var(--ink); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .brand .mark span { width: 9px; height: 9px; border-radius: 50%; background: var(--pop); }
-  .brand h1 { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
-  .brand h1 b { font-weight: 800; }
-  .nav { display: flex; flex-direction: column; gap: 2px; }
-  .nav button {
-    display: flex; align-items: center; gap: 11px; width: 100%; padding: 9px 11px; border: none; background: none;
-    font-family: var(--font); font-size: 13px; font-weight: 550; color: var(--muted); cursor: pointer; text-align: left;
-    border-radius: var(--r-sm); transition: color .14s, background .14s; position: relative;
+@media (max-width: 400px) {
+  .stat-row { gap: 8px; }
+  .tile .n { font-size: 26px; }
+  .mobile-nav button { font-size: 9.5px; }
+}
+
+/* ---------- Motion preference ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
-  .nav button .ic { width: 17px; height: 17px; flex-shrink: 0; opacity: .65; }
-  .nav button:hover { color: var(--ink); background: var(--panel); }
-  .nav button.active { color: var(--ink); background: var(--pop-soft); font-weight: 650; }
-  .nav button.active .ic { opacity: 1; color: var(--pop); }
-  .side-foot { margin-top: auto; padding-top: 18px; }
-  .status { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--muted); margin-bottom: 12px; padding: 0 4px; }
-  .status .ring { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); box-shadow: 0 0 0 3px rgba(155,155,166,.18); }
-  .sync {
-    width: 100%; padding: 10px; border: none; background: var(--ink); color: #fff;
-    font-family: var(--font); font-size: 12px; font-weight: 650; letter-spacing: 0.01em;
-    cursor: pointer; border-radius: var(--r-sm); transition: transform .12s, background .14s;
-  }
-  .sync:hover { background: #1c1c24; transform: translateY(-1px); }
-  .sync:active { transform: translateY(0); }
-
-  /* Main */
-  .main { flex: 1; overflow-y: auto; }
-  .topbar { display: flex; align-items: center; gap: 10px; padding: 10px 28px; background: rgba(247,247,248,.85); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); font-size: 12px; color: var(--muted); position: sticky; top: 0; z-index: 20; }
-  .demo-pill { font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; color: var(--pop); background: var(--pop-soft); padding: 3px 9px; border-radius: 100px; }
-  .wrap { max-width: 1160px; padding: 36px 40px 60px; }
-  .head { margin-bottom: 28px; }
-  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: var(--pop); margin-bottom: 9px; }
-  .head h2 { font-size: 27px; font-weight: 800; letter-spacing: -0.025em; }
-  .head p { color: var(--muted); margin-top: 7px; font-size: 13.5px; }
-
-  .muted { color: var(--muted); } .faint { color: var(--faint); }
-  .sm { font-size: 12px; } .xs { font-size: 12px; }
-  .row { display: flex; } .between { justify-content: space-between; align-items: flex-start; }
-  hr { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
-  .rule-strong { border-top: 1px solid var(--line-2); }
-  .sec-title { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); margin-bottom: 13px; }
-
-  /* Cards */
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-sm); }
-
-  /* Dashboard */
-  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 16px; }
-  .tile { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-sm); padding: 18px 18px 16px; transition: box-shadow .16s, transform .16s; }
-  .tile:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
-  .tile .k { font-size: 12px; font-weight: 650; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 7px; }
-  .tile .k .ic { width: 15px; height: 15px; opacity: .55; }
-  .tile .n { font-size: 38px; font-weight: 800; letter-spacing: -0.04em; margin-top: 12px; line-height: 1; }
-  .tile .n.pop { color: var(--pop); }
-  .tile .cap { font-size: 12px; color: var(--faint); margin-top: 8px; }
-
-  .dash-cols { display: grid; grid-template-columns: 1.55fr 1fr; gap: 16px; align-items: start; }
-  .panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-sm); overflow: hidden; }
-  .panel + .panel { margin-top: 16px; }
-  .panel-h { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--line); }
-  .panel-h h3 { font-size: 13px; font-weight: 700; }
-  .panel-h .more { font-size: 12px; color: var(--pop); cursor: pointer; font-weight: 600; }
-  .lrow { display: flex; align-items: flex-start; gap: 12px; padding: 13px 18px; border-bottom: 1px solid var(--line); cursor: pointer; transition: background .12s; }
-  .lrow:last-child { border-bottom: none; }
-  .lrow:hover { background: var(--panel); }
-  .lrow .av { width: 30px; height: 30px; border-radius: 9px; background: var(--panel); border: 1px solid var(--line-2); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--ink-2); flex-shrink: 0; }
-  .lrow .lr-body { flex: 1; min-width: 0; }
-  .lrow .lr-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-  .lrow .lr-name { font-weight: 650; font-size: 13px; }
-  .lrow .lr-when { font-size: 10.5px; color: var(--faint); white-space: nowrap; }
-  .lrow .lr-prev { font-size: 12px; color: var(--muted); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .lrow .lr-meta { margin-top: 7px; display: flex; gap: 6px; }
-  .empty-row { padding: 22px 18px; color: var(--faint); font-size: 12.5px; }
-
-  /* Tags */
-  .tag { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 650; letter-spacing: 0.02em; padding: 3px 9px; border-radius: 100px; border: 1px solid var(--line-2); color: var(--muted); white-space: nowrap; }
-  .tag.solid { background: var(--ink); color: #fff; border-color: var(--ink); }
-  .tag.pop { background: var(--pop-soft); color: var(--pop-ink); border-color: transparent; }
-  .tag.flag { background: #fff4ec; color: #b5561a; border-color: #f6e0cf; }
-  .tag.good { background: #eafaf2; color: var(--good); border-color: #cfeedd; }
-
-  /* Inbox */
-  .inbox { display: grid; grid-template-columns: 340px 1fr; height: calc(100vh - 41px); }
-  .threads { border-right: 1px solid var(--line); overflow-y: auto; background: var(--card); }
-  .threads-head { padding: 22px 22px 14px; position: sticky; top: 0; background: var(--card); z-index: 2; border-bottom: 1px solid var(--line); }
-  .threads-head h3 { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
-  .filters { display: flex; gap: 7px; margin-top: 14px; flex-wrap: wrap; }
-  .chip { font-size: 11.5px; font-weight: 600; padding: 6px 12px; border: 1px solid var(--line-2); background: var(--card); border-radius: 100px; cursor: pointer; color: var(--muted); font-family: var(--font); transition: all .12s; }
-  .chip:hover { border-color: var(--faint); color: var(--ink); }
-  .chip.on { border-color: var(--ink); color: var(--ink); background: var(--panel); font-weight: 650; }
-  .thread { padding: 15px 22px; border-bottom: 1px solid var(--line); cursor: pointer; border-left: 2px solid transparent; transition: background .12s; }
-  .thread:hover { background: var(--panel); }
-  .thread.active { border-left: 2px solid var(--pop); background: var(--pop-soft); }
-  .thread .t-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-  .thread .name { font-weight: 700; font-size: 13.5px; }
-  .thread .when { font-size: 10.5px; color: var(--faint); white-space: nowrap; }
-  .thread .prev { font-size: 12.5px; color: var(--muted); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .thread .t-meta { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
-
-  .detail { overflow-y: auto; padding: 30px 38px; }
-  .d-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 8px; }
-  .d-head h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
-  .convo { display: flex; flex-direction: column; gap: 8px; margin: 22px 0; max-height: 300px; overflow-y: auto; padding-right: 6px; }
-  .msg { max-width: 76%; }
-  .msg.me { align-self: flex-end; } .msg.them { align-self: flex-start; }
-  .bubble { padding: 10px 14px; font-size: 13.5px; line-height: 1.45; border-radius: 16px; }
-  .me .bubble { background: var(--ink); color: #fff; border-bottom-right-radius: 5px; }
-  .them .bubble { background: var(--card); border: 1px solid var(--line-2); border-bottom-left-radius: 5px; }
-  .msg .time { font-size: 9.5px; color: var(--faint); margin-top: 4px; }
-  .me .time { text-align: right; }
-
-  .draft-card { background: var(--card); border: 1px solid var(--line-2); border-radius: var(--r); box-shadow: var(--shadow-sm); padding: 18px; animation: fadeSwap .28s ease; }
-  .draft-card textarea { width: 100%; border: none; outline: none; resize: vertical; min-height: 76px; font-family: var(--font); font-size: 15px; line-height: 1.6; color: var(--ink); background: none; }
-  @keyframes fadeSwap { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
-  .reason { font-size: 12.5px; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 9px; }
-
-  /* Tone dial */
-  .tone-dial { margin: 16px 0 4px; }
-  .tone-dial-label { font-size: 10.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--faint); margin-bottom: 8px; display: block; }
-  .tone-seg-group { display: inline-flex; border: 1px solid var(--line-2); border-radius: 100px; padding: 3px; background: var(--panel); gap: 2px; }
-  .tone-seg {
-    font-family: var(--font); font-size: 12px; font-weight: 650; padding: 7px 14px; border: none; background: transparent;
-    color: var(--muted); border-radius: 100px; cursor: pointer; transition: background .14s, color .14s, box-shadow .14s;
-  }
-  .tone-seg:hover { color: var(--ink); }
-  .tone-seg.on { background: var(--card); color: var(--ink); box-shadow: var(--shadow-sm); }
-  .tone-seg:focus-visible { outline: 2px solid var(--pop); outline-offset: 2px; }
-  .tone-caption { font-size: 12px; color: var(--faint); margin-top: 10px; font-style: italic; max-width: 480px; line-height: 1.5; }
-  .rw-label { font-size: 10.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--faint); margin: 20px 0 9px; }
-  .rewrites { display: flex; flex-wrap: wrap; gap: 7px; }
-  .rw { font-size: 12px; padding: 6px 12px; border: 1px solid var(--line-2); background: var(--card); border-radius: 100px; cursor: pointer; color: var(--muted); font-family: var(--font); transition: all .12s; }
-  .rw:hover { border-color: var(--pop); color: var(--pop); background: var(--pop-soft); }
-  .actions { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 22px; }
-  .btn { font-family: var(--font); font-size: 12.5px; font-weight: 650; padding: 10px 16px; border-radius: var(--r-sm); cursor: pointer; border: 1px solid var(--line-2); background: var(--card); color: var(--ink); transition: all .12s; }
-  .btn:hover { background: var(--panel); border-color: var(--faint); }
-  .btn.primary { background: var(--pop); border-color: var(--pop); color: #fff; }
-  .btn.primary:hover { background: var(--pop-ink); }
-  .btn.solid { background: var(--ink); color: #fff; border-color: var(--ink); }
-  .btn.solid:hover { background: #1c1c24; }
-  .flags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
-  .notice { background: #fff8f1; border: 1px solid #f6e0cf; border-radius: var(--r-sm); padding: 12px 14px; font-size: 12.5px; color: #8a481c; margin-top: 14px; }
-  .notice b { color: #6f3a16; }
-
-  /* Follow-ups */
-  .fu { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 15px 18px; border-bottom: 1px solid var(--line); }
-  .fu:last-child { border-bottom: none; }
-  .fu .task { font-weight: 600; font-size: 13.5px; }
-  .fu .fu-meta { display: flex; gap: 11px; margin-top: 6px; flex-wrap: wrap; align-items: center; }
-  .dir { font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 8px; border-radius: 5px; background: var(--panel); border: 1px solid var(--line-2); color: var(--ink-2); }
-  .conf { font-size: 10.5px; color: var(--faint); font-style: italic; }
-  .empty { color: var(--faint); padding: 50px 0; text-align: center; font-size: 13px; }
-
-  /* Analytics */
-  .acard { padding: 20px; margin-bottom: 14px; }
-  .acard .a-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; }
-  .a-name { font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
-  .a-meta { display: flex; gap: 9px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
-  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
-  .stat .k { font-size: 10.5px; font-weight: 650; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); }
-  .stat .v { font-weight: 700; font-size: 14px; margin-top: 5px; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th { text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); padding: 0 14px 12px 0; }
-  td { padding: 13px 14px 13px 0; border-top: 1px solid var(--line); }
-
-  /* Settings */
-  .ssection { margin-bottom: 30px; }
-  .srow { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--line); gap: 24px; }
-  .srow:last-child { border-bottom: none; }
-  .srow .s-label { font-weight: 650; font-size: 13.5px; }
-  .srow .s-desc { font-size: 12px; color: var(--muted); margin-top: 3px; max-width: 460px; }
-  .sinput { border: 1px solid var(--line-2); border-radius: var(--r-sm); padding: 9px 12px; font-family: var(--font); font-size: 13px; width: 280px; outline: none; background: var(--card); transition: border-color .12s; }
-  .sinput:focus { border-color: var(--pop); box-shadow: 0 0 0 3px var(--pop-soft); }
-  .tog { width: 42px; height: 24px; border: 1px solid var(--line-2); background: var(--panel); border-radius: 100px; position: relative; cursor: pointer; flex-shrink: 0; transition: all .15s; }
-  .tog::after { content: ''; position: absolute; width: 18px; height: 18px; background: #fff; box-shadow: var(--shadow-sm); border-radius: 50%; top: 2px; left: 2px; transition: .15s; }
-  .tog.on { background: var(--pop); border-color: var(--pop); }
-  .tog.on::after { left: 21px; }
-
-  /* Toast */
-  .toasts { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 8px; z-index: 60; }
-  .toast { background: var(--ink); color: #fff; padding: 12px 18px; border-radius: var(--r-sm); font-size: 12.5px; font-weight: 600; box-shadow: var(--shadow-md); animation: pop .18s ease; }
-  @keyframes pop { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-  ::-webkit-scrollbar { width: 9px; height: 9px; }
-  ::-webkit-scrollbar-thumb { background: #dadadf; border-radius: 5px; border: 2px solid var(--bg); }
-  ::-webkit-scrollbar-thumb:hover { background: var(--faint); }
-
-  .mobile-nav { display: none; }
-  .mobile-back { display: none; }
-
-  @media (max-width: 760px) {
-    .app { flex-direction: column; height: auto; min-height: 100vh; overflow: visible; }
-    .side { display: none; }
-    .main { height: auto; min-height: 100vh; padding-bottom: 76px; }
-    .topbar { padding: 9px 16px; font-size: 12px; line-height: 1.4; }
-    .wrap { max-width: 100%; padding: 22px 16px 44px; }
-    .head { margin-bottom: 20px; }
-    .head h2 { font-size: 23px; }
-    .stat-row { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px; }
-    .tile { padding: 15px; }
-    .tile .n { font-size: 30px; margin-top: 8px; }
-    .dash-cols { grid-template-columns: 1fr; gap: 14px; }
-
-    /* Inbox becomes single column with list <-> detail */
-    .inbox { grid-template-columns: 1fr; height: auto; }
-    .threads { border-right: none; }
-    .threads-head { position: static; }
-    .detail { padding: 18px 16px 44px; }
-    .inbox.show-list .detail { display: none; }
-    .inbox.show-detail .threads { display: none; }
-    .mobile-back { display: inline-flex; align-items: center; gap: 5px; margin-bottom: 14px; padding: 7px 12px; }
-    .convo { max-height: none; }
-    .d-head { flex-wrap: wrap; gap: 10px; }
-    .d-head h2 { font-size: 20px; }
-    .actions { gap: 8px; }
-    .actions .btn { flex: 1 1 calc(50% - 8px); }
-    .stats { grid-template-columns: repeat(2, 1fr); }
-
-    /* Native-style bottom tab bar */
-    .mobile-nav {
-      display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
-      background: rgba(255,255,255,.92); backdrop-filter: blur(16px) saturate(1.3);
-      border-top: 1px solid var(--line);
-      padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
-    }
-    .mobile-nav button {
-      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
-      background: none; border: none; cursor: pointer; padding: 5px 2px;
-      font-family: var(--font); font-size: 9.5px; font-weight: 600; color: var(--faint);
-    }
-    .mobile-nav button span { white-space: nowrap; }
-    .mobile-nav button .ic { width: 21px; height: 21px; opacity: .55; }
-    .mobile-nav button.active { color: var(--pop); }
-    .mobile-nav button.active .ic { opacity: 1; }
-  }
-
-  @media (max-width: 400px) {
-    .stat-row { gap: 8px; }
-    .tile .n { font-size: 27px; }
-    .mobile-nav button { font-size: 12px; }
-  }
+}
+/* RG-STYLES-END */
 </style>
 </head>
 <body>
+
 <div class="app">
   <aside class="side">
     <div class="brand"><span class="mark"><span></span></span><h1>Reply<b>Graph</b></h1></div>
-    <nav class="nav" id="nav"></nav>
+    <nav class="nav" id="nav" aria-label="Sections"></nav>
     <div class="side-foot">
-      <div class="status"><span class="ring"></span> Demo mode — not connected</div>
-      <button class="sync" onclick="toast('Sync runs on your Mac in the real app')">Sync Messages</button>
+      <div class="trust">
+        <span class="ring"></span>
+        <div>
+          <b>Local &amp; read-only</b>
+          <p>Reads <span class="num">chat.db</span> on your Mac. Never writes, never sends.</p>
+        </div>
+      </div>
+      <button class="sync" id="syncBtn">Sync messages</button>
     </div>
   </aside>
-  <main class="main" id="main"></main>
+
+  <main class="main" id="main">
+    <div id="chrome"></div>
+    <div id="view"></div>
+  </main>
 </div>
-<nav class="mobile-nav" id="mnav"></nav>
-<div class="toasts" id="toasts"></div>
+
+<nav class="mobile-nav" id="mnav" aria-label="Sections"></nav>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+<div id="overlay"></div>
 
 <script>
-// ---------- Icons ----------
+/* ============================================================
+   Icons
+   ============================================================ */
+const S = (p, extra) => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"${extra || ''}>${p}</svg>`;
 const IC = {
-  dashboard:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>',
-  inbox:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
-  followups:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
-  analytics:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
-  exports:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
-  settings:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
-  bell:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
-  flag:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>',
-  clock:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
-  heart:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>',
+  dashboard: S('<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>'),
+  inbox: S('<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>'),
+  followups: S('<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>'),
+  analytics: S('<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 15l3.5-4 3 2.5L20 7"/>'),
+  exports: S('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>'),
+  settings: S('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>'),
+  bell: S('<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>'),
+  flag: S('<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>'),
+  clock: S('<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/>'),
+  heart: S('<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>'),
+  search: S('<circle cx="11" cy="11" r="7"/><line x1="20" y1="20" x2="16.65" y2="16.65"/>'),
+  copy: S('<rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
+  check: S('<polyline points="20 6 9 17 4 12"/>'),
+  x: S('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'),
+  alert: S('<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>'),
+  sun: S('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
+  moon: S('<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'),
+  refresh: S('<path d="M21 12a9 9 0 1 1-2.6-6.4"/><polyline points="21 3 21 9 15 9"/>'),
+  keyboard: S('<rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 13h.01M10 13h.01M14 13h.01M18 13h.01M8 16h8"/>'),
+  arrow: S('<line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>'),
+  wand: S('<path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8 19 13M17.8 6.2 19 5M3 21l9-9M12.2 6.2 11 5"/>'),
+  lock: S('<rect x="3" y="11" width="18" height="10" rx="2.5"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'),
 };
 
-// ---------- Sample data ----------
+/* ============================================================
+   Sample data — nothing here comes from a real conversation.
+   ============================================================ */
 const NOW = new Date('2026-06-28T18:30:00');
-function ago(mins){ return new Date(NOW.getTime() - mins*60000); }
-function tfmt(d){ return d.toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}); }
-function initials(n){ return n.replace(/\(.*\)/,'').trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+const MIN = 60000;
+const ago = m => new Date(NOW.getTime() - m * MIN);
+const tfmt = d => d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+const initials = n => n.replace(/\(.*\)/, '').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+
+function dur(mins) {
+  if (mins < 60) return Math.round(mins) + 'm';
+  if (mins < 60 * 36) return Math.round(mins / 60) + 'h';
+  return Math.round(mins / 1440) + 'd';
+}
+
+// Deterministic pseudo-random so the graphs look the same on every load.
+function seeded(seed) {
+  let s = seed * 9301 + 49297;
+  return () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+}
+
+// A fortnight of message timestamps behind each thread, used by the pulse graph.
+// `lastReply` is how long ago you last sent anything: after that point every
+// message in the thread is theirs, which is the gap the graph is drawing.
+function history(seed, density, msgs, lastReply) {
+  const rnd = seeded(seed);
+  const pts = [];
+  let mins = 20160; // 14 days
+  while (mins > 0) {
+    const burst = 1 + Math.floor(rnd() * 2);
+    for (let i = 0; i < burst; i++) {
+      const at = Math.max(0, mins - i * (20 + rnd() * 70));
+      pts.push({ me: at > lastReply && rnd() > 0.45, mins: at });
+    }
+    mins -= (600 + rnd() * 1900) / density;
+  }
+  if (lastReply < 20160) pts.push({ me: true, mins: lastReply });
+  msgs.forEach(m => pts.push({ me: m.me, mins: (NOW - m.at) / MIN }));
+  return pts.filter(p => p.mins > 0 && p.mins <= 20160).sort((a, b) => b.mins - a.mins);
+}
 
 const THREADS = [
-  { id:1, name:'Sarah Chen', priority:'urgent', urgency:'high', needs:true, tone:'tense', trend:'declining', conf:'high', risk:[],
-    last:'so are we still on for friday or not? you keep leaving me on read',
-    msgs:[
-      {me:false,t:'hey did you get my message about friday?',at:ago(2880)},
-      {me:false,t:'just need to know if dinner is happening',at:ago(1440)},
-      {me:false,t:'so are we still on for friday or not? you keep leaving me on read',at:ago(180)},
+  {
+    id: 1, name: 'Sarah Chen', priority: 'urgent', urgency: 'high', needs: true,
+    tone: 'tense', trend: 'declining', conf: 'high', risk: [],
+    last: 'so are we still on for friday or not? you keep leaving me on read',
+    msgs: [
+      { me: false, t: 'hey did you get my message about friday?', at: ago(2880) },
+      { me: false, t: 'just need to know if dinner is happening', at: ago(1440) },
+      { me: false, t: 'so are we still on for friday or not? you keep leaving me on read', at: ago(180) },
     ],
-    draft:{text:"you're right, sorry for the silence — friday works, 8pm at the usual place?",reason:'Repeated unanswered messages; some friction. Keep it short and own the delay once.',risk:[],conf:'medium'},
-    fu:[{task:'confirm friday dinner 8pm',dir:'user_owes_them',due:'friday',conf:'high'}] },
-  { id:2, name:'Dr. Patel office', priority:'risky_to_answer_fast', urgency:'high', needs:true, tone:'logistical', trend:'stable', conf:'medium', risk:['medical'],
-    last:'Please confirm your appointment and whether you want the lab results sent over.',
-    msgs:[
-      {me:false,t:'Reminder: follow-up appointment Tue 10:00am.',at:ago(4320)},
-      {me:false,t:'Please confirm your appointment and whether you want the lab results sent over.',at:ago(600)},
+    draft: {
+      text: "you're right, sorry for the silence — friday works, 8pm at the usual place?",
+      reason: 'Three messages in a row with no reply from you. Own the delay once, then answer the actual question.',
+      risk: [], conf: 'medium',
+    },
+    fu: [{ task: 'confirm friday dinner 8pm', dir: 'user_owes_them', due: 'friday', conf: 'high' }],
+  },
+  {
+    id: 2, name: 'Dr. Patel office', priority: 'risky_to_answer_fast', urgency: 'high', needs: true,
+    tone: 'logistical', trend: 'stable', conf: 'medium', risk: ['medical'],
+    last: 'Please confirm your appointment and whether you want the lab results sent over.',
+    msgs: [
+      { me: false, t: 'Reminder: follow-up appointment Tue 10:00am.', at: ago(4320) },
+      { me: false, t: 'Please confirm your appointment and whether you want the lab results sent over.', at: ago(600) },
     ],
-    draft:{text:"Hi — confirming Tuesday 10am works. Yes, please send the lab results. Thank you.",reason:'Medical topic flagged — review carefully before copying. Kept factual.',risk:['medical'],conf:'medium'},
-    fu:[{task:'confirm appt tue 10am',dir:'user_owes_them',due:'tuesday',conf:'high'},{task:'decide on lab results',dir:'unanswered_question',due:null,conf:'medium'}] },
-  { id:3, name:'Dad', priority:'emotional', urgency:'medium', needs:true, tone:'warm', trend:'stable', conf:'high', risk:[],
-    last:'miss you kiddo, call me when you get a chance ❤️',
-    msgs:[
-      {me:false,t:'how did the presentation go??',at:ago(2000)},
-      {me:true,t:'went well! tell you about it soon',at:ago(1900)},
-      {me:false,t:'miss you kiddo, call me when you get a chance ❤️',at:ago(300)},
+    draft: {
+      text: 'Hi — confirming Tuesday 10am works. Yes, please send the lab results. Thank you.',
+      reason: 'Medical topic. The draft stays factual and answers both questions without adding detail.',
+      risk: ['medical'], conf: 'medium',
+    },
+    fu: [
+      { task: 'confirm appt tue 10am', dir: 'user_owes_them', due: 'tuesday', conf: 'high' },
+      { task: 'decide on lab results', dir: 'unanswered_question', due: null, conf: 'medium' },
     ],
-    draft:{text:"miss you too — i'll call tonight after work, promise. love you",reason:'Warm family thread. Simple and caring; gives a concrete time.',risk:[],conf:'high'},
-    fu:[{task:'call dad tonight',dir:'user_owes_them',due:'tonight',conf:'high'}] },
-  { id:4, name:'Priya (work)', priority:'work_admin', urgency:'medium', needs:true, tone:'logistical', trend:'stable', conf:'medium', risk:['work_risk'],
-    last:'can you send the revised budget before the client call tomorrow?',
-    msgs:[
-      {me:false,t:'great work on the deck',at:ago(800)},
-      {me:false,t:'can you send the revised budget before the client call tomorrow?',at:ago(120)},
+  },
+  {
+    id: 3, name: 'Dad', priority: 'emotional', urgency: 'medium', needs: true,
+    tone: 'warm', trend: 'stable', conf: 'high', risk: [],
+    last: 'miss you kiddo, call me when you get a chance ❤️',
+    msgs: [
+      { me: false, t: 'how did the presentation go??', at: ago(2000) },
+      { me: true, t: 'went well! tell you about it soon', at: ago(1900) },
+      { me: false, t: 'miss you kiddo, call me when you get a chance ❤️', at: ago(300) },
     ],
-    draft:{text:"Will do — I'll have the revised budget to you by EOD today.",reason:'Work request with a deadline. Direct, commits to a clear time.',risk:['work_risk'],conf:'medium'},
-    fu:[{task:'send revised budget before client call',dir:'user_owes_them',due:'tomorrow',conf:'high'}] },
-  { id:5, name:'Jules', priority:'logistical', urgency:'medium', needs:true, tone:'playful', trend:'stable', conf:'medium', risk:[],
-    last:'are you free this weekend? thinking we could do that hike finally lol',
-    msgs:[
-      {me:false,t:'are you free this weekend? thinking we could do that hike finally lol',at:ago(420)},
+    draft: {
+      text: "miss you too — i'll call tonight after work, promise. love you",
+      reason: 'Warm family thread. Short, affectionate, and commits to a specific time.',
+      risk: [], conf: 'high',
+    },
+    fu: [{ task: 'call dad tonight', dir: 'user_owes_them', due: 'tonight', conf: 'high' }],
+  },
+  {
+    id: 4, name: 'Priya (work)', priority: 'work_admin', urgency: 'medium', needs: true,
+    tone: 'logistical', trend: 'stable', conf: 'medium', risk: ['work_risk'],
+    last: 'can you send the revised budget before the client call tomorrow?',
+    msgs: [
+      { me: false, t: 'great work on the deck', at: ago(800) },
+      { me: false, t: 'can you send the revised budget before the client call tomorrow?', at: ago(120) },
     ],
-    draft:{text:"haha yes let's actually do it — saturday morning? i can drive",reason:'Casual scheduling. Matches the light tone, proposes a concrete time.',risk:[],conf:'medium'},
-    fu:[{task:'plan weekend hike',dir:'scheduling_loop',due:'this weekend',conf:'medium'}] },
-  { id:6, name:'Alex', priority:'low_priority', urgency:'low', needs:false, tone:'neutral', trend:'stable', conf:'low', risk:[],
-    last:'sounds good, talk soon!',
-    msgs:[
-      {me:false,t:'thanks for the recommendation',at:ago(6000)},
-      {me:true,t:'anytime!',at:ago(5990)},
-      {me:false,t:'sounds good, talk soon!',at:ago(5980)},
+    draft: {
+      text: "Will do — I'll have the revised budget to you by EOD today.",
+      reason: 'A request with a deadline. Direct, and commits to a time earlier than the deadline.',
+      risk: ['work_risk'], conf: 'medium',
+    },
+    fu: [{ task: 'send revised budget before client call', dir: 'user_owes_them', due: 'tomorrow', conf: 'high' }],
+  },
+  {
+    id: 5, name: 'Jules', priority: 'logistical', urgency: 'medium', needs: true,
+    tone: 'playful', trend: 'stable', conf: 'medium', risk: [],
+    last: 'are you free this weekend? thinking we could do that hike finally lol',
+    msgs: [
+      { me: false, t: 'are you free this weekend? thinking we could do that hike finally lol', at: ago(420) },
     ],
-    draft:{text:"No reply needed here — the thread looks wrapped up.",reason:'Last message was a sign-off; nothing outstanding.',risk:[],conf:'medium'},
-    fu:[] },
+    draft: {
+      text: "haha yes let's actually do it — saturday morning? i can drive",
+      reason: 'Casual scheduling. Matches the light tone and proposes a concrete time.',
+      risk: [], conf: 'medium',
+    },
+    fu: [{ task: 'plan weekend hike', dir: 'scheduling_loop', due: 'this weekend', conf: 'medium' }],
+  },
+  {
+    id: 6, name: 'Alex', priority: 'low_priority', urgency: 'low', needs: false,
+    tone: 'neutral', trend: 'stable', conf: 'low', risk: [],
+    last: 'sounds good, talk soon!',
+    msgs: [
+      { me: false, t: 'thanks for the recommendation', at: ago(6000) },
+      { me: true, t: 'anytime!', at: ago(5990) },
+      { me: false, t: 'sounds good, talk soon!', at: ago(5980) },
+    ],
+    draft: {
+      text: 'No reply needed here — the thread looks wrapped up.',
+      reason: 'The last message was a sign-off. Nothing is outstanding.',
+      risk: [], conf: 'medium',
+    },
+    fu: [],
+  },
 ];
 
+const DENSITY = { 1: 1.6, 2: 0.4, 3: 1.3, 4: 0.9, 5: 0.6, 6: 0.35 };
+// Minutes since you last sent a message in each thread.
+const LAST_REPLY = { 1: 5760, 2: 20161, 3: 1900, 4: 4300, 5: 8600, 6: 5990 };
+THREADS.forEach(t => {
+  t.lastReply = LAST_REPLY[t.id];
+  t.pulse = history(t.id * 17, DENSITY[t.id], t.msgs, t.lastReply);
+});
+
 const TONE_VARIANTS = {
-  1: { // Sarah Chen — "are we still on for friday"
+  1: {
     casual: "yesss friday's still on, my bad for the radio silence 😅 8pm at the usual spot?",
     warm: "Yes — Friday's still on! Sorry for leaving you hanging, I've just been buried. Excited to see you — 8pm at our usual spot?",
-    professional: "Confirming Friday works on my end — apologies for the delayed response. Shall we still say 8pm at the usual place?",
+    professional: 'Confirming Friday works on my end — apologies for the delayed response. Shall we still say 8pm at the usual place?',
   },
-  2: { // Dr. Patel office — appointment + lab results
-    casual: "hey! yep tuesday 10am works for me, and go ahead and send over the lab results, thanks!",
-    warm: "Hi there — Tuesday at 10am works great for me. Yes, please do send the lab results over — thank you for checking in.",
-    professional: "Confirming Tuesday at 10:00 AM works. Please send the lab results at your convenience. Thank you.",
+  2: {
+    casual: 'hey! yep tuesday 10am works for me, and go ahead and send over the lab results, thanks!',
+    warm: 'Hi there — Tuesday at 10am works great for me. Yes, please do send the lab results over — thank you for checking in.',
+    professional: 'Confirming Tuesday at 10:00 AM works. Please send the lab results at your convenience. Thank you.',
   },
-  3: { // Dad — miss you, call me
-    casual: "miss u too dad 🥺 calling tonight after work, promise!",
+  3: {
+    casual: 'miss u too dad 🥺 calling tonight after work, promise!',
     warm: "Miss you too, Dad — I'll call tonight after work, I promise. Love you so much.",
-    professional: "I miss you too and will call this evening after work without fail. Love you.",
+    professional: 'I miss you too and will call this evening after work without fail. Love you.',
   },
-  4: { // Priya (work) — revised budget
-    casual: "on it! budget will be in your inbox by end of day 👍",
+  4: {
+    casual: 'on it! budget will be in your inbox by end of day 👍',
     warm: "Thanks for the heads up — I'll get the revised budget over to you by end of day today!",
-    professional: "Understood — I will have the revised budget completed and sent to you by end of day.",
+    professional: 'Understood — I will have the revised budget completed and sent to you by end of day.',
   },
-  5: { // Jules — weekend hike
+  5: {
     casual: "haha yes let's finally do this — sat morning? i'll drive",
     warm: "Yes, let's finally make this happen! Saturday morning works great for me — happy to drive.",
     professional: "Yes, I'd like to join for the hike. Saturday morning works, and I can provide transportation.",
@@ -400,338 +998,1002 @@ const TONE_VARIANTS = {
 };
 
 const ANALYTICS = [
-  { name:'Sarah Chen', tone:'tense', trend:'declining', conf:'high', vol:42, last:'Jun 28', resp:'~6h', waitThem:false, waitYou:true, topics:['plans','food'], loops:['so are we still on for friday or not?'] },
-  { name:'Dad', tone:'warm', trend:'stable', conf:'high', vol:128, last:'Jun 28', resp:'~2h', waitThem:false, waitYou:true, topics:['family','health'], loops:['call me when you get a chance'] },
-  { name:'Priya (work)', tone:'logistical', trend:'stable', conf:'medium', vol:67, last:'Jun 28', resp:'~1h', waitThem:false, waitYou:true, topics:['work','money'], loops:['send the revised budget?'] },
-  { name:'Jules', tone:'playful', trend:'stable', conf:'medium', vol:23, last:'Jun 28', resp:'~4h', waitThem:false, waitYou:true, topics:['plans'], loops:[] },
+  { id: 1, name: 'Sarah Chen', tone: 'tense', trend: 'declining', conf: 'high', vol: 42, last: 'Jun 28', resp: '~6h', waitYou: true, topics: ['plans', 'food'], loops: ['so are we still on for friday or not?'] },
+  { id: 3, name: 'Dad', tone: 'warm', trend: 'stable', conf: 'high', vol: 128, last: 'Jun 28', resp: '~2h', waitYou: true, topics: ['family', 'health'], loops: ['call me when you get a chance'] },
+  { id: 4, name: 'Priya (work)', tone: 'logistical', trend: 'stable', conf: 'medium', vol: 67, last: 'Jun 28', resp: '~1h', waitYou: true, topics: ['work', 'money'], loops: ['send the revised budget?'] },
+  { id: 5, name: 'Jules', tone: 'playful', trend: 'stable', conf: 'medium', vol: 23, last: 'Jun 28', resp: '~4h', waitYou: true, topics: ['plans'], loops: [] },
 ];
 
 const TOKENS = [
-  { op:'draft_generation', n:14, inp:18400, out:2800, cost:0.0259 },
-  { op:'rewrite', n:9, inp:6200, out:1350, cost:0.0104 },
-  { op:'relationship_analytics', n:4, inp:9100, out:1600, cost:0.0137 },
-  { op:'followup_extraction', n:6, inp:4300, out:900, cost:0.0070 },
+  { op: 'draft_generation', n: 14, inp: 18400, out: 2800, cost: 0.0259, color: 'var(--pop)' },
+  { op: 'rewrite', n: 9, inp: 6200, out: 1350, cost: 0.0104, color: 'var(--pop-2)' },
+  { op: 'relationship_analytics', n: 4, inp: 9100, out: 1600, cost: 0.0137, color: 'var(--good)' },
+  { op: 'followup_extraction', n: 6, inp: 4300, out: 900, cost: 0.0070, color: 'var(--warn)' },
 ];
 
-const DIR_LABEL = { user_owes_them:'I owe them', they_owe_user:'They owe me', scheduling_loop:'Scheduling', unanswered_question:'Open question' };
+const DIR_LABEL = {
+  user_owes_them: 'I owe them',
+  they_owe_user: 'They owe me',
+  scheduling_loop: 'Scheduling',
+  unanswered_question: 'Open question',
+};
 
-// ---------- State ----------
-let state = { tab:'dashboard', thread:1, filter:'needs', drafts:{}, completed:new Set(), inboxPane:'list', tone:{} };
-const MTAB = { dashboard:'Home', inbox:'Inbox', followups:'Tasks', analytics:'Stats', exports:'Export', settings:'Settings' };
-THREADS.forEach(t => state.drafts[t.id] = t.draft.text);
-let toggles = { local:true, llm:false };
+const REWRITES = ['shorter', 'nicer', 'more direct', 'less fake', 'more adult', 'casual', 'professional', 'say no politely', 'buy time', 'one clear question', 'calmer', 'less defensive', 'less apologetic'];
 
 const TABS = [
-  ['dashboard','Dashboard'], ['inbox','Inbox'], ['followups','Follow-ups'],
-  ['analytics','Analytics'], ['exports','Exports'], ['settings','Settings'],
+  ['dashboard', 'Dashboard'], ['inbox', 'Inbox'], ['followups', 'Follow-ups'],
+  ['analytics', 'Analytics'], ['exports', 'Exports'], ['settings', 'Settings'],
 ];
+const MTAB = { dashboard: 'Home', inbox: 'Inbox', followups: 'Tasks', analytics: 'Stats', exports: 'Export', settings: 'Settings' };
 
-// ---------- Render ----------
-function renderNav(){
-  document.getElementById('nav').innerHTML = TABS.map(([id,label]) =>
-    `<button class="${state.tab===id?'active':''}" onclick="go('${id}')">${IC[id]}<span>${label}</span></button>`).join('');
-  document.getElementById('mnav').innerHTML = TABS.map(([id,label]) =>
-    `<button class="${state.tab===id?'active':''}" onclick="go('${id}')">${IC[id]}<span>${MTAB[id]||label}</span></button>`).join('');
-}
-function go(tab){ state.tab = tab; if(tab==='inbox') state.inboxPane='list'; renderNav(); renderMain(); document.getElementById('main').scrollTop = 0; window.scrollTo(0,0); }
-function renderMain(){
-  const m = document.getElementById('main');
-  const views = { dashboard:viewDashboard, inbox:viewInbox, followups:viewFollowups, analytics:viewAnalytics, exports:viewExports, settings:viewSettings };
-  m.innerHTML = (state.tab==='inbox' ? '' : topbar()) + views[state.tab]();
-}
-function topbar(){ return `<div class="topbar"><span class="demo-pill">DEMO</span> Sample data — the real app reads your iMessages locally on your Mac. Nothing is ever sent for you.</div>`; }
+/* ============================================================
+   State
+   ============================================================ */
+const state = {
+  tab: 'dashboard',
+  thread: 1,
+  filter: 'needs',
+  query: '',
+  drafts: {},
+  tone: {},
+  used: {},
+  completed: new Set(),
+  inboxPane: 'list',
+  overlay: null,      // 'palette' | 'keys' | null
+  paletteQuery: '',
+  paletteIndex: 0,
+  syncing: false,
+  toggles: { local: true, llm: false },
+};
+THREADS.forEach(t => { state.drafts[t.id] = t.draft.text; state.used[t.id] = new Set(); });
 
-function allFollowups(){
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const $ = sel => document.querySelector(sel);
+
+/* ============================================================
+   The pulse graph — the signature element.
+   Their messages tick above the line, yours below. The stretch
+   of silence since the last message glows at the right edge.
+   ============================================================ */
+function pulse(points, opts) {
+  const o = Object.assign({ w: 640, h: 56, mini: false, window: 20160 }, opts || {});
+  const pad = 6, mid = o.h / 2, inner = o.w - pad * 2;
+  const up = o.mini ? 7 : 15, down = o.mini ? 6 : 13;
+  const x = mins => pad + (1 - Math.min(mins, o.window) / o.window) * inner;
+
+  const visible = points.filter(p => p.mins <= o.window);
+  const ticks = visible.map(p => {
+    const px = x(p.mins).toFixed(1);
+    return p.me
+      ? `<line class="tick-me" x1="${px}" y1="${mid + 2}" x2="${px}" y2="${mid + down}"/>`
+      : `<line class="tick-them" x1="${px}" y1="${mid - 2}" x2="${px}" y2="${mid - up}"/>`;
+  }).join('');
+
+  // The band runs from your last message to now: the stretch they have been
+  // waiting through. With no reply inside the window, the whole strip is a gap.
+  const mine = visible.filter(p => p.me).map(p => p.mins);
+  const openSince = mine.length ? Math.min.apply(null, mine) : o.window;
+  const gapStart = x(openSince), gapEnd = o.w - pad;
+  const gapWide = gapEnd - gapStart > 8;
+  const uid = 'pf' + Math.round(gapStart * 100) + '-' + o.h + '-' + (o.mini ? 'm' : 'f');
+
+  const gap = gapWide ? `
+    <rect class="gap-glow" x="${gapStart.toFixed(1)}" y="${mid - up}" width="${(gapEnd - gapStart).toFixed(1)}" height="${up + down}" fill="url(#${uid})"/>
+    <line class="gap" x1="${gapStart.toFixed(1)}" y1="${mid}" x2="${(gapEnd - 3).toFixed(1)}" y2="${mid}"/>` : '';
+
+  const now = `
+    ${reduceMotion || o.mini ? '' : `<circle class="now-halo" cx="${gapEnd}" cy="${mid}" r="5"/>`}
+    <circle class="now" cx="${gapEnd}" cy="${mid}" r="${o.mini ? 2 : 3}"/>`;
+
+  return `<svg class="pulse${o.mini ? ' pulse-mini' : ''}" viewBox="0 0 ${o.w} ${o.h}" ${o.mini ? '' : 'style="height:auto"'} preserveAspectRatio="none" role="img" aria-label="Two weeks of this thread; ${dur(openSince)} since you last replied">
+    <defs><linearGradient id="${uid}" x1="0" x2="1">
+      <stop offset="0" stop-color="var(--pop)" stop-opacity="0"/>
+      <stop offset="1" stop-color="var(--pop)" stop-opacity="0.16"/>
+    </linearGradient></defs>
+    <line class="axis" x1="${pad}" y1="${mid}" x2="${o.w - pad}" y2="${mid}"/>
+    ${ticks}${gap}${now}
+  </svg>`;
+}
+
+function sinceLast(t) {
+  return (NOW - t.msgs[t.msgs.length - 1].at) / MIN;
+}
+// How long they have been waiting for anything from you.
+function openFor(t) { return Math.min(t.lastReply, 20160); }
+function openLabel(t) {
+  return t.lastReply > 20160 ? 'no reply in 14 days' : dur(t.lastReply) + ' since you replied';
+}
+
+/* ============================================================
+   Shell
+   ============================================================ */
+function needsCount() { return THREADS.filter(t => t.needs).length; }
+function openFollowups() {
   const out = [];
-  THREADS.forEach(t => t.fu.forEach((f,i) => out.push({...f, key:t.id+'-'+i, who:t.name})));
+  THREADS.forEach(t => t.fu.forEach((f, i) => out.push(Object.assign({}, f, { key: t.id + '-' + i, who: t.name, threadId: t.id }))));
   return out.filter(f => !state.completed.has(f.key));
 }
 
-function viewDashboard(){
-  const needs = THREADS.filter(t=>t.needs);
-  const risk = THREADS.filter(t=>t.priority==='risky_to_answer_fast' || t.risk.length);
-  const emo = THREADS.filter(t=>t.priority==='emotional');
-  const fu = allFollowups();
-  const lrow = t => `<div class="lrow" onclick="go('inbox');setTimeout(()=>pick(${t.id}),0)">
-      <div class="av">${initials(t.name)}</div>
-      <div class="lr-body">
-        <div class="lr-top"><span class="lr-name">${t.name}</span><span class="lr-when">${tfmt(t.msgs[t.msgs.length-1].at)}</span></div>
-        <div class="lr-prev">${t.last}</div>
-        <div class="lr-meta">
-          ${t.priority==='urgent'?'<span class="tag solid">Urgent</span>':''}
-          ${t.risk.length?`<span class="tag flag">${t.risk[0]}</span>`:''}
-          ${t.priority==='emotional'?'<span class="tag pop">Emotional</span>':''}
-        </div>
+function renderNav() {
+  const counts = { inbox: needsCount(), followups: openFollowups().length };
+  $('#nav').innerHTML = TABS.map(([id, label]) => `
+    <button class="${state.tab === id ? 'active' : ''}" onclick="go('${id}')" aria-current="${state.tab === id ? 'page' : 'false'}">
+      ${IC[id]}<span>${label}</span>${counts[id] ? `<span class="count">${counts[id]}</span>` : ''}
+    </button>`).join('');
+  $('#mnav').innerHTML = TABS.map(([id, label]) => `
+    <button class="${state.tab === id ? 'active' : ''}" onclick="go('${id}')" aria-current="${state.tab === id ? 'page' : 'false'}">
+      ${IC[id]}<span>${MTAB[id] || label}</span>
+    </button>`).join('');
+}
+
+function renderChrome() {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  $('#chrome').innerHTML = `
+    <div class="topbar">
+      <div class="note">
+        <span class="demo-pill">DEMO</span>
+        <span class="txt">Sample data. The real app reads your iMessages on your Mac and never sends for you.</span>
+      </div>
+      <div class="spacer"></div>
+      <div class="topbar-tools">
+        <button class="kbd-open" onclick="openPalette()" aria-label="Open command palette">
+          ${IC.search}<span>Search</span><kbd>⌘K</kbd>
+        </button>
+        <button class="iconbtn" onclick="toggleTheme()" aria-label="Switch to ${dark ? 'light' : 'dark'} theme" title="Theme (T)">${dark ? IC.sun : IC.moon}</button>
+        <button class="iconbtn" onclick="showKeys()" aria-label="Keyboard shortcuts" title="Shortcuts (?)">${IC.keyboard}</button>
       </div>
     </div>`;
+}
+
+const VIEWS = {
+  dashboard: viewDashboard, inbox: viewInbox, followups: viewFollowups,
+  analytics: viewAnalytics, exports: viewExports, settings: viewSettings,
+};
+
+function render() {
+  stopTyping();
+  renderNav();
+  const inbox = state.tab === 'inbox';
+  $('#chrome').style.display = inbox ? 'none' : '';
+  if (!inbox) renderChrome();
+  $('#view').innerHTML = `<div class="view">${VIEWS[state.tab]()}</div>`;
+  if (state.tab === 'dashboard') countUp();
+  if (state.tab === 'inbox') afterInbox();
+}
+
+function go(tab) {
+  if (!VIEWS[tab]) return;
+  state.tab = tab;
+  if (tab === 'inbox') state.inboxPane = 'list';
+  render();
+  $('#main').scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+
+/* ============================================================
+   Dashboard
+   ============================================================ */
+function viewDashboard() {
+  const needs = THREADS.filter(t => t.needs);
+  const risk = THREADS.filter(t => t.priority === 'risky_to_answer_fast' || t.risk.length);
+  const emo = THREADS.filter(t => t.priority === 'emotional');
+  const fu = openFollowups();
+  const waiting = needs.map(openFor).sort((a, b) => b - a)[0] || 0;
+
+  const tile = (icon, k, n, cap, pop, tab) => `
+    <button class="tile" onclick="go('${tab}')">
+      <div class="k">${IC[icon]} ${k}</div>
+      <div class="n${pop ? ' pop' : ''}" data-count="${n}">0</div>
+      <div class="cap">${cap}</div>
+    </button>`;
+
+  const lrow = t => `
+    <button class="lrow" onclick="openThread(${t.id})">
+      <span class="av">${initials(t.name)}</span>
+      <span class="lr-body">
+        <span class="lr-top"><span class="lr-name">${esc(t.name)}</span><span class="lr-when">${dur(sinceLast(t))} ago</span></span>
+        <span class="lr-prev">${esc(t.last)}</span>
+        <span class="lr-meta">
+          ${t.priority === 'urgent' ? '<span class="tag solid">Urgent</span>' : ''}
+          ${t.risk.length ? `<span class="tag flag">${esc(t.risk[0].replace('_', ' '))}</span>` : ''}
+          ${t.priority === 'emotional' ? '<span class="tag pop">Emotional</span>' : ''}
+          <span class="tag">${esc(t.tone)}</span>
+        </span>
+      </span>
+    </button>`;
+
   return `<div class="wrap">
-    <div class="head"><div class="eyebrow">Overview</div><h2>Good evening</h2><p>${needs.length} conversations need a reply · ${fu.length} open follow-ups · ${risk.length} flagged to review</p></div>
-    <div class="stat-row">
-      <div class="tile"><div class="k">${IC.bell} Needs reply</div><div class="n pop">${needs.length}</div><div class="cap">people waiting on you</div></div>
-      <div class="tile"><div class="k">${IC.flag} Flagged</div><div class="n">${risk.length}</div><div class="cap">review before sending</div></div>
-      <div class="tile"><div class="k">${IC.followups} Follow-ups</div><div class="n">${fu.length}</div><div class="cap">open loops tracked</div></div>
-      <div class="tile"><div class="k">${IC.heart} Emotional</div><div class="n">${emo.length}</div><div class="cap">handle with care</div></div>
+    <div class="head">
+      <div class="eyebrow">Thursday evening</div>
+      <h2>${needs.length} conversations are waiting on you.</h2>
+      <p>One has gone ${dur(waiting)} without a word from you. ${fu.length} follow-ups are still tracked, and ${risk.length} threads are flagged to read before you copy anything.</p>
     </div>
+
+    <div class="stat-row">
+      ${tile('bell', 'Needs reply', needs.length, 'people waiting on you', true, 'inbox')}
+      ${tile('flag', 'Flagged', risk.length, 'read before copying', false, 'inbox')}
+      ${tile('followups', 'Follow-ups', fu.length, 'open loops tracked', false, 'followups')}
+      ${tile('heart', 'Emotional', emo.length, 'handle with care', false, 'inbox')}
+    </div>
+
     <div class="dash-cols">
-      <div class="panel">
-        <div class="panel-h"><h3>Needs reply</h3><span class="more" onclick="go('inbox')">Open inbox →</span></div>
-        ${needs.map(lrow).join('') || '<div class="empty-row">All caught up 🎉</div>'}
+      <div class="panel" id="needsPanel">
+        <div class="panel-h">
+          <h3>Needs reply</h3>
+          <span class="more" onclick="go('inbox')">Open inbox ${IC.arrow}</span>
+        </div>
+        ${needs.map(lrow).join('') || '<div class="empty-row">All caught up.</div>'}
       </div>
+
       <div>
         <div class="panel">
-          <div class="panel-h"><h3>Open follow-ups</h3><span class="more" onclick="go('followups')">All →</span></div>
-          ${fu.slice(0,4).map(f=>`<div class="lrow" onclick="go('followups')"><div class="lr-body"><div class="lr-name" style="font-size:12.5px">${f.task}</div><div class="lr-meta"><span class="dir">${DIR_LABEL[f.dir]}</span>${f.due?`<span class="conf" style="font-style:normal;color:var(--pop)">${f.due}</span>`:''}</div></div></div>`).join('') || '<div class="empty-row">No open items</div>'}
+          <div class="panel-h"><h3>Open follow-ups</h3><span class="more" onclick="go('followups')">All ${IC.arrow}</span></div>
+          ${fu.slice(0, 4).map(f => `
+            <button class="lrow" onclick="go('followups')">
+              <span class="lr-body">
+                <span class="lr-name" style="font-size:12.5px">${esc(f.task)}</span>
+                <span class="lr-meta"><span class="dir">${DIR_LABEL[f.dir]}</span>${f.due ? `<span class="due">${esc(f.due)}</span>` : ''}</span>
+              </span>
+            </button>`).join('') || '<div class="empty-row">No open items.</div>'}
         </div>
+
         <div class="panel">
-          <div class="panel-h"><h3>iMessage sync</h3></div>
-          <div style="padding:16px 18px"><div class="tag good">Read-only · local</div><p class="sm muted" style="margin-top:10px">Connects to <b>chat.db</b> on your Mac. Never writes, never auto-sends.</p></div>
+          <div class="panel-h"><h3>Quietest thread</h3></div>
+          <div style="padding:15px 17px">
+            ${quietest()}
+          </div>
         </div>
       </div>
     </div>
   </div>`;
 }
 
-function viewInbox(){
+function quietest() {
+  const t = THREADS.filter(x => x.needs).sort((a, b) => openFor(b) - openFor(a))[0];
+  return `
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+      <b style="font-size:13.5px;letter-spacing:-0.01em">${esc(t.name)}</b>
+      <span class="num" style="font-size:11px;color:var(--pop)">${openLabel(t)}</span>
+    </div>
+    ${pulse(t.pulse, { h: 44 })}
+    <div class="pulse-legend">
+      <span style="color:var(--ink-2)"><i></i> them</span>
+      <span style="color:var(--faint)"><i></i> you</span>
+      <span style="color:var(--pop)"><i style="background:currentColor;opacity:.6"></i> waiting</span>
+    </div>
+    <p class="sm muted" style="margin-top:11px;line-height:1.5">Fourteen days of this thread. Marks above the line are theirs, below are yours, and the shaded stretch is everything since you last wrote back.</p>`;
+}
+
+function countUp() {
+  document.querySelectorAll('.tile .n[data-count]').forEach(el => {
+    const target = +el.dataset.count;
+    if (reduceMotion || target === 0) { el.textContent = target; return; }
+    const t0 = performance.now(), ms = 520;
+    let net = 0;
+    const step = now => {
+      const p = Math.min(1, (now - t0) / ms);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+      else clearTimeout(net);
+    };
+    requestAnimationFrame(step);
+    net = setTimeout(() => { el.textContent = target; }, ms + 400);
+  });
+}
+
+/* ============================================================
+   Inbox
+   ============================================================ */
+function filtered() {
   let list = THREADS;
-  if(state.filter==='needs') list = THREADS.filter(t=>t.needs);
-  else if(state.filter==='risk') list = THREADS.filter(t=>t.priority==='risky_to_answer_fast'||t.risk.length);
-  const t = THREADS.find(x=>x.id===state.thread) || THREADS[0];
-  const filt = (id,label) => `<button class="chip ${state.filter===id?'on':''}" onclick="setFilter('${id}')">${label}</button>`;
-  const threadList = list.map(x=>`
-    <div class="thread ${x.id===state.thread?'active':''}" onclick="pick(${x.id})">
-      <div class="t-top"><span class="name">${x.name}</span><span class="when">${tfmt(x.msgs[x.msgs.length-1].at)}</span></div>
-      <div class="prev">${x.last}</div>
-      <div class="t-meta">
-        ${x.priority==='urgent'?'<span class="tag solid">Urgent</span>':''}
-        ${x.risk.length?`<span class="tag flag">${x.risk[0]}</span>`:''}
-        ${x.needs?'<span class="tag pop">Reply</span>':'<span class="tag good">Caught up</span>'}
-      </div>
-    </div>`).join('');
-  const highRisk = t.risk.some(f=>['medical','money','legal','conflict','work_risk'].includes(f));
-  const dtext = state.drafts[t.id];
-  const detail = `
-    <button class="mobile-back btn" onclick="backToList()">‹ All threads</button>
-    <div class="d-head">
-      <div>
-        <div class="eyebrow">${t.priority.replace(/_/g,' ')}</div>
-        <h2>${t.name}</h2>
-        <div class="a-meta">
-          <span class="tag">${t.tone} · ${t.conf} conf</span>
-          ${t.risk.map(f=>`<span class="tag flag">${f}</span>`).join('')}
-        </div>
-      </div>
-      <button class="btn" onclick="toast('Marked: no reply needed')">No reply needed</button>
-    </div>
-    <div class="convo">
-      ${t.msgs.map(mm=>`<div class="msg ${mm.me?'me':'them'}"><div class="bubble">${mm.t}</div><div class="time">${tfmt(mm.at)}</div></div>`).join('')}
-    </div>
-    <hr class="rule-strong"/>
-    <div class="rw-label" style="margin-top:0">Draft reply</div>
-    <div class="reason">${t.draft.reason}<span class="tag">${t.draft.conf} conf</span></div>
-    <div class="draft-card"><textarea id="draft" oninput="state.drafts[${t.id}]=this.value">${dtext}</textarea></div>
-    ${TONE_VARIANTS[t.id] ? toneDialHTML(t.id) : ''}
-    ${highRisk?`<div class="notice"><b>Review carefully</b> — this touches a sensitive topic (${t.risk.join(', ')}). Copy-to-clipboard only; nothing is ever sent for you.</div>`:''}
-    ${t.draft.risk.length?`<div class="flags">${t.draft.risk.map(f=>`<span class="tag flag">${f}</span>`).join('')}</div>`:''}
-    <div class="rw-label">Rewrite</div>
-    <div class="rewrites">
-      ${['shorter','nicer','more direct','less fake','more adult','casual','professional','say no politely','buy time','one clear question','calmer','less defensive','less apologetic'].map(r=>`<button class="rw" onclick="rewrite(${t.id},'${r}')">${r}</button>`).join('')}
-    </div>
-    <div class="actions">
-      <button class="btn solid" onclick="toast('Approved & saved to decisions')">✓ Approve</button>
-      <button class="btn" onclick="toast('Edited draft saved')">Save edit</button>
-      <button class="btn primary" onclick="copyDraft(${t.id})">Copy to clipboard</button>
-      <button class="btn" onclick="toast('Denied — noted for style learning')">Deny</button>
-    </div>`;
-  return `<div class="inbox ${state.inboxPane==='detail'?'show-detail':'show-list'}">
+  if (state.filter === 'needs') list = list.filter(t => t.needs);
+  else if (state.filter === 'risk') list = list.filter(t => t.priority === 'risky_to_answer_fast' || t.risk.length);
+  const q = state.query.trim().toLowerCase();
+  if (q) list = list.filter(t => (t.name + ' ' + t.last).toLowerCase().includes(q));
+  return list;
+}
+
+function highlight(text) {
+  const q = state.query.trim();
+  if (!q) return esc(text);
+  const i = text.toLowerCase().indexOf(q.toLowerCase());
+  if (i === -1) return esc(text);
+  return esc(text.slice(0, i)) + '<mark>' + esc(text.slice(i, i + q.length)) + '</mark>' + esc(text.slice(i + q.length));
+}
+
+function viewInbox() {
+  return `<div class="inbox ${state.inboxPane === 'detail' ? 'show-detail' : 'show-list'}" id="inbox">
     <div class="threads">
       <div class="threads-head">
-        <div class="eyebrow">Inbox</div><h3>Threads</h3>
-        <div class="filters">${filt('needs','Needs reply')}${filt('all','All')}${filt('risk','Flagged')}</div>
+        <h3>Threads</h3>
+        <div class="search${state.query ? ' has-value' : ''}" id="searchWrap">
+          ${IC.search}
+          <input id="search" type="search" placeholder="Search threads…" value="${esc(state.query)}"
+                 oninput="onSearch(this.value)" autocomplete="off" aria-label="Search threads" />
+          <button class="clear" onclick="onSearch('')" aria-label="Clear search">${IC.x}</button>
+        </div>
+        <div class="filters" id="filters">${filterChips()}</div>
       </div>
-      ${threadList}
+      <div id="threadList">${threadListHTML()}</div>
     </div>
-    <div class="detail">${detail}</div>
+    <div class="detail"><div class="detail-inner" id="detail">${detailHTML()}</div></div>
   </div>`;
 }
 
-function toneDialHTML(id){
+function filterChips() {
+  const counts = {
+    needs: THREADS.filter(t => t.needs).length,
+    all: THREADS.length,
+    risk: THREADS.filter(t => t.priority === 'risky_to_answer_fast' || t.risk.length).length,
+  };
+  return [['needs', 'Needs reply'], ['all', 'All'], ['risk', 'Flagged']].map(([id, label]) =>
+    `<button class="chip ${state.filter === id ? 'on' : ''}" onclick="setFilter('${id}')" aria-pressed="${state.filter === id}">
+      ${label}<span class="n">${counts[id]}</span></button>`).join('');
+}
+
+function threadListHTML() {
+  const list = filtered();
+  if (!list.length) {
+    return `<div class="threads-empty">No thread matches “${esc(state.query)}”.<br/>
+      <button class="btn ghost" style="margin-top:12px" onclick="onSearch('')">Clear search</button></div>`;
+  }
+  return list.map(x => `
+    <button class="thread ${x.id === state.thread ? 'active' : ''}" onclick="pick(${x.id})" data-thread="${x.id}">
+      <span class="t-top"><span class="name">${highlight(x.name)}</span><span class="when">${dur(sinceLast(x))}</span></span>
+      <span class="prev">${highlight(x.last)}</span>
+      <span class="t-meta">
+        ${x.priority === 'urgent' ? '<span class="tag solid">Urgent</span>' : ''}
+        ${x.risk.length ? `<span class="tag flag">${esc(x.risk[0].replace('_', ' '))}</span>` : ''}
+        ${x.needs ? '<span class="tag pop">Reply</span>' : '<span class="tag good">Caught up</span>'}
+      </span>
+      ${pulse(x.pulse, { h: 22, mini: true })}
+    </button>`).join('');
+}
+
+function detailHTML() {
+  const t = THREADS.find(x => x.id === state.thread) || THREADS[0];
+  const sensitive = t.risk.some(f => ['medical', 'money', 'legal', 'conflict', 'work_risk'].includes(f));
+  const draft = state.drafts[t.id];
+  const gap = sinceLast(t);
+
+  const bubbles = [];
+  t.msgs.forEach((m, i) => {
+    const prev = t.msgs[i - 1];
+    if (prev) {
+      const quiet = (prev.at - m.at) / MIN * -1;
+      if (quiet > 720) bubbles.push(`<div class="silence">${dur(quiet)} of quiet</div>`);
+    }
+    bubbles.push(`<div class="msg ${m.me ? 'me' : 'them'}" style="animation-delay:${Math.min(i * 55, 300)}ms">
+      <div class="bubble">${esc(m.t)}</div><div class="time">${tfmt(m.at)}</div></div>`);
+  });
+
+  return `
+    <button class="mobile-back btn ghost" onclick="backToList()">‹ All threads</button>
+    <div class="d-head">
+      <div>
+        <div class="eyebrow">${esc(t.priority.replace(/_/g, ' '))}</div>
+        <h2>${esc(t.name)}</h2>
+        <div class="a-meta">
+          <span class="tag">${esc(t.tone)}</span>
+          <span class="tag">${t.conf} confidence</span>
+          ${t.risk.map(f => `<span class="tag flag">${esc(f.replace('_', ' '))}</span>`).join('')}
+        </div>
+      </div>
+      <button class="btn ghost" onclick="toast('Marked as no reply needed')">No reply needed</button>
+    </div>
+
+    <div class="d-pulse">
+      <div class="ph"><b>Last 14 days</b><span class="num">${openLabel(t)}</span></div>
+      ${pulse(t.pulse, { h: 52 })}
+      <div class="pulse-legend">
+        <span style="color:var(--ink-2)"><i></i> them</span>
+        <span style="color:var(--faint)"><i></i> you</span>
+        <span style="color:var(--pop)"><i style="opacity:.6"></i> waiting on you</span>
+      </div>
+    </div>
+
+    <div class="convo">${bubbles.join('')}</div>
+
+    <hr class="rule-strong"/>
+
+    <div class="composer">
+      <span class="rw-label" style="margin-top:0">Draft reply</span>
+      <div class="reason">${esc(t.draft.reason)}<span class="tag">${t.draft.conf} confidence</span></div>
+      <div class="draft-card" id="draftCard">
+        <textarea id="draft" aria-label="Draft reply" oninput="onDraftInput(${t.id}, this.value)"
+          onkeydown="onDraftKey(event)">${esc(draft)}</textarea>
+        <div class="draft-foot">
+          <span id="wordCount">${wordsOf(draft)}</span>
+          <span>⌘↵ to copy</span>
+        </div>
+      </div>
+
+      ${TONE_VARIANTS[t.id] ? toneDial(t.id) : ''}
+
+      ${sensitive ? `<div class="notice">${IC.alert}<div><b>Read this one before you copy it.</b> The thread touches ${esc(t.risk.join(', ').replace(/_/g, ' '))}. ReplyGraph copies to your clipboard and stops there.</div></div>` : ''}
+
+      <span class="rw-label">Rewrite</span>
+      <div class="rewrites" id="rewrites">
+        ${REWRITES.map(r => `<button class="rw ${state.used[t.id].has(r) ? 'used' : ''}" onclick="rewrite(${t.id}, '${r}')">${r}</button>`).join('')}
+      </div>
+
+      <div class="actions">
+        <button class="btn solid" onclick="toast('Approved and saved to decisions')">${IC.check} Approve</button>
+        <button class="btn" onclick="toast('Edit saved to your style profile')">Save edit</button>
+        <button class="btn primary" onclick="copyDraft(${t.id})">${IC.copy} Copy to clipboard</button>
+        <button class="btn ghost" onclick="toast('Denied. Noted for style learning.')">Deny</button>
+      </div>
+    </div>`;
+}
+
+function wordsOf(text) {
+  const w = text.trim() ? text.trim().split(/\s+/).length : 0;
+  return `${w} ${w === 1 ? 'word' : 'words'} · ${text.length} characters`;
+}
+
+function toneDial(id) {
   const tone = state.tone[id];
-  const seg = (key,label) => `<button type="button" class="tone-seg ${tone===key?'on':''}" aria-pressed="${tone===key}" onclick="setTone(${id},'${key}')" onkeydown="toneKeyNav(event)">${label}</button>`;
+  const seg = (key, label) => `<button type="button" class="tone-seg ${tone === key ? 'on' : ''}"
+    aria-pressed="${tone === key}" data-tone="${key}" onclick="setTone(${id}, '${key}')" onkeydown="toneKeyNav(event)">${label}</button>`;
   return `<div class="tone-dial">
     <span class="tone-dial-label">Tone</span>
-    <div class="tone-seg-group" role="group" aria-label="Reply tone">
-      ${seg('casual','Casual')}${seg('warm','Warm')}${seg('professional','Professional')}
+    <div class="tone-seg-group" role="group" aria-label="Reply tone" id="toneGroup">
+      <span class="tone-thumb" id="toneThumb"></span>
+      ${seg('casual', 'Casual')}${seg('warm', 'Warm')}${seg('professional', 'Professional')}
     </div>
-    <p class="tone-caption">In the real app, tone variants are drafted locally in your voice. Nothing is sent for you.</p>
+    <p class="tone-caption">Variants are written locally in your voice. Press <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> to switch.</p>
   </div>`;
 }
 
-function viewFollowups(){
-  const fu = allFollowups();
+function afterInbox() {
+  positionThumb();
+  const list = $('#threadList');
+  const active = list && list.querySelector('.thread.active');
+  if (active && active.scrollIntoView) active.scrollIntoView({ block: 'nearest' });
+}
+
+function positionThumb() {
+  const group = $('#toneGroup'), thumb = $('#toneThumb');
+  if (!group || !thumb) return;
+  const on = group.querySelector('.tone-seg.on');
+  if (!on) { thumb.classList.remove('shown'); return; }
+  thumb.classList.add('shown');
+  thumb.style.width = on.offsetWidth + 'px';
+  thumb.style.transform = `translateX(${on.offsetLeft - 3}px)`;
+}
+
+/* Redraw only the pieces that changed, so the textarea keeps focus and caret. */
+function refreshThreadList() {
+  const wrap = $('#searchWrap');
+  if (wrap) wrap.classList.toggle('has-value', !!state.query);
+  const list = $('#threadList');
+  if (list) list.innerHTML = threadListHTML();
+  const filters = $('#filters');
+  if (filters) filters.innerHTML = filterChips();
+}
+function refreshDetail() {
+  stopTyping();
+  const d = $('#detail');
+  if (!d) return;
+  d.innerHTML = detailHTML();
+  positionThumb();
+}
+
+/* ============================================================
+   Follow-ups
+   ============================================================ */
+function viewFollowups() {
+  const fu = openFollowups();
   const groups = {};
-  fu.forEach(f=>{ (groups[f.dir]=groups[f.dir]||[]).push(f); });
-  const body = Object.keys(groups).length ? Object.entries(groups).map(([dir,items])=>`
-    <div class="sec-title" style="margin-top:24px">${DIR_LABEL[dir]||dir}</div>
-    <div class="panel">${items.map(f=>`<div class="fu">
-      <div><div class="task">${f.task}</div>
-        <div class="fu-meta"><span class="dir">${DIR_LABEL[f.dir]}</span><span class="sm muted">${f.who}</span>${f.due?`<span class="sm" style="color:var(--pop)">Due: ${f.due}</span>`:''}<span class="conf">${f.conf} conf</span></div>
-      </div>
-      <button class="btn" onclick="complete('${f.key}')">Done</button>
-    </div>`).join('')}</div>`).join('') : '<div class="empty">No open follow-ups 🎉</div>';
+  fu.forEach(f => { (groups[f.dir] = groups[f.dir] || []).push(f); });
+
+  const body = Object.keys(groups).length
+    ? Object.entries(groups).map(([dir, items]) => `
+        <div class="sec-title" style="margin-top:26px">${DIR_LABEL[dir] || dir}</div>
+        <div class="panel">${items.map(f => `
+          <div class="fu" id="fu-${f.key}">
+            <div>
+              <div class="task">${esc(f.task)}</div>
+              <div class="fu-meta">
+                <span class="dir">${DIR_LABEL[f.dir]}</span>
+                <button class="sm muted" style="cursor:pointer;text-decoration:underline" onclick="openThread(${f.threadId})">${esc(f.who)}</button>
+                ${f.due ? `<span class="due">due ${esc(f.due)}</span>` : ''}
+                <span class="conf">${f.conf} conf</span>
+              </div>
+            </div>
+            <button class="btn" onclick="complete('${f.key}')">${IC.check} Done</button>
+          </div>`).join('')}</div>`).join('')
+    : `<div class="empty"><b>Nothing is open.</b>Every promise and question ReplyGraph found has been closed.</div>`;
+
   return `<div class="wrap">
-    <div class="head"><div class="eyebrow">Tasks</div><h2>Follow-ups</h2><p>${fu.length} open items pulled from your conversations</p></div>
+    <div class="head">
+      <div class="eyebrow">Pulled from your threads</div>
+      <h2>Follow-ups</h2>
+      <p>Promises you made, questions nobody answered, and scheduling loops that never landed on a date. Each one carries the confidence ReplyGraph had when it read the message.</p>
+    </div>
     ${body}
   </div>`;
 }
 
-function viewAnalytics(){
-  const cards = ANALYTICS.map(a=>`
-    <div class="card acard">
+/* ============================================================
+   Analytics
+   ============================================================ */
+function viewAnalytics() {
+  const cards = ANALYTICS.map(a => {
+    const t = THREADS.find(x => x.id === a.id);
+    return `<div class="card acard">
       <div class="a-top">
         <div>
-          <div class="a-name">${a.name}</div>
+          <div class="a-name">${esc(a.name)}</div>
           <div class="a-meta">
             <span class="tag">${a.tone}</span>
-            <span class="sm muted">${a.trend==='declining'?'↓ higher-friction lately':a.trend==='improving'?'↑ warming up':'→ stable'}</span>
+            <span class="sm muted">${a.trend === 'declining' ? 'more friction lately' : a.trend === 'improving' ? 'warming up' : 'steady'}</span>
             <span class="conf">${a.conf} conf</span>
           </div>
         </div>
-        <div class="sm muted" style="text-align:right">${a.vol} messages<br/>${a.last}</div>
+        <div class="sm muted num" style="text-align:right">${a.vol} messages<br/>${a.last}</div>
       </div>
+      ${t ? pulse(t.pulse, { h: 34, mini: true }) : ''}
       <div class="stats">
-        <div class="stat"><div class="k">Avg response</div><div class="v">${a.resp}</div></div>
-        <div class="stat"><div class="k">You're waiting</div><div class="v">${a.waitYou?'Yes':'No'}</div></div>
+        <div class="stat"><div class="k">Avg response</div><div class="v num">${a.resp}</div></div>
+        <div class="stat"><div class="k">Waiting on you</div><div class="v">${a.waitYou ? 'Yes' : 'No'}</div></div>
         <div class="stat"><div class="k">Topics</div><div class="v" style="font-size:12.5px">${a.topics.join(', ')}</div></div>
-        ${a.loops.length?`<div class="stat"><div class="k">Open loop</div><div class="v" style="font-size:12.5px;color:var(--pop)">${a.loops[0].slice(0,38)}…</div></div>`:''}
+        ${a.loops.length ? `<div class="stat"><div class="k">Open loop</div><div class="v" style="font-size:12.5px;color:var(--pop)">“${esc(a.loops[0].slice(0, 34))}…”</div></div>` : ''}
       </div>
-    </div>`).join('');
-  const tokenRows = TOKENS.map(r=>`<tr><td>${r.op}</td><td class="muted">${r.n}</td><td class="muted">${r.inp.toLocaleString()}</td><td class="muted">${r.out.toLocaleString()}</td><td style="color:var(--pop);font-weight:700">$${r.cost.toFixed(4)}</td></tr>`).join('');
+    </div>`;
+  }).join('');
+
+  const total = TOKENS.reduce((s, r) => s + r.cost, 0);
+  const bar = TOKENS.map(r => `<span style="width:${(r.cost / total * 100).toFixed(1)}%;background:${r.color}"></span>`).join('');
+  const legend = TOKENS.map(r => `<span><i style="background:${r.color}"></i>${r.op.replace(/_/g, ' ')}</span>`).join('');
+  const rows = TOKENS.map(r => `<tr>
+    <td>${r.op.replace(/_/g, ' ')}</td>
+    <td class="n muted">${r.n}</td>
+    <td class="n muted">${r.inp.toLocaleString()}</td>
+    <td class="n muted">${r.out.toLocaleString()}</td>
+    <td class="n" style="color:var(--pop);font-weight:650">$${r.cost.toFixed(4)}</td></tr>`).join('');
+
   return `<div class="wrap">
-    <div class="head"><div class="eyebrow">Estimates</div><h2>Analytics</h2><p>Heuristic estimates from text patterns — not facts, not psychology. Confidence shows how much data was available.</p></div>
-    <div class="notice" style="margin-bottom:22px">These are <b>estimates</b>. Low confidence means take it lightly. ReplyGraph describes threads ("higher-friction lately") — it does not judge people.</div>
+    <div class="head">
+      <div class="eyebrow">Estimates, not findings</div>
+      <h2>Analytics</h2>
+      <p>These numbers come from counting words and timestamps. ReplyGraph describes a thread — “more friction lately” — and stops there. It does not diagnose people, and low confidence means take it lightly.</p>
+    </div>
     ${cards}
-    <div class="sec-title" style="margin-top:32px">Token usage estimate</div>
-    <div class="card" style="padding:20px"><table><thead><tr><th>Operation</th><th>Runs</th><th>Input</th><th>Output</th><th>Est. cost</th></tr></thead><tbody>${tokenRows}</tbody></table>
-    <p class="sm muted" style="margin-top:12px">Prices come from your editable settings and may not match real billing.</p></div>
+    <div class="sec-title" style="margin-top:30px">Token usage estimate</div>
+    <div class="card" style="padding:20px">
+      <div class="usebar">${bar}</div>
+      <div class="uselegend">${legend}<span style="margin-left:auto" class="num">$${total.toFixed(4)} total</span></div>
+      <table><thead><tr><th>Operation</th><th>Runs</th><th>Input</th><th>Output</th><th>Est. cost</th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="sm muted" style="margin-top:12px">Prices come from your settings and will not match a real bill exactly.</p>
+    </div>
   </div>`;
 }
 
-function viewExports(){
+/* ============================================================
+   Exports
+   ============================================================ */
+function viewExports() {
   return `<div class="wrap">
-    <div class="head"><div class="eyebrow">Output</div><h2>Exports</h2><p>Summaries only by default — never raw message dumps. User-triggered, timestamped, with confidence labels.</p></div>
+    <div class="head">
+      <div class="eyebrow">What leaves the app</div>
+      <h2>Exports</h2>
+      <p>Summaries only, never raw message dumps. You trigger every export, and each file is timestamped and carries its confidence label.</p>
+    </div>
     <div class="dash-cols">
-      <div class="card" style="padding:22px"><h3 style="font-size:14px;font-weight:700">Markdown</h3><p class="sm muted" style="margin:10px 0 18px">Daily digest, follow-ups, and analytics as local .md files.</p><button class="btn solid" onclick="toast('Wrote 3 markdown files (demo)')">Export Markdown</button></div>
-      <div class="card" style="padding:22px"><h3 style="font-size:14px;font-weight:700">Obsidian</h3><p class="sm muted" style="margin:10px 0 18px">Writes into /ReplyGraph/ with YAML frontmatter and [[wiki links]].</p><button class="btn solid" onclick="toast('Set a vault path in Settings (demo)')">Export to Obsidian</button></div>
+      <div class="card" style="padding:22px">
+        <h3 style="font-size:14px;font-weight:650">Markdown</h3>
+        <p class="sm muted" style="margin:9px 0 18px;line-height:1.55">A daily digest, your follow-ups, and analytics as plain <span class="num">.md</span> files on disk.</p>
+        <button class="btn solid" onclick="toast('Wrote 3 markdown files')">Export Markdown</button>
+      </div>
+      <div class="card" style="padding:22px">
+        <h3 style="font-size:14px;font-weight:650">Obsidian</h3>
+        <p class="sm muted" style="margin:9px 0 18px;line-height:1.55">Writes into <span class="num">/ReplyGraph/</span> with YAML frontmatter and wiki links.</p>
+        <button class="btn solid" onclick="go('settings')">Set a vault path</button>
+      </div>
     </div>
-    <div class="sec-title" style="margin-top:30px">Recent exports</div>
+    <div class="sec-title" style="margin-top:28px">Recent exports</div>
     <div class="panel">
-      <div class="fu"><div><span class="tag">daily_digest</span> <span class="sm muted" style="margin-left:8px">~/ReplyGraph/daily_digest_2026-06-28.md</span></div><span class="sm faint">just now</span></div>
-      <div class="fu"><div><span class="tag">followups</span> <span class="sm muted" style="margin-left:8px">~/ReplyGraph/followups_2026-06-28.md</span></div><span class="sm faint">just now</span></div>
+      <div class="fu"><div><span class="tag">daily digest</span> <span class="sm muted num" style="margin-left:8px">~/ReplyGraph/daily_digest_2026-06-28.md</span></div><span class="sm faint">just now</span></div>
+      <div class="fu"><div><span class="tag">follow-ups</span> <span class="sm muted num" style="margin-left:8px">~/ReplyGraph/followups_2026-06-28.md</span></div><span class="sm faint">just now</span></div>
     </div>
   </div>`;
 }
 
-function viewSettings(){
-  const tog = (k) => `<div class="tog ${toggles[k]?'on':''}" onclick="flip('${k}')"></div>`;
+/* ============================================================
+   Settings
+   ============================================================ */
+function viewSettings() {
+  const tog = k => `<button class="tog ${state.toggles[k] ? 'on' : ''}" onclick="flip('${k}')" role="switch" aria-checked="${state.toggles[k]}" aria-label="${k}"></button>`;
+  const row = (label, desc, control) => `<div class="srow"><div><div class="s-label">${label}</div><div class="s-desc">${desc}</div></div>${control}</div>`;
+
   return `<div class="wrap">
-    <div class="head"><div class="eyebrow">Configuration</div><h2>Settings</h2><p>All local. Nothing leaves your machine unless you add an API key and turn local-only mode off.</p></div>
+    <div class="head">
+      <div class="eyebrow">Configuration</div>
+      <h2>Settings</h2>
+      <p>Everything here stays on this machine. Nothing leaves it unless you turn off local-only mode and add your own API key.</p>
+    </div>
+
     <div class="ssection"><div class="sec-title">iMessage</div><div class="card">
-      <div class="srow"><div><div class="s-label">Database status</div><div class="s-desc">Reads ~/Library/Messages/chat.db (read-only). Needs Full Disk Access for Terminal on macOS.</div></div><span class="tag">Demo — not connected</span></div>
-      <div class="srow"><div><div class="s-label">Max threads</div><div class="s-desc">How many recent conversations to pull per sync.</div></div><input class="sinput" value="50" style="width:90px"/></div>
-      <div class="srow"><div><div class="s-label">Max messages / thread</div><div class="s-desc">How far back to read in each conversation.</div></div><input class="sinput" value="50" style="width:90px"/></div>
+      ${row('Database status', 'Reads <span class="num">~/Library/Messages/chat.db</span> read-only. macOS requires Full Disk Access for your terminal.', '<span class="tag">Demo — not connected</span>')}
+      ${row('Threads per sync', 'How many recent conversations to pull.', '<input class="sinput" value="50" style="width:90px" aria-label="Threads per sync"/>')}
+      ${row('Messages per thread', 'How far back to read in each conversation.', '<input class="sinput" value="50" style="width:90px" aria-label="Messages per thread"/>')}
     </div></div>
-    <div class="ssection"><div class="sec-title">Privacy & LLM</div><div class="card">
-      <div class="srow"><div><div class="s-label">Local-only mode</div><div class="s-desc">When on, drafts use offline heuristics and no message text is ever sent anywhere.</div></div>${tog('local')}</div>
-      <div class="srow"><div><div class="s-label">Use LLM drafts</div><div class="s-desc">Optional. Sends the conversation to Claude to write better drafts. Off by default.</div></div>${tog('llm')}</div>
-      <div class="srow"><div><div class="s-label">API key</div><div class="s-desc">Stored locally. Only used if LLM drafts are on.</div></div><input class="sinput" type="password" placeholder="sk-ant-…"/></div>
-      <div class="srow"><div><div class="s-label">Model</div><div class="s-desc">Stronger models for risky rewrites, cheaper ones for routine drafts.</div></div><input class="sinput" value="claude-haiku-4-5" style="width:200px"/></div>
+
+    <div class="ssection"><div class="sec-title">Privacy and drafting</div><div class="card">
+      ${row('Local-only mode', 'Drafts come from offline heuristics. No message text leaves your Mac.', tog('local'))}
+      ${row('Use LLM drafts', 'Sends the conversation to Claude to write better drafts. Off by default.', tog('llm'))}
+      ${row('API key', 'Stored locally, used only when LLM drafts are on.', '<input class="sinput" type="password" placeholder="sk-ant-…" aria-label="API key"/>')}
+      ${row('Model', 'Stronger models for sensitive rewrites, cheaper ones for routine drafts.', '<input class="sinput" value="claude-haiku-4-5" style="width:210px" aria-label="Model"/>')}
     </div></div>
+
     <div class="ssection"><div class="sec-title">Export</div><div class="card">
-      <div class="srow"><div><div class="s-label">Obsidian vault path</div><div class="s-desc">Where /ReplyGraph/ notes get written.</div></div><input class="sinput" placeholder="~/Documents/MyVault"/></div>
+      ${row('Obsidian vault path', 'Where <span class="num">/ReplyGraph/</span> notes get written.', '<input class="sinput" placeholder="~/Documents/MyVault" aria-label="Obsidian vault path"/>')}
     </div></div>
+
     <div class="ssection"><div class="sec-title">Data</div><div class="card">
-      <div class="srow"><div><div class="s-label">Rebuild analytics</div><div class="s-desc">Recompute tone & relationship estimates from stored messages.</div></div><button class="btn" onclick="toast('Rebuilt (demo)')">Rebuild</button></div>
-      <div class="srow"><div><div class="s-label">Clear local database</div><div class="s-desc">Deletes all synced messages and analysis from this machine.</div></div><button class="btn" onclick="toast('Demo: nothing was deleted')">Clear</button></div>
+      ${row('Rebuild analytics', 'Recompute tone and relationship estimates from stored messages.', '<button class="btn" onclick="toast(\'Analytics rebuilt\')">Rebuild</button>')}
+      ${row('Clear local database', 'Deletes every synced message and analysis from this machine.', '<button class="btn" onclick="toast(\'Demo mode — nothing was deleted\')">Clear</button>')}
     </div></div>
   </div>`;
 }
 
-// ---------- Actions ----------
-function pick(id){ state.thread=id; state.inboxPane='detail'; renderMain(); }
-function backToList(){ state.inboxPane='list'; renderMain(); }
-function setFilter(f){ state.filter=f; renderMain(); }
-function flip(k){ toggles[k]=!toggles[k]; renderMain(); }
-function complete(key){ state.completed.add(key); renderMain(); toast('Marked complete'); }
+/* ============================================================
+   Actions
+   ============================================================ */
+function pick(id) {
+  state.thread = id;
+  state.inboxPane = 'detail';
+  if (state.tab !== 'inbox') { state.tab = 'inbox'; render(); return; }
+  refreshThreadList();
+  refreshDetail();
+}
+function openThread(id) { state.tab = 'inbox'; state.thread = id; state.inboxPane = 'detail'; render(); }
+function backToList() { state.inboxPane = 'list'; const el = $('#inbox'); if (el) { el.classList.remove('show-detail'); el.classList.add('show-list'); } }
+function setFilter(f) { state.filter = f; refreshThreadList(); }
+function onSearch(v) {
+  state.query = v;
+  refreshThreadList();
+  const input = $('#search');
+  if (input && input.value !== v) input.value = v;
+}
+function flip(k) { state.toggles[k] = !state.toggles[k]; render(); toast(`${k === 'local' ? 'Local-only mode' : 'LLM drafts'} ${state.toggles[k] ? 'on' : 'off'}`); }
 
-function rewrite(id, type){
-  let t = state.drafts[id]; const words = t.split(/\s+/);
-  if(type==='shorter') t = words.slice(0, Math.max(4, Math.ceil(words.length/2))).join(' ');
-  else if(type==='casual') t = t.toLowerCase().replace(/[.!]+$/,'') + ' :)';
-  else if(type==='professional') t = t.charAt(0).toUpperCase()+t.slice(1).replace(/\s*:\)$/,'').replace(/[!]+/,'');
-  else if(type==='less apologetic') t = t.replace(/\b(sorry|i apologize|my bad|my fault)[,]?\s*/gi,'').replace(/^./,c=>c.toUpperCase());
-  else if(type==='calmer') t = t.replace(/\b(ridiculous|insane|unacceptable|crazy)\b/gi,'frustrating');
-  else if(type==='say no politely') t = "Thanks for thinking of me — I can't make this one work, but I appreciate the ask.";
-  else if(type==='buy time') t = "Thanks for this — I need a little time to think it through. I'll get back to you shortly.";
-  else if(type==='one clear question') t = t.replace(/[?.!]+$/,'') + '. What works best for you?';
-  else if(type==='nicer') t = t.replace(/^./,c=>c.toUpperCase()) + ' 🙂';
-  else if(type==='more direct') t = t.replace(/^(hey|hi|so|well|um|i think|maybe)[, ]+/i,'').replace(/^./,c=>c.toUpperCase());
-  else if(type==='less fake') t = t.replace(/!+/g,'').replace(/\bso (excited|happy|thrilled)\b/gi,'glad');
-  else if(type==='more adult') t = t.replace(/\blol\b/gi,'').replace(/\bhaha\b/gi,'').trim().replace(/^./,c=>c.toUpperCase());
-  else if(type==='less defensive') t = t.replace(/\b(i was just|i didn'?t mean|for the record|to be clear)\b[, ]*/gi,'').replace(/^./,c=>c.toUpperCase());
-  state.drafts[id]=t.trim(); renderMain(); toast('Rewritten: '+type);
+function complete(key) {
+  const el = document.getElementById('fu-' + key);
+  const finish = () => { state.completed.add(key); render(); toast('Marked done'); };
+  if (el && !reduceMotion) { el.classList.add('leaving'); setTimeout(finish, 260); } else finish();
 }
-function setTone(id, tone){
-  if(!TONE_VARIANTS[id] || !TONE_VARIANTS[id][tone]) return;
+
+function onDraftInput(id, value) {
+  stopTyping();
+  state.drafts[id] = value;
+  const wc = $('#wordCount');
+  if (wc) wc.textContent = wordsOf(value);
+}
+function onDraftKey(e) {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); copyDraft(state.thread); }
+}
+
+/* Type the new draft in rather than swapping it — it reads as composing.
+   Driven by elapsed time, so a throttled or backgrounded tab still lands on
+   the complete text instead of stopping partway. */
+let typing = null;
+function stopTyping() {
+  if (!typing) return;
+  cancelAnimationFrame(typing.raf);
+  clearTimeout(typing.net);
+  const card = $('#draftCard');
+  if (card) card.classList.remove('writing');
+  typing = null;
+}
+function setDraftText(id, text) {
+  stopTyping();
+  state.drafts[id] = text;
+  const ta = $('#draft'), card = $('#draftCard'), wc = $('#wordCount');
+  if (!ta) return;
+  const settle = () => { ta.value = text; if (wc) wc.textContent = wordsOf(text); };
+  if (reduceMotion) { settle(); return; }
+
+  card.classList.add('writing');
+  ta.value = '';
+  const ms = Math.min(700, 180 + text.length * 4);
+  const t0 = performance.now();
+  typing = { raf: 0, net: 0 };
+  const step = now => {
+    const p = Math.min(1, (now - t0) / ms);
+    const i = Math.round(text.length * p);
+    ta.value = text.slice(0, i);
+    if (wc) wc.textContent = wordsOf(ta.value);
+    if (p < 1) typing.raf = requestAnimationFrame(step);
+    else { stopTyping(); settle(); }
+  };
+  typing.raf = requestAnimationFrame(step);
+  // Background tabs suspend rAF. Land on the full text regardless.
+  typing.net = setTimeout(() => { stopTyping(); settle(); }, ms + 400);
+}
+
+function rewrite(id, type) {
+  let t = state.drafts[id];
+  const words = t.split(/\s+/);
+  if (type === 'shorter') t = words.slice(0, Math.max(4, Math.ceil(words.length / 2))).join(' ');
+  else if (type === 'casual') t = t.toLowerCase().replace(/[.!]+$/, '') + ' :)';
+  else if (type === 'professional') t = t.charAt(0).toUpperCase() + t.slice(1).replace(/\s*:\)$/, '').replace(/[!]+/, '');
+  else if (type === 'less apologetic') t = t.replace(/\b(sorry|i apologize|my bad|my fault)[,]?\s*/gi, '').replace(/^./, c => c.toUpperCase());
+  else if (type === 'calmer') t = t.replace(/\b(ridiculous|insane|unacceptable|crazy)\b/gi, 'frustrating');
+  else if (type === 'say no politely') t = "Thanks for thinking of me — I can't make this one work, but I appreciate the ask.";
+  else if (type === 'buy time') t = "Thanks for this — I need a little time to think it through. I'll get back to you shortly.";
+  else if (type === 'one clear question') t = t.replace(/[?.!]+$/, '') + '. What works best for you?';
+  else if (type === 'nicer') t = t.replace(/^./, c => c.toUpperCase()) + ' 🙂';
+  else if (type === 'more direct') t = t.replace(/^(hey|hi|so|well|um|i think|maybe)[, ]+/i, '').replace(/^./, c => c.toUpperCase());
+  else if (type === 'less fake') t = t.replace(/!+/g, '').replace(/\bso (excited|happy|thrilled)\b/gi, 'glad');
+  else if (type === 'more adult') t = t.replace(/\blol\b/gi, '').replace(/\bhaha\b/gi, '').trim().replace(/^./, c => c.toUpperCase());
+  else if (type === 'less defensive') t = t.replace(/\b(i was just|i didn'?t mean|for the record|to be clear)\b[, ]*/gi, '').replace(/^./, c => c.toUpperCase());
+
+  state.used[id].add(type);
+  const btns = document.querySelectorAll('#rewrites .rw');
+  btns.forEach(b => { if (b.textContent.trim() === type) b.classList.add('used'); });
+  setDraftText(id, t.trim());
+  toast('Rewritten: ' + type);
+}
+
+function setTone(id, tone) {
+  if (!TONE_VARIANTS[id] || !TONE_VARIANTS[id][tone]) return;
   state.tone[id] = tone;
-  state.drafts[id] = TONE_VARIANTS[id][tone];
-  renderMain();
-  const el = document.querySelector(`.tone-seg[aria-pressed="true"]`);
-  if(el) el.focus();
+  document.querySelectorAll('#toneGroup .tone-seg').forEach(b => {
+    const on = b.dataset.tone === tone;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on);
+  });
+  positionThumb();
+  setDraftText(id, TONE_VARIANTS[id][tone]);
 }
-function toneKeyNav(e){
-  if(e.key!=='ArrowRight' && e.key!=='ArrowLeft') return;
+
+function toneKeyNav(e) {
+  if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
   e.preventDefault();
   const segs = Array.from(document.querySelectorAll('.tone-seg'));
   const i = segs.indexOf(document.activeElement);
-  if(i===-1) return;
-  let next = e.key==='ArrowRight' ? i+1 : i-1;
-  if(next<0) next = segs.length-1;
-  if(next>=segs.length) next = 0;
+  if (i === -1) return;
+  let next = e.key === 'ArrowRight' ? i + 1 : i - 1;
+  if (next < 0) next = segs.length - 1;
+  if (next >= segs.length) next = 0;
   segs[next].focus();
 }
-function copyDraft(id){
+
+function copyDraft(id) {
   const text = state.drafts[id];
-  if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>toast('Copied to clipboard')).catch(()=>toast('Copied (demo)')); }
-  else toast('Copied (demo)');
-}
-function toast(msg){
-  const c = document.getElementById('toasts');
-  const el = document.createElement('div'); el.className='toast'; el.textContent=msg;
-  c.appendChild(el); setTimeout(()=>el.remove(), 2600);
+  const done = () => toast('Copied. Paste it wherever you like — ReplyGraph never sends.');
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(done).catch(done);
+  else done();
 }
 
-// ---------- Boot ----------
-// Optional #tab=inbox&thread=1&tone=casual hook, used to preselect a
-// tab/thread/tone for non-interactive screenshots (e.g. headless Chrome).
-function applyHashParams(){
-  if(!location.hash) return;
+function doSync() {
+  if (state.syncing) return;
+  state.syncing = true;
+  const btn = $('#syncBtn');
+  btn.disabled = true;
+  btn.innerHTML = `${IC.refresh.replace('class="ic"', 'class="ic spin"')} Syncing…`;
+  setTimeout(() => {
+    state.syncing = false;
+    btn.disabled = false;
+    btn.textContent = 'Sync messages';
+    toast('In the real app this reads chat.db on your Mac');
+  }, reduceMotion ? 200 : 1100);
+}
+
+function toggleTheme() {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const next = dark ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('rg-theme', next); } catch (e) {}
+  if (state.tab !== 'inbox') renderChrome();
+}
+
+function toast(msg, type) {
+  const c = $('#toasts');
+  const el = document.createElement('div');
+  el.className = 'toast' + (type === 'error' ? ' toast-error' : '');
+  el.innerHTML = (type === 'error' ? IC.alert : IC.check) + '<span>' + esc(msg) + '</span>';
+  c.appendChild(el);
+  setTimeout(() => { el.classList.add('leaving'); setTimeout(() => el.remove(), 220); }, 2600);
+}
+
+/* ============================================================
+   Command palette and shortcut sheet
+   ============================================================ */
+function paletteItems() {
+  const items = [];
+  TABS.forEach(([id, label]) => items.push({ group: 'Go to', icon: id, label, hint: 'G ' + label[0].toUpperCase(), run: () => go(id) }));
+  THREADS.forEach(t => items.push({ group: 'Threads', icon: 'inbox', label: t.name, hint: t.needs ? 'needs reply' : 'caught up', run: () => openThread(t.id) }));
+  items.push({ group: 'Actions', icon: 'copy', label: 'Copy the current draft', hint: 'C', run: () => copyDraft(state.thread) });
+  items.push({ group: 'Actions', icon: 'refresh', label: 'Sync messages', hint: '', run: doSync });
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  items.push({ group: 'Actions', icon: dark ? 'sun' : 'moon', label: `Switch to ${dark ? 'light' : 'dark'} theme`, hint: 'T', run: toggleTheme });
+  items.push({ group: 'Actions', icon: 'keyboard', label: 'Keyboard shortcuts', hint: '?', run: showKeys });
+  return items;
+}
+
+function matchedItems() {
+  const q = state.paletteQuery.trim().toLowerCase();
+  const all = paletteItems();
+  if (!q) return all;
+  return all.filter(i => i.label.toLowerCase().includes(q) || i.group.toLowerCase().includes(q));
+}
+
+function openPalette() { state.overlay = 'palette'; state.paletteQuery = ''; state.paletteIndex = 0; renderOverlay(); }
+function showKeys() { state.overlay = 'keys'; renderOverlay(); }
+function closeOverlay() { state.overlay = null; renderOverlay(); }
+
+function renderOverlay() {
+  const host = $('#overlay');
+  if (!state.overlay) { host.innerHTML = ''; return; }
+
+  if (state.overlay === 'keys') {
+    const keys = [
+      ['⌘K', 'Command palette'], ['/', 'Search threads'],
+      ['G then D I F A E S', 'Jump to a section'], ['J / K', 'Next / previous thread'],
+      ['1 2 3', 'Casual / warm / professional'], ['C', 'Copy the draft'],
+      ['T', 'Toggle theme'], ['Esc', 'Close'],
+    ];
+    host.innerHTML = `<div class="scrim" onclick="if(event.target===this)closeOverlay()">
+      <div class="sheet" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">
+        <h3>Keyboard shortcuts</h3>
+        <p>ReplyGraph is built to be driven from the keyboard.</p>
+        <div class="keys">${keys.map(([k, d]) => `<div><span>${d}</span><kbd>${k}</kbd></div>`).join('')}</div>
+        <div style="margin-top:20px;text-align:right"><button class="btn" onclick="closeOverlay()">Close</button></div>
+      </div></div>`;
+    return;
+  }
+
+  const items = matchedItems();
+  if (state.paletteIndex >= items.length) state.paletteIndex = Math.max(0, items.length - 1);
+  let lastGroup = null;
+  const rows = items.map((it, i) => {
+    const header = it.group !== lastGroup ? `<div class="palette-group">${it.group}</div>` : '';
+    lastGroup = it.group;
+    return header + `<button class="pitem ${i === state.paletteIndex ? 'sel' : ''}" data-i="${i}"
+      onmousemove="setPaletteIndex(${i})" onclick="runPalette(${i})">
+      ${IC[it.icon]}<span>${esc(it.label)}</span>${it.hint ? `<span class="hint">${esc(it.hint)}</span>` : ''}</button>`;
+  }).join('');
+
+  host.innerHTML = `<div class="scrim" onclick="if(event.target===this)closeOverlay()">
+    <div class="palette" role="dialog" aria-modal="true" aria-label="Command palette">
+      <div class="palette-in">
+        ${IC.search}
+        <input id="paletteInput" placeholder="Jump to a section, a thread, or an action…" value="${esc(state.paletteQuery)}"
+          oninput="onPaletteInput(this.value)" autocomplete="off" aria-label="Command palette" />
+        <kbd>Esc</kbd>
+      </div>
+      <div class="palette-list" id="paletteList">${rows || '<div class="palette-empty">Nothing matches that.</div>'}</div>
+      <div class="palette-foot">
+        <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>↵</kbd> open</span><span><kbd>Esc</kbd> dismiss</span>
+      </div>
+    </div></div>`;
+  const input = $('#paletteInput');
+  if (input) { input.focus(); input.setSelectionRange(input.value.length, input.value.length); }
+}
+
+function onPaletteInput(v) { state.paletteQuery = v; state.paletteIndex = 0; renderOverlay(); }
+function setPaletteIndex(i) {
+  if (state.paletteIndex === i) return;
+  state.paletteIndex = i;
+  document.querySelectorAll('.pitem').forEach(el => el.classList.toggle('sel', +el.dataset.i === i));
+}
+function runPalette(i) {
+  const items = matchedItems();
+  const it = items[i];
+  closeOverlay();
+  if (it) it.run();
+}
+
+/* ============================================================
+   Keyboard
+   ============================================================ */
+let gPending = false;
+const G_MAP = { d: 'dashboard', i: 'inbox', f: 'followups', a: 'analytics', e: 'exports', s: 'settings' };
+
+document.addEventListener('keydown', e => {
+  const typingHere = /^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName);
+
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    state.overlay === 'palette' ? closeOverlay() : openPalette();
+    return;
+  }
+
+  if (state.overlay === 'palette') {
+    const items = matchedItems();
+    if (e.key === 'ArrowDown') { e.preventDefault(); state.paletteIndex = (state.paletteIndex + 1) % Math.max(1, items.length); renderOverlay(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); state.paletteIndex = (state.paletteIndex - 1 + items.length) % Math.max(1, items.length); renderOverlay(); }
+    else if (e.key === 'Enter') { e.preventDefault(); runPalette(state.paletteIndex); }
+    else if (e.key === 'Escape') { e.preventDefault(); closeOverlay(); }
+    return;
+  }
+  if (state.overlay === 'keys' && e.key === 'Escape') { closeOverlay(); return; }
+
+  if (e.key === 'Escape') {
+    if (typingHere) { document.activeElement.blur(); return; }
+    if (state.tab === 'inbox' && state.inboxPane === 'detail') backToList();
+    return;
+  }
+  if (typingHere || e.metaKey || e.ctrlKey || e.altKey) return;
+
+  if (gPending) {
+    gPending = false;
+    const dest = G_MAP[e.key.toLowerCase()];
+    if (dest) { e.preventDefault(); go(dest); }
+    return;
+  }
+
+  switch (e.key.toLowerCase()) {
+    case 'g': gPending = true; setTimeout(() => { gPending = false; }, 900); break;
+    case '?': showKeys(); break;
+    case 't': toggleTheme(); break;
+    case 'c': if (state.tab === 'inbox') copyDraft(state.thread); break;
+    case '/':
+      e.preventDefault();
+      if (state.tab !== 'inbox') go('inbox');
+      setTimeout(() => { const s = $('#search'); if (s) s.focus(); }, 30);
+      break;
+    case 'j': case 'k': {
+      if (state.tab !== 'inbox') break;
+      e.preventDefault();
+      const list = filtered();
+      if (!list.length) break;
+      const i = list.findIndex(t => t.id === state.thread);
+      const next = e.key.toLowerCase() === 'j'
+        ? list[Math.min(list.length - 1, i + 1)] || list[0]
+        : list[Math.max(0, i - 1)] || list[0];
+      pick(next.id);
+      break;
+    }
+    case '1': case '2': case '3': {
+      if (state.tab !== 'inbox') break;
+      const tone = ['casual', 'warm', 'professional'][+e.key - 1];
+      setTone(state.thread, tone);
+      break;
+    }
+  }
+});
+
+window.addEventListener('resize', positionThumb);
+
+/* ============================================================
+   Boot
+   ============================================================ */
+// #tab=inbox&thread=1&tone=casual preselects a view for screenshots.
+function applyHashParams() {
+  if (!location.hash) return;
   const params = new URLSearchParams(location.hash.slice(1));
   const tab = params.get('tab');
-  const threadId = parseInt(params.get('thread'),10);
+  const threadId = parseInt(params.get('thread'), 10);
   const tone = params.get('tone');
-  if(tab) state.tab = tab;
-  if(!isNaN(threadId) && THREADS.some(t=>t.id===threadId)){
+  const theme = params.get('theme');
+  if (theme === 'dark' || theme === 'light') document.documentElement.setAttribute('data-theme', theme);
+  if (tab) state.tab = tab;
+  if (!isNaN(threadId) && THREADS.some(t => t.id === threadId)) {
     state.thread = threadId;
     state.inboxPane = 'detail';
-    if(!tab) state.tab = 'inbox';
-    if(tone && TONE_VARIANTS[threadId] && TONE_VARIANTS[threadId][tone]){
+    if (!tab) state.tab = 'inbox';
+    if (tone && TONE_VARIANTS[threadId] && TONE_VARIANTS[threadId][tone]) {
       state.tone[threadId] = tone;
       state.drafts[threadId] = TONE_VARIANTS[threadId][tone];
     }
   }
 }
+
+Object.assign(window, {
+  go, pick, openThread, backToList, setFilter, onSearch, flip, complete,
+  rewrite, setTone, toneKeyNav, copyDraft, toast, toggleTheme,
+  openPalette, closeOverlay, showKeys, onPaletteInput, setPaletteIndex, runPalette,
+  onDraftInput, onDraftKey,
+});
+
 applyHashParams();
-renderNav(); renderMain();
+render();
+$('#syncBtn').addEventListener('click', doSync);
 </script>
 </body>
 </html>

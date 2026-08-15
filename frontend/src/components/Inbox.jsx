@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { api } from '../api.js'
+import { Icon } from '../icons.jsx'
+import { Pulse, PulseLegend, openLabel } from './Pulse.jsx'
 
 const REWRITES = [
   ['shorter', 'shorter'], ['nicer', 'nicer'], ['more_direct', 'more direct'], ['less_fake', 'less fake'],
@@ -12,6 +14,7 @@ const HIGH_RISK = ['medical', 'money', 'legal', 'conflict', 'work_risk']
 export default function Inbox({ ctx, initialThread }) {
   const [threads, setThreads] = useState([])
   const [filter, setFilter] = useState('needs')
+  const [query, setQuery] = useState('')
   const [selected, setSelected] = useState(initialThread || null)
   const [thread, setThread] = useState(null)
   const [draft, setDraft] = useState(null)
@@ -74,10 +77,18 @@ export default function Inbox({ ctx, initialThread }) {
   }
 
   const list = threads.filter(t => {
-    if (filter === 'needs') return t.needs_response_estimate
-    if (filter === 'risk') return t.priority_label === 'risky_to_answer_fast'
-    return true
+    if (filter === 'needs' && !t.needs_response_estimate) return false
+    if (filter === 'risk' && t.priority_label !== 'risky_to_answer_fast') return false
+    const q = query.trim().toLowerCase()
+    if (!q) return true
+    return `${t.contact_name || ''} ${t.latest_message || ''}`.toLowerCase().includes(q)
   })
+
+  const counts = {
+    needs: threads.filter(t => t.needs_response_estimate).length,
+    all: threads.length,
+    risk: threads.filter(t => t.priority_label === 'risky_to_answer_fast').length,
+  }
 
   const riskFlags = draft ? (draft.risk_flags || (draft.risk_flags_json ? JSON.parse(draft.risk_flags_json) : [])) : []
   const isHighRisk = riskFlags.some(f => HIGH_RISK.includes(f))
@@ -86,15 +97,33 @@ export default function Inbox({ ctx, initialThread }) {
     <div className={`inbox ${pane === 'detail' ? 'show-detail' : 'show-list'}`}>
       <div className="threads">
         <div className="threads-head">
-          <div className="eyebrow">Inbox</div><h3>Threads</h3>
+          <h3>Threads</h3>
+          <div className={`search${query ? ' has-value' : ''}`}>
+            <Icon name="search" />
+            <input
+              type="search"
+              placeholder="Search threads…"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              aria-label="Search threads"
+            />
+            <button className="clear" onClick={() => setQuery('')} aria-label="Clear search"><Icon name="x" /></button>
+          </div>
           <div className="filters">
             {[['needs', 'Needs reply'], ['all', 'All'], ['risk', 'Flagged']].map(([id, label]) => (
-              <button key={id} className={`chip ${filter === id ? 'on' : ''}`} onClick={() => setFilter(id)}>{label}</button>
+              <button key={id} className={`chip ${filter === id ? 'on' : ''}`} onClick={() => setFilter(id)} aria-pressed={filter === id}>
+                {label}<span className="n">{counts[id]}</span>
+              </button>
             ))}
           </div>
         </div>
         {loading && <div className="loading">Loading…</div>}
-        {!loading && list.length === 0 && <div className="empty">No threads. Sync your messages first.</div>}
+        {!loading && list.length === 0 && threads.length === 0 && (
+          <div className="empty"><b>No threads yet.</b>Sync your messages to get started.</div>
+        )}
+        {!loading && list.length === 0 && threads.length > 0 && (
+          <div className="threads-empty">Nothing matches that filter.</div>
+        )}
         {list.map(t => (
           <div key={t.id} className={`thread ${selected === t.id ? 'active' : ''}`} onClick={() => loadThread(t.id)}>
             <div className="t-top"><span className="name">{t.contact_name}</span><span className="when">{fmtDate(t.latest_at)}</span></div>
@@ -122,8 +151,19 @@ export default function Inbox({ ctx, initialThread }) {
                   {riskFlags.map(f => <span key={f} className="tag flag">{f}</span>)}
                 </div>
               </div>
-              <button className="btn" onClick={() => decide('none')}>No reply needed</button>
+              <button className="btn ghost" onClick={() => decide('none')}>No reply needed</button>
             </div>
+
+            {thread.messages?.length > 0 && (
+              <div className="d-pulse">
+                <div className="ph">
+                  <b>Last 14 days</b>
+                  <span className="num">{openLabel(thread.messages)}</span>
+                </div>
+                <Pulse messages={thread.messages} />
+                <PulseLegend />
+              </div>
+            )}
 
             <div className="convo">
               {thread.messages?.map(m => (
@@ -149,11 +189,26 @@ export default function Inbox({ ctx, initialThread }) {
             {draft && (
               <>
                 <div className="draft-card">
-                  <textarea value={draftText} onChange={e => setDraftText(e.target.value)} />
+                  <textarea
+                    value={draftText}
+                    aria-label="Draft reply"
+                    onChange={e => setDraftText(e.target.value)}
+                    onKeyDown={e => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); copy() } }}
+                  />
+                  <div className="draft-foot">
+                    <span>{words(draftText)}</span>
+                    <span>⌘↵ to copy</span>
+                  </div>
                 </div>
 
                 {isHighRisk && (
-                  <div className="notice"><b>Review carefully</b> — this touches a sensitive topic ({riskFlags.join(', ')}). Copy-to-clipboard only; nothing is ever sent for you.</div>
+                  <div className="notice">
+                    <Icon name="alert" />
+                    <div>
+                      <b>Read this one before you copy it.</b> The thread touches {riskFlags.join(', ').replace(/_/g, ' ')}.
+                      ReplyGraph copies to your clipboard and stops there.
+                    </div>
+                  </div>
                 )}
                 {toneRisks?.flags?.length > 0 && (
                   <div style={{ marginTop: 10 }}>
@@ -170,10 +225,10 @@ export default function Inbox({ ctx, initialThread }) {
                 </div>
 
                 <div className="actions">
-                  <button className="btn solid" onClick={() => decide('approve')}>✓ Approve</button>
+                  <button className="btn solid" onClick={() => decide('approve')}><Icon name="check" /> Approve</button>
                   <button className="btn" onClick={() => decide('edit')}>Save edit</button>
-                  <button className="btn primary" onClick={copy}>Copy to clipboard</button>
-                  <button className="btn" onClick={() => decide('deny')}>Deny</button>
+                  <button className="btn primary" onClick={copy}><Icon name="copy" /> Copy to clipboard</button>
+                  <button className="btn ghost" onClick={() => decide('deny')}>Deny</button>
                 </div>
               </>
             )}
@@ -198,6 +253,12 @@ export default function Inbox({ ctx, initialThread }) {
       </div>
     </div>
   )
+}
+
+function words(text) {
+  const t = text || ''
+  const n = t.trim() ? t.trim().split(/\s+/).length : 0
+  return `${n} ${n === 1 ? 'word' : 'words'} · ${t.length} characters`
 }
 
 function fmtDate(iso) {

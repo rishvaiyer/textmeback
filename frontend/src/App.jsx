@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api } from './api.js'
-import { Icon } from './icons.jsx'
+import { Icon, currentTheme, toggleTheme } from './icons.jsx'
 import Dashboard from './components/Dashboard.jsx'
 import Inbox from './components/Inbox.jsx'
 import FollowUps from './components/FollowUps.jsx'
@@ -25,6 +25,7 @@ export default function App() {
   const [syncing, setSyncing] = useState(false)
   const [syncStatus, setSyncStatus] = useState(null)
   const [toasts, setToasts] = useState([])
+  const [theme, setTheme] = useState(currentTheme)
 
   const toast = useCallback((msg, type = 'success') => {
     const id = Date.now() + Math.random()
@@ -80,18 +81,34 @@ export default function App() {
           ))}
         </nav>
         <div className="side-foot">
-          <div className="status">
-            <span className="ring" style={{ background: imessageOk ? 'var(--good)' : 'var(--faint)' }} />
-            {imessageOk ? 'iMessage connected' : 'iMessage not connected'}
+          <div className="trust">
+            <span className={`ring${imessageOk ? '' : ' off'}`} />
+            <div>
+              <b>{imessageOk ? 'Local & read-only' : 'Not connected'}</b>
+              <p>
+                {imessageOk
+                  ? <>Reads <span className="num">chat.db</span> on this Mac. Never writes, never sends.</>
+                  : <>Grant Full Disk Access to your terminal, then sync.</>}
+              </p>
+            </div>
           </div>
           <button className="sync" onClick={sync} disabled={syncing}>
-            {syncing ? 'Syncing…' : 'Sync Messages'}
+            {syncing && <Icon name="refresh" className="ic spin" />}
+            {syncing ? 'Syncing…' : 'Sync messages'}
           </button>
         </div>
       </aside>
 
       <main className="main">
-        {tab !== 'inbox' && <Topbar imessageOk={imessageOk} syncStatus={syncStatus} onGo={go} />}
+        {tab !== 'inbox' && (
+          <Topbar
+            imessageOk={imessageOk}
+            syncStatus={syncStatus}
+            onGo={go}
+            theme={theme}
+            onToggleTheme={() => setTheme(toggleTheme())}
+          />
+        )}
         {tab === 'dashboard' && <Dashboard ctx={ctx} />}
         {tab === 'inbox' && <Inbox ctx={ctx} initialThread={inboxThread} />}
         {tab === 'followups' && <FollowUps ctx={ctx} />}
@@ -108,28 +125,50 @@ export default function App() {
         ))}
       </nav>
 
-      <div className="toasts">
-        {toasts.map(t => <div key={t.id} className={`toast${t.type === 'error' ? ' toast-error' : ''}`}>{t.msg}</div>)}
+      <div className="toasts" role="status" aria-live="polite">
+        {toasts.map(t => (
+          <div key={t.id} className={`toast${t.type === 'error' ? ' toast-error' : ''}`}>
+            <Icon name={t.type === 'error' ? 'alert' : 'check'} />
+            <span>{t.msg}</span>
+          </div>
+        ))}
       </div>
     </div>
   )
 }
 
-function Topbar({ imessageOk, syncStatus, onGo }) {
-  if (imessageOk) {
-    return (
-      <div className="topbar">
-        <span className="demo-pill" style={{ color: 'var(--good)', background: '#eafaf2' }}>CONNECTED</span>
-        Reading your iMessages locally, read-only. Nothing is ever sent for you.
-        {syncStatus?.ok && <> · {syncStatus.synced} threads synced</>}
-      </div>
-    )
-  }
+function Topbar({ imessageOk, syncStatus, onGo, theme, onToggleTheme }) {
+  const dark = theme === 'dark'
   return (
     <div className="topbar">
-      <span className="demo-pill" style={{ color: 'var(--muted)', background: 'var(--panel)' }}>NOT CONNECTED</span>
-      No iMessage access yet — grant Full Disk Access, then Sync.
-      <span className="more" style={{ color: 'var(--pop)', cursor: 'pointer', fontWeight: 600 }} onClick={() => onGo('settings')}>&nbsp;Open Settings →</span>
+      <div className="note">
+        {imessageOk ? (
+          <>
+            <span className="demo-pill" style={{ color: 'var(--good)', background: 'var(--good-soft)' }}>CONNECTED</span>
+            <span className="txt">
+              Reading your iMessages locally, read-only. Nothing is ever sent for you.
+              {syncStatus?.ok && ` · ${syncStatus.synced} threads synced`}
+            </span>
+          </>
+        ) : (
+          <>
+            <span className="demo-pill" style={{ color: 'var(--muted)', background: 'var(--panel)' }}>NOT CONNECTED</span>
+            <span className="txt">No iMessage access yet. Grant Full Disk Access, then sync.</span>
+            <span className="more" style={{ color: 'var(--pop)', cursor: 'pointer', fontWeight: 600 }} onClick={() => onGo('settings')}>Open settings</span>
+          </>
+        )}
+      </div>
+      <div className="spacer" />
+      <div className="topbar-tools">
+        <button
+          className="iconbtn"
+          onClick={onToggleTheme}
+          aria-label={`Switch to ${dark ? 'light' : 'dark'} theme`}
+          title="Theme"
+        >
+          <Icon name={dark ? 'sun' : 'moon'} />
+        </button>
+      </div>
     </div>
   )
 }
