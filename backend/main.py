@@ -25,7 +25,7 @@ from backend.services.clipboard_sender import copy_to_clipboard
 from backend.services.markdown_exporter import export_daily_digest, export_followups, export_analytics
 from backend.services.obsidian_exporter import export_to_obsidian
 
-app = FastAPI(title="ReplyGraph", version="1.0.0")
+app = FastAPI(title="TextMeBack", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,

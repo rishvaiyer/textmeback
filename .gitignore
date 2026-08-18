@@ -12,7 +12,7 @@ dist/
 .vite/
 
 # Local data (never commit messages or the live DB)
-backend/data/replygraph.db
+backend/data/textmeback.db
 backend/data/exports/*.md
 backend/data/exports/*.txt
 

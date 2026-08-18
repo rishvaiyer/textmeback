@@ -5,7 +5,7 @@ from backend.config import load_settings
 
 def _frontmatter(export_type: str, confidence: str = "medium") -> str:
     return f"""---
-source: replygraph
+source: textmeback
 generated_at: {datetime.utcnow().strftime("%Y-%m-%d")}
 export_type: {export_type}
 confidence: {confidence}
@@ -30,7 +30,7 @@ def export_to_obsidian(threads: list[dict], followups: list[dict], analytics: li
     if not vault:
         return {"ok": False, "error": "Obsidian vault path not configured or not found in settings."}
 
-    rg_root = vault / "ReplyGraph"
+    rg_root = vault / "TextMeBack"
     daily_dir = rg_root / "Daily"
     contacts_dir = rg_root / "Contacts"
     followups_dir = rg_root / "Followups"

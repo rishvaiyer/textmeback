@@ -36,7 +36,7 @@ export default function Analytics({ ctx }) {
       </div>
 
       <div className="notice" style={{ marginBottom: 22 }}>
-        These are <b>estimates</b>. Low confidence means take it lightly. ReplyGraph describes threads ("higher-friction lately") — it does not judge people.
+        These are <b>estimates</b>. Low confidence means take it lightly. TextMeBack describes threads ("higher-friction lately") — it does not judge people.
       </div>
 
       {data.length === 0 && <div className="empty">No analytics yet. Sync messages, then rebuild.</div>}

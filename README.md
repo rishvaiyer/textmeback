@@ -1,6 +1,6 @@
-# ReplyGraph
+# TextMeBack
 
-![ReplyGraph dashboard](docs/preview.png)
+![TextMeBack dashboard](docs/preview.png)
 
 A private, local-first macOS app that reads your own iMessage history, ranks
 which conversations need attention, drafts replies in your voice, flags risky
@@ -9,15 +9,15 @@ tone, extracts follow-ups, and exports summaries to Markdown / Obsidian.
 **Local-first. Read-only. No auto-send.** Your messages stay on your Mac.
 
 > There is also a static, sample-data **demo** of the interface (no backend, no
-> real messages) at [`replygraph/demo/index.html`](./demo/index.html), published
-> via GitHub Pages at `/replygraph/`. The instructions below are for the *real*
-> app under `replygraph/`.
+> real messages) at [`textmeback/demo/index.html`](./demo/index.html), hosted
+> publicly at [rishva.up.railway.app/demos/textmeback/](https://rishva.up.railway.app/demos/textmeback/).
+> The instructions below are for the *real* app under `textmeback/`.
 
 ---
 
 ## The interface
 
-ReplyGraph is a two-pane desktop app that collapses to a single column with a
+TextMeBack is a two-pane desktop app that collapses to a single column with a
 native-style tab bar on a phone. Both the real app and the demo share one
 stylesheet, so they look and behave the same.
 
@@ -93,7 +93,7 @@ node demo/shot_mobile.mjs
 ## Privacy principles
 
 - All message data stays local by default (SQLite + JSON on your machine).
-- The Messages database is opened **read-only**; ReplyGraph never writes to it.
+- The Messages database is opened **read-only**; TextMeBack never writes to it.
 - Emotional/relationship analytics are estimates with confidence labels, not facts.
 - Nothing leaves your machine unless you turn off *local-only mode* and add an API key.
 
@@ -112,12 +112,12 @@ The app is two processes: a FastAPI backend and a Vite/React frontend.
 ### 1. Backend
 
 ```bash
-cd replygraph/backend
+cd textmeback/backend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# run from the replygraph/ directory so the `backend` package resolves
+# run from the textmeback/ directory so the `backend` package resolves
 cd ..
 uvicorn backend.main:app --port 8000 --reload
 ```
@@ -127,7 +127,7 @@ Backend is now on http://localhost:8000 (`/health` shows iMessage status).
 ### 2. Frontend
 
 ```bash
-cd replygraph/frontend
+cd textmeback/frontend
 npm install
 npm run dev
 ```
@@ -147,7 +147,7 @@ runs the backend (e.g. Terminal or iTerm):
 
 ### 4. Sync your messages
 
-Click **Sync Messages** in the sidebar (or `POST /sync/imessage`). ReplyGraph pulls
+Click **Sync Messages** in the sidebar (or `POST /sync/imessage`). TextMeBack pulls
 the most recent threads (default 50 threads × 50 messages, configurable in Settings).
 If access fails, you get a clear permission error and the app keeps running.
 
@@ -159,7 +159,7 @@ There is no `chat.db` on Linux, so a **dev-only synthetic seed** lets you exerci
 the whole analysis pipeline:
 
 ```bash
-cd replygraph
+cd textmeback
 source backend/.venv/bin/activate
 python -m backend.dev_seed     # loads sample threads into the local DB
 uvicorn backend.main:app --port 8000
@@ -187,8 +187,8 @@ follow-ups, drafts and analytics where a real Messages database is unavailable.
   and unanswered questions, each with a direction and confidence.
 - **Dashboard customisation**: show/hide and reorder widgets, compact/spacious density,
   pin contacts/threads, choose the default tab; stored locally with a reset button.
-- **Obsidian export**: set a vault path in Settings; ReplyGraph writes summaries into
-  `/ReplyGraph/Daily|Contacts|Followups|Analytics/` with YAML frontmatter and wiki links.
+- **Obsidian export**: set a vault path in Settings; TextMeBack writes summaries into
+  `/TextMeBack/Daily|Contacts|Followups|Analytics/` with YAML frontmatter and wiki links.
 - **Token strategy**: `token_estimator.py` estimates usage with editable pricing; the
   app processes recent threads first and caches summaries rather than resending history.
 - **Pulse graph**: `frontend/src/components/Pulse.jsx` draws each thread's last

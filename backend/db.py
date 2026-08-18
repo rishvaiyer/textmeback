@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from pathlib import Path
 
-DB_PATH = Path(__file__).parent / "data" / "replygraph.db"
+DB_PATH = Path(__file__).parent / "data" / "textmeback.db"
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 engine = create_engine(f"sqlite:///{DB_PATH}", connect_args={"check_same_thread": False})

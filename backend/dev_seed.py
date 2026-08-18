@@ -4,7 +4,7 @@ This is NOT a product feature and never ships in the real workflow. It exists
 so the analysis pipeline (ranking, tone, follow-ups, analytics, drafts) can be
 verified on machines without a macOS Messages database (e.g. CI / Linux).
 
-Run from the `replygraph` directory:
+Run from the `textmeback` directory:
     python -m backend.dev_seed
 """
 from datetime import datetime, timedelta

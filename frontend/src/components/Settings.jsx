@@ -62,7 +62,7 @@ export default function Settings({ ctx }) {
         <Row label="Database status" desc={status.error || `Reading ${status.path || '~/Library/Messages/chat.db'} (read-only).`}>
           <span className={`tag ${status.accessible ? 'good' : ''}`}>{status.accessible ? 'Connected' : 'Not connected'}</span>
         </Row>
-        <Row label="Database path" desc="Where ReplyGraph looks for your Messages database.">
+        <Row label="Database path" desc="Where TextMeBack looks for your Messages database.">
           <input className="sinput" value={form.imessage_db_path} onChange={e => set('imessage_db_path', e.target.value)} />
         </Row>
         <Row label="Max threads" desc="How many recent conversations to pull per sync.">
@@ -89,7 +89,7 @@ export default function Settings({ ctx }) {
       </Section>
 
       <Section title="Export">
-        <Row label="Obsidian vault path" desc="Where /ReplyGraph/ notes get written.">
+        <Row label="Obsidian vault path" desc="Where /TextMeBack/ notes get written.">
           <input className="sinput" placeholder="~/Documents/MyVault" value={form.obsidian_vault_path} onChange={e => set('obsidian_vault_path', e.target.value)} />
         </Row>
       </Section>

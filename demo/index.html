@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>ReplyGraph Demo</title>
-<meta name="description" content="ReplyGraph reads your iMessages locally, shows which conversations are waiting on you, and drafts a reply in your voice. It never sends." />
+<title>TextMeBack Demo</title>
+<meta name="description" content="TextMeBack reads your iMessages locally, shows which conversations are waiting on you, and drafts a reply in your voice. It never sends." />
 <meta name="theme-color" content="#fafafb" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#0a0c11" media="(prefers-color-scheme: dark)" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,7 +23,7 @@
 <style id="rg-styles">
 /* RG-STYLES-START: generated from frontend/src/styles.css by demo/sync-styles.mjs. Do not edit here. */
 /* ============================================================
-   ReplyGraph design system
+   TextMeBack design system
    Shared by the React app (frontend/) and the static demo.
    Edit this file, then run `node demo/sync-styles.mjs` to push
    the same rules into demo/index.html.
@@ -1411,7 +1411,7 @@ function detailHTML() {
 
       ${TONE_VARIANTS[t.id] ? toneDial(t.id) : ''}
 
-      ${sensitive ? `<div class="notice">${IC.alert}<div><b>Read this one before you copy it.</b> The thread touches ${esc(t.risk.join(', ').replace(/_/g, ' '))}. ReplyGraph copies to your clipboard and stops there.</div></div>` : ''}
+      ${sensitive ? `<div class="notice">${IC.alert}<div><b>Read this one before you copy it.</b> The thread touches ${esc(t.risk.join(', ').replace(/_/g, ' '))}. TextMeBack copies to your clipboard and stops there.</div></div>` : ''}
 
       <span class="rw-label">Rewrite</span>
       <div class="rewrites" id="rewrites">
@@ -1504,13 +1504,13 @@ function viewFollowups() {
             </div>
             <button class="btn" onclick="complete('${f.key}')">${IC.check} Done</button>
           </div>`).join('')}</div>`).join('')
-    : `<div class="empty"><b>Nothing is open.</b>Every promise and question ReplyGraph found has been closed.</div>`;
+    : `<div class="empty"><b>Nothing is open.</b>Every promise and question TextMeBack found has been closed.</div>`;
 
   return `<div class="wrap">
     <div class="head">
       <div class="eyebrow">Pulled from your threads</div>
       <h2>Follow-ups</h2>
-      <p>Promises you made, questions nobody answered, and scheduling loops that never landed on a date. Each one carries the confidence ReplyGraph had when it read the message.</p>
+      <p>Promises you made, questions nobody answered, and scheduling loops that never landed on a date. Each one carries the confidence TextMeBack had when it read the message.</p>
     </div>
     ${body}
   </div>`;
@@ -1558,7 +1558,7 @@ function viewAnalytics() {
     <div class="head">
       <div class="eyebrow">Estimates, not findings</div>
       <h2>Analytics</h2>
-      <p>These numbers come from counting words and timestamps. ReplyGraph describes a thread, "more friction lately", and stops there. It does not diagnose people, and low confidence means take it lightly.</p>
+      <p>These numbers come from counting words and timestamps. TextMeBack describes a thread, "more friction lately", and stops there. It does not diagnose people, and low confidence means take it lightly.</p>
     </div>
     ${cards}
     <div class="sec-title" style="margin-top:30px">Token usage estimate</div>
@@ -1589,14 +1589,14 @@ function viewExports() {
       </div>
       <div class="card" style="padding:22px">
         <h3 style="font-size:14px;font-weight:650">Obsidian</h3>
-        <p class="sm muted" style="margin:9px 0 18px;line-height:1.55">Writes into <span class="num">/ReplyGraph/</span> with YAML frontmatter and wiki links.</p>
+        <p class="sm muted" style="margin:9px 0 18px;line-height:1.55">Writes into <span class="num">/TextMeBack/</span> with YAML frontmatter and wiki links.</p>
         <button class="btn solid" onclick="go('settings')">Set a vault path</button>
       </div>
     </div>
     <div class="sec-title" style="margin-top:28px">Recent exports</div>
     <div class="panel">
-      <div class="fu"><div><span class="tag">daily digest</span> <span class="sm muted num" style="margin-left:8px">~/ReplyGraph/daily_digest_2026-09-15.md</span></div><span class="sm faint">just now</span></div>
-      <div class="fu"><div><span class="tag">follow-ups</span> <span class="sm muted num" style="margin-left:8px">~/ReplyGraph/followups_2026-09-15.md</span></div><span class="sm faint">just now</span></div>
+      <div class="fu"><div><span class="tag">daily digest</span> <span class="sm muted num" style="margin-left:8px">~/TextMeBack/daily_digest_2026-09-15.md</span></div><span class="sm faint">just now</span></div>
+      <div class="fu"><div><span class="tag">follow-ups</span> <span class="sm muted num" style="margin-left:8px">~/TextMeBack/followups_2026-09-15.md</span></div><span class="sm faint">just now</span></div>
     </div>
   </div>`;
 }
@@ -1629,7 +1629,7 @@ function viewSettings() {
     </div></div>
 
     <div class="ssection"><div class="sec-title">Export</div><div class="card">
-      ${row('Obsidian vault path', 'Where <span class="num">/ReplyGraph/</span> notes get written.', '<input class="sinput" placeholder="~/Documents/MyVault" aria-label="Obsidian vault path"/>')}
+      ${row('Obsidian vault path', 'Where <span class="num">/TextMeBack/</span> notes get written.', '<input class="sinput" placeholder="~/Documents/MyVault" aria-label="Obsidian vault path"/>')}
     </div></div>
 
     <div class="ssection"><div class="sec-title">Data</div><div class="card">
@@ -1764,7 +1764,7 @@ function toneKeyNav(e) {
 
 function copyDraft(id) {
   const text = state.drafts[id];
-  const done = () => toast('Copied. Paste it wherever you like. ReplyGraph never sends.');
+  const done = () => toast('Copied. Paste it wherever you like. TextMeBack never sends.');
   if (navigator.clipboard) navigator.clipboard.writeText(text).then(done).catch(done);
   else done();
 }
@@ -1840,7 +1840,7 @@ function renderOverlay() {
     host.innerHTML = `<div class="scrim" onclick="if(event.target===this)closeOverlay()">
       <div class="sheet" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">
         <h3>Keyboard shortcuts</h3>
-        <p>ReplyGraph is built to be driven from the keyboard.</p>
+        <p>TextMeBack is built to be driven from the keyboard.</p>
         <div class="keys">${keys.map(([k, d]) => `<div><span>${d}</span><kbd>${k}</kbd></div>`).join('')}</div>
         <div style="margin-top:20px;text-align:right"><button class="btn" onclick="closeOverlay()">Close</button></div>
       </div></div>`;

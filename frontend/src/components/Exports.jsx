@@ -39,7 +39,7 @@ export default function Exports({ ctx }) {
         </div>
         <div className="card" style={{ padding: 22 }}>
           <h3 style={{ fontSize: 14, fontWeight: 700 }}>Obsidian</h3>
-          <p className="sm muted" style={{ margin: '10px 0 18px' }}>Writes into /ReplyGraph/ with YAML frontmatter and [[wiki links]]. Set a vault path in Settings first.</p>
+          <p className="sm muted" style={{ margin: '10px 0 18px' }}>Writes into /TextMeBack/ with YAML frontmatter and [[wiki links]]. Set a vault path in Settings first.</p>
           <button className="btn solid" onClick={exportObsidian} disabled={busy}>{busy ? 'Exporting…' : 'Export to Obsidian'}</button>
         </div>
       </div>

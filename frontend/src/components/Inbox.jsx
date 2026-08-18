@@ -206,7 +206,7 @@ export default function Inbox({ ctx, initialThread }) {
                     <Icon name="alert" />
                     <div>
                       <b>Read this one before you copy it.</b> The thread touches {riskFlags.join(', ').replace(/_/g, ' ')}.
-                      ReplyGraph copies to your clipboard and stops there.
+                      TextMeBack copies to your clipboard and stops there.
                     </div>
                   </div>
                 )}
