@@ -67,6 +67,18 @@ node demo/shot.mjs
 node demo/shot_mobile.mjs
 ```
 
+### Testing
+
+Run the behavior-focused backend tests, build the frontend, and verify that the
+standalone demo still matches the shared stylesheet:
+
+```bash
+python3 -m unittest discover -s backend/tests -v
+npm ci --prefix frontend
+npm run build --prefix frontend
+node demo/sync-styles.mjs --check
+```
+
 ---
 
 ## What it does
