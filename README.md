@@ -27,7 +27,6 @@ since you last wrote back. A thread you have gone quiet on is visible at a
 glance, without reading a word of it. It appears in the thread list, the thread
 header, and each analytics card.
 
-![The inbox in dark mode](docs/preview-inbox.png)
 
 **Driven from the keyboard.**
 
