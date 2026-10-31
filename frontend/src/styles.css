@@ -8,46 +8,47 @@
 /* ---------- Tokens ---------- */
 :root {
   /* Surfaces climb: page < card < raised */
-  --bg: #f6f1e7;
-  --bg-tint: #efe8d9;
-  --card: #fbf8f1;
-  --raised: #fffdf8;
-  --panel: #f1eadb;
+  --bg: #efe6d4;
+  --bg-tint: #e7dcc4;
+  --card: #fbf6ea;
+  --raised: #fffaf0;
+  --panel: #f3ead8;
 
   /* Ink descends */
-  --ink: #24251f;
-  --ink-2: #3c3b32;
-  --muted: #6a6c62;
-  --faint: #8f8a78;
+  --ink: #17140f;
+  --ink-2: #35302a;
+  --muted: #5f584b;
+  --faint: #8b8372;
 
-  --line: #e6dfcf;
-  --line-2: #d9d0bb;
+  --line: #ddd0b6;
+  --line-2: #cbbd9f;
 
-  /* Accent: a deep terracotta, with a sage partner used only in the
-     mark and the pulse graph. Everything else stays warm neutral. */
-  --pop: #b85f2a;
-  --pop-2: #7f9579;
-  --pop-ink: #8d4519;
-  --pop-soft: #f5e5d7;
-  --pop-ring: rgba(184, 95, 42, 0.28);
+  /* Accent: vermilion, with a deep teal partner. Four colours carry meaning
+     (see the Dispatch block at the end): vermilion needs you, ink is careful,
+     teal is on track, butter is tender. */
+  --pop: #d63f27;
+  --pop-2: #0f5c58;
+  --pop-ink: #a82d1a;
+  --pop-soft: #f8ddd3;
+  --pop-ring: rgba(214, 63, 39, 0.3);
 
-  --good: #3d7a55;
-  --good-soft: #e7f0e6;
-  --good-line: #cfe2cd;
-  --warn: #9c6a12;
-  --warn-soft: #f8efd9;
-  --warn-line: #ecdcb4;
-  --danger: #a63a2d;
+  --good: #1d6b5a;
+  --good-soft: #d9eadf;
+  --good-line: #b5d4c3;
+  --warn: #a86a0f;
+  --warn-soft: #f6e4b8;
+  --warn-line: #e6cc86;
+  --danger: #a12a22;
 
-  --shadow-sm: 0 1px 2px rgba(60, 45, 25, 0.05), 0 1px 3px rgba(60, 45, 25, 0.06);
-  --shadow-md: 0 2px 6px rgba(60, 45, 25, 0.06), 0 10px 26px rgba(60, 45, 25, 0.08);
-  --shadow-lg: 0 8px 20px rgba(60, 45, 25, 0.10), 0 30px 64px rgba(60, 45, 25, 0.16);
+  --shadow-sm: 0 1px 0 rgba(23, 20, 15, 0.06), 0 1px 2px rgba(23, 20, 15, 0.06);
+  --shadow-md: 0 2px 0 rgba(23, 20, 15, 0.05), 0 14px 30px -14px rgba(23, 20, 15, 0.28);
+  --shadow-lg: 0 10px 24px rgba(23, 20, 15, 0.12), 0 34px 70px -20px rgba(23, 20, 15, 0.34);
 
-  --r: 16px;
-  --r-sm: 11px;
+  --r: 20px;
+  --r-sm: 12px;
   --r-xs: 8px;
 
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
   --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
@@ -59,33 +60,33 @@
 }
 
 :root[data-theme='dark'] {
-  --bg: #14130f;
-  --bg-tint: #1a1914;
-  --card: #1d1c17;
-  --raised: #24231d;
-  --panel: #27261f;
+  --bg: #11130f;
+  --bg-tint: #171a14;
+  --card: #1b1f18;
+  --raised: #21261d;
+  --panel: #242a1f;
 
-  --ink: #f1ece0;
-  --ink-2: #d6d0c0;
-  --muted: #a09a88;
-  --faint: #7d7767;
+  --ink: #f0e9d6;
+  --ink-2: #d8cfb8;
+  --muted: #a39b84;
+  --faint: #7a7360;
 
-  --line: #2c2a22;
-  --line-2: #3a372c;
+  --line: #2b3024;
+  --line-2: #3a4130;
 
-  --pop: #e59a68;
-  --pop-2: #9fb598;
-  --pop-ink: #f0b690;
-  --pop-soft: #2d1f15;
-  --pop-ring: rgba(229, 154, 104, 0.32);
+  --pop: #ff6b4a;
+  --pop-2: #46b3a5;
+  --pop-ink: #ff9a80;
+  --pop-soft: #3a1d15;
+  --pop-ring: rgba(255, 107, 74, 0.35);
 
-  --good: #7cc496;
-  --good-soft: #17261d;
-  --good-line: #274636;
-  --warn: #e0b255;
-  --warn-soft: #2a2110;
-  --warn-line: #493a19;
-  --danger: #ee8c7e;
+  --good: #6fd0b6;
+  --good-soft: #13261f;
+  --good-line: #24473b;
+  --warn: #f0b94a;
+  --warn-soft: #2b2210;
+  --warn-line: #4d3b17;
+  --danger: #ff8a7a;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.45), 0 12px 32px rgba(0, 0, 0, 0.4);
@@ -738,35 +739,91 @@ td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
   }
 }
 
-/* ---------- Paper finish ----------
-   Warm, quiet, editorial: serif numerals and headings, hairlines, a faint dot grid. */
+/* ---------- Dispatch ----------
+   A stationery desk. Cream paper, one dark ink rail, and four colours that mean something:
+   vermilion = needs you, ink = handle with care, teal = on track, butter = tender. */
+:root { --butter: #edb93c; --plum: #6d4a8f; }
+:root[data-theme='dark'] { --butter: #f2c14e; --plum: #b08ad6; }
 ::selection { background: var(--pop-soft); color: var(--ink); }
 * { scrollbar-color: var(--line-2) transparent; }
-body { background-image: radial-gradient(var(--line-2) 0.8px, transparent 0.8px); background-size: 26px 26px; background-position: -1px -1px; }
+body { background-image: radial-gradient(var(--line-2) 0.7px, transparent 0.7px); background-size: 26px 26px; background-position: -1px -1px; }
 :focus-visible { outline: 2px solid var(--pop); outline-offset: 2px; }
 
-.brand h1 { font-family: var(--display); font-size: 19px; font-weight: 500; letter-spacing: -0.02em; }
+/* The rail: always dark, in either theme. Scoped tokens flip everything inside it. */
+.side {
+  background: #17140f; border-right: 0; color: #efe7d6;
+  --bg: #17140f; --bg-tint: #201c15; --card: #1e1a14; --raised: #26211a; --panel: #26211a;
+  --ink: #f0e9d6; --ink-2: #d8cfb8; --muted: #a39b84; --faint: #7a7360; --line: #2d281f; --line-2: #3d372b;
+  --pop: #ff7455; --shadow-sm: none;
+}
+.brand { padding: 4px 8px 26px; gap: 12px; }
+.brand .mark { width: 30px; height: 30px; border-radius: 50%; background: var(--pop); box-shadow: 0 0 0 3px #17140f, 0 0 0 4.5px var(--pop); }
+.brand .mark span { width: 7px; height: 7px; background: #17140f; }
+.brand h1 { font-family: var(--display); font-size: 22px; font-weight: 500; letter-spacing: -0.025em; color: #f0e9d6; }
 .brand h1 b { font-weight: 500; font-style: italic; color: var(--pop); }
-.head h2 { font-size: clamp(34px, 4.2vw, 46px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.05;
-  font-variation-settings: 'wght' 500, 'SOFT' 30, 'WONK' 0, 'opsz' 60; }
-.head p { font-size: 14.5px; max-width: 58ch; }
+.nav { gap: 2px; }
+.nav button { border-radius: 12px; color: #b9b09a; font-weight: 500; padding-top: 9px; padding-bottom: 9px; }
+.nav button:hover { background: #26211a; color: #f0e9d6; }
+.nav button.active { background: #f0e9d6; color: #17140f; box-shadow: none; font-weight: 650; }
+.nav button.active .ic { color: var(--pop-ink); opacity: 1; }
+.nav button.active::before { display: none; }
+.nav button .count { padding: 2px 8px; border-radius: 999px; background: #2d281f; color: #d8cfb8; }
+.nav button.active .count { background: var(--pop-ink); color: #fff; }
+.trust { background: #1e1a14; border: 1px solid #2d281f; border-radius: 16px; }
+.sync { background: var(--pop); color: #17140f; border-radius: 999px; padding: 12px; font-weight: 700; }
+.sync:hover { background: #ff8a70; }
+.status { color: #a39b84; }
 
-.tile { border-radius: 20px; padding: 18px 19px 17px; }
-.tile .n { font-family: var(--display); font-size: 48px; font-weight: 500; letter-spacing: -0.035em; font-variation-settings: 'wght' 500, 'SOFT' 30, 'opsz' 72; }
-.panel { border-radius: 20px; }
-.panel-h { padding: 16px 19px; }
-.panel-h h3 { font-family: var(--display); font-size: 17px; font-weight: 500; letter-spacing: -0.01em; }
+.topbar { background: color-mix(in srgb, var(--bg) 86%, transparent); }
+.demo-pill { background: var(--ink); color: var(--bg); border-radius: 999px; padding: 4px 10px; }
+.kbd-open { border-radius: 999px; background: var(--card); }
+.iconbtn { border-radius: 50%; }
+
+/* Headlines */
+.head { margin-bottom: 30px; max-width: 880px; }
+.head h2 { font-size: clamp(42px, 5.4vw, 68px); font-weight: 500; letter-spacing: -0.04em; line-height: 0.98;
+  font-variation-settings: 'wght' 500, 'SOFT' 40, 'WONK' 1, 'opsz' 110; }
+.head p { font-size: 15.5px; max-width: 56ch; margin-top: 14px; }
+.eyebrow { color: var(--pop-ink); letter-spacing: 0.18em; }
+.panel-h h3 { font-family: var(--display); font-size: 19px; font-weight: 500; letter-spacing: -0.015em; }
+.panel-h .more { color: var(--pop-ink); }
+
+/* Four colours, four meanings */
+.stat-row { gap: 14px; }
+.tile { border: 0; border-radius: 24px; min-height: 164px; padding: 20px 22px 18px; display: flex; flex-direction: column; box-shadow: var(--shadow-md); }
+.tile .k { color: inherit; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 650; opacity: 0.85; }
+.tile .k .ic { opacity: 0.9; }
+.tile .n { font-family: var(--display); font-size: 72px; font-weight: 500; letter-spacing: -0.045em; margin-top: auto; font-variation-settings: 'wght' 500, 'SOFT' 40, 'opsz' 120; }
+.tile .n.pop { color: inherit; }
+.tile .cap { color: inherit; opacity: 0.78; font-size: 12.5px; margin-top: 8px; }
+.stat-row .tile:nth-child(1) { background: var(--pop); color: #fff6ee; }
+.stat-row .tile:nth-child(2) { background: #17140f; color: #f0e9d6; }
+.stat-row .tile:nth-child(3) { background: var(--pop-2); color: #eef7f1; }
+.stat-row .tile:nth-child(4) { background: var(--butter); color: #17140f; }
+:root[data-theme='dark'] .stat-row .tile:nth-child(1) { color: #1a0b06; }
+:root[data-theme='dark'] .stat-row .tile:nth-child(2) { background: #26211a; }
+:root[data-theme='dark'] .stat-row .tile:nth-child(3) { color: #06201c; }
+
+.panel, .card { border-radius: 24px; box-shadow: var(--shadow-md); }
+.panel-h { padding: 18px 22px; }
+
+/* Conversations */
 .lrow { transition: background 0.18s var(--ease); }
-.lrow .av { border-radius: 50%; background: var(--bg-tint); border: 1px solid var(--line); font-weight: 650; letter-spacing: 0.02em; }
-.lrow .lr-name { font-size: 13.5px; }
-.sync { border-radius: 999px; padding: 11px; }
-.nav button { border-radius: 12px; }
+.lrow .av { border-radius: 50%; background: transparent; border: 1.5px solid var(--ink); color: var(--ink); font-family: var(--display); font-weight: 600; font-size: 13px; letter-spacing: 0; }
+.lrow .lr-name { font-size: 14px; font-weight: 650; }
 .chip, .tag, .btn { border-radius: 999px; }
+.tag.solid { background: var(--pop); border-color: var(--pop); color: #fff; }
+.btn.primary { background: var(--pop); border-color: var(--pop); }
+.btn.primary:hover { background: var(--pop-ink); border-color: var(--pop-ink); }
 
-@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-.stat-row > * { animation: rise 0.6s var(--ease) both; }
-.stat-row > *:nth-child(2) { animation-delay: 0.05s; }
-.stat-row > *:nth-child(3) { animation-delay: 0.1s; }
-.stat-row > *:nth-child(4) { animation-delay: 0.15s; }
-.dash-cols > * { animation: rise 0.7s var(--ease) 0.2s both; }
+/* Pulse: ink for them, a thin line for you, vermilion for the silence */
+.pulse .tick-them { stroke: var(--ink); }
+
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.stat-row > * { animation: rise 0.65s var(--ease) both; }
+.stat-row > *:nth-child(2) { animation-delay: 0.06s; }
+.stat-row > *:nth-child(3) { animation-delay: 0.12s; }
+.stat-row > *:nth-child(4) { animation-delay: 0.18s; }
+.dash-cols > * { animation: rise 0.75s var(--ease) 0.22s both; }
 @media (prefers-reduced-motion: reduce) { .stat-row > *, .dash-cols > *, .view { animation: none; } }
+@media (max-width: 900px) { .tile { min-height: 132px; } .tile .n { font-size: 56px; } }
