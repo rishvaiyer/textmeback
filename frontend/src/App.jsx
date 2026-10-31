@@ -72,7 +72,7 @@ export default function App() {
   return (
     <div className="app">
       <aside className="side">
-        <div className="brand"><span className="mark"><span /></span><h1>Reply<b>Graph</b></h1></div>
+        <div className="brand"><span className="mark"><span /></span><h1>TextMe<b>Back</b></h1></div>
         <nav className="nav">
           {TABS.map(([id, label]) => (
             <button key={id} className={tab === id ? 'active' : ''} onClick={() => go(id)}>
