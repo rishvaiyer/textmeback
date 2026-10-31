@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { api } from './api.js'
 import { Icon, currentTheme, toggleTheme } from './icons.jsx'
 import Dashboard from './components/Dashboard.jsx'
+import Triage from './components/Triage.jsx'
 import Inbox from './components/Inbox.jsx'
 import FollowUps from './components/FollowUps.jsx'
 import Analytics from './components/Analytics.jsx'
@@ -10,13 +11,14 @@ import Settings from './components/Settings.jsx'
 
 const TABS = [
   ['dashboard', 'Dashboard'],
+  ['triage', 'Triage'],
   ['inbox', 'Inbox'],
   ['followups', 'Follow-ups'],
   ['analytics', 'Analytics'],
   ['exports', 'Exports'],
   ['settings', 'Settings'],
 ]
-const MTAB = { dashboard: 'Home', inbox: 'Inbox', followups: 'Tasks', analytics: 'Stats', exports: 'Export', settings: 'Settings' }
+const MTAB = { dashboard: 'Home', triage: 'Triage', inbox: 'Inbox', followups: 'Tasks', analytics: 'Stats', exports: 'Export', settings: 'Settings' }
 
 export default function App() {
   const [tab, setTab] = useState('dashboard')
@@ -110,6 +112,7 @@ export default function App() {
           />
         )}
         {tab === 'dashboard' && <Dashboard ctx={ctx} />}
+        {tab === 'triage' && <Triage ctx={ctx} />}
         {tab === 'inbox' && <Inbox ctx={ctx} initialThread={inboxThread} />}
         {tab === 'followups' && <FollowUps ctx={ctx} />}
         {tab === 'analytics' && <Analytics ctx={ctx} />}

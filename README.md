@@ -112,7 +112,7 @@ node demo/sync-styles.mjs --check
 
 ## Requirements
 
-- macOS (for real iMessage access; the app also runs on Linux for development with the dev seed).
+- macOS for reading iMessage directly. Linux and other devices connect through a Mac running BlueBubbles (see below); the app also runs on Linux with the dev seed.
 - Python 3.11+
 - Node 18+
 
@@ -163,6 +163,25 @@ the most recent threads (default 50 threads × 50 messages, configurable in Sett
 If access fails, you get a clear permission error and the app keeps running.
 
 ---
+
+## Linux and other devices
+
+iMessage only exists on Apple hardware, so TextMeBack cannot read it straight from a Linux box.
+It can read it through a Mac you already own:
+
+1. On the Mac, install and start the [BlueBubbles server](https://bluebubbles.app) (it needs Messages signed in).
+2. On the Linux machine, run TextMeBack as usual (backend and frontend, below).
+3. In **Settings → Where messages come from**, choose *A Mac running BlueBubbles*, paste the server address and
+   password, press **Test**, then **Save changes** and **Sync**.
+
+TextMeBack only reads through the server and never calls its send endpoints. The password is stored in
+`backend/data/app_settings.json` on the device that runs TextMeBack and is never returned by the API.
+Away from home, expose the server with a tunnel (BlueBubbles documents Cloudflare, ngrok and dynamic DNS).
+
+Copying a reply on Linux needs a clipboard tool: `xclip` or `xsel` on X11, `wl-clipboard` on Wayland.
+
+Status: this connector is covered by tests against a stand-in server (`backend/tests/test_bluebubbles.py`),
+and has not yet been run against a live BlueBubbles install. Treat it as experimental until it has.
 
 ## Without a Mac / for development
 

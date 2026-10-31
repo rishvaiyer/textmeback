@@ -9,9 +9,10 @@ from backend.models import (
     Contact, Thread, Message, Draft, Decision,
     FollowupItem, ThreadAnalytics, RelationshipSnapshot, Export, TokenUsageEstimate
 )
-from backend.schemas import DecisionIn, RewriteIn, SettingsIn, DashboardPrefsIn
+from backend.schemas import DecisionIn, RewriteIn, SettingsIn, SourceTestIn, DashboardPrefsIn
 from backend.config import load_settings, save_settings, load_style_profile
-from backend.services.imessage_reader import check_imessage_access, read_threads
+from backend.services.message_source import read_source_threads, source_status
+from backend.services.bluebubbles_reader import check_connection as check_bluebubbles
 from backend.services.ingest import ingest_threads
 from backend.services.thread_ranker import rank_thread
 from backend.services.draft_generator import generate_draft, rewrite_draft
@@ -43,15 +44,14 @@ def startup():
 
 @app.get("/health")
 def health():
-    access = check_imessage_access()
-    return {"status": "ok", "imessage": access}
+    return {"status": "ok", "imessage": source_status()}
 
 
 # ── iMessage sync ──────────────────────────────────────────────────────────────
 
 @app.post("/sync/imessage")
 def sync_imessage(db: Session = Depends(get_db)):
-    result = read_threads()
+    result = read_source_threads()
     if not result["ok"]:
         return {"ok": False, "error": result["error"], "synced": 0}
 
@@ -534,10 +534,18 @@ def export_obsidian_route(db: Session = Depends(get_db)):
 @app.get("/settings")
 def get_settings():
     settings = load_settings()
-    safe = {k: v for k, v in settings.items() if k != "llm_api_key"}
+    safe = {k: v for k, v in settings.items() if k not in ("llm_api_key", "bluebubbles_password")}
     safe["llm_api_key_set"] = bool(settings.get("llm_api_key"))
-    safe["imessage_status"] = check_imessage_access()
+    safe["bluebubbles_password_set"] = bool(settings.get("bluebubbles_password"))
+    safe["imessage_status"] = source_status()
     return safe
+
+
+@app.post("/source/test")
+def test_source(body: SourceTestIn):
+    """Try a BlueBubbles address and password without saving them."""
+    password = body.password or load_settings().get("bluebubbles_password", "")
+    return check_bluebubbles(body.url, password)
 
 
 @app.post("/settings")

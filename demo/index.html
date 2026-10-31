@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#0a0c11" media="(prefers-color-scheme: dark)" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <script>
   // Set the theme before first paint so there is no flash.
   (function () {
@@ -72,9 +72,9 @@
   --r-sm: 12px;
   --r-xs: 8px;
 
-  --font: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
-  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font: 'Libre Franklin', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --display: var(--font);
+  --mono: var(--font);
 
   --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
   --spring: cubic-bezier(0.34, 1.4, 0.5, 1);
@@ -272,13 +272,11 @@ kbd {
 
 .head { margin-bottom: 26px; max-width: 720px; }
 .eyebrow {
-  font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--pop); margin-bottom: 10px;
+  font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0; color: var(--pop); margin-bottom: 10px;
 }
 .head h2 {
   font-family: var(--display); font-size: 34px; font-weight: 600;
   letter-spacing: -0.02em; line-height: 1.1;
-  font-variation-settings: 'wght' 600, 'SOFT' 0, 'WONK' 0, 'opsz' 40;
 }
 .head p { color: var(--muted); margin-top: 9px; font-size: 13.5px; line-height: 1.55; }
 
@@ -294,8 +292,7 @@ hr { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
 .rule-strong { border-top: 1px solid var(--line-2); }
 
 .sec-title {
-  font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--faint); margin-bottom: 13px;
+  font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0; color: var(--faint); margin-bottom: 13px;
 }
 
 .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-sm); }
@@ -384,9 +381,9 @@ hr { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
 .pulse .now-halo { fill: var(--pop); opacity: 0.16; animation: halo 2.4s var(--ease) infinite; transform-origin: center; }
 @keyframes halo { 0%, 100% { opacity: 0.1; r: 5; } 50% { opacity: 0.22; r: 8; } }
 .pulse-legend {
-  display: flex; gap: 14px; font-family: var(--mono); font-size: 10px;
-  color: var(--faint); letter-spacing: 0.04em; text-transform: uppercase; margin-top: 6px;
-}
+  display: flex; gap: 14px; font-family: var(--mono); font-size: 12px;
+  color: var(--faint); letter-spacing: 0.04em; margin-top: 6px;
+ font-weight: 600;}
 .pulse-legend span { display: inline-flex; align-items: center; gap: 5px; }
 .pulse-legend i { width: 8px; height: 2px; border-radius: 2px; background: currentColor; display: inline-block; }
 .pulse-mini { width: 100%; height: 22px; margin-top: 9px; opacity: 0.9; }
@@ -400,7 +397,7 @@ hr { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line);
 }
-.threads-head h3 { font-family: var(--display); font-size: 22px; font-weight: 600; letter-spacing: -0.02em; font-variation-settings: 'wght' 600, 'SOFT' 0, 'WONK' 0, 'opsz' 28; }
+.threads-head h3 { font-family: var(--display); font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
 
 .search { position: relative; margin-top: 13px; }
 .search .ic { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--faint); pointer-events: none; }
@@ -444,7 +441,7 @@ hr { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
 .detail { overflow-y: auto; padding: 28px 34px 56px; }
 .detail-inner { max-width: 720px; }
 .d-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
-.d-head h2 { font-family: var(--display); font-size: 27px; font-weight: 600; letter-spacing: -0.02em; font-variation-settings: 'wght' 600, 'SOFT' 0, 'WONK' 0, 'opsz' 32; }
+.d-head h2 { font-family: var(--display); font-size: 27px; font-weight: 600; letter-spacing: -0.02em; }
 .d-pulse { margin: 20px 0 4px; padding: 15px 16px 12px; border: 1px solid var(--line); border-radius: var(--r); background: var(--card); }
 .d-pulse .ph { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .d-pulse .ph b { font-size: 12px; font-weight: 650; }
@@ -461,10 +458,9 @@ hr { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
 .msg .time { font-family: var(--mono); font-size: 9.5px; color: var(--faint); margin-top: 4px; }
 .me .time { text-align: right; }
 .silence {
-  align-self: center; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--faint); display: flex; align-items: center; gap: 9px;
+  align-self: center; font-family: var(--mono); font-size: 12px; letter-spacing: 0; color: var(--faint); display: flex; align-items: center; gap: 9px;
   width: 100%; justify-content: center; margin: 2px 0;
-}
+ font-weight: 600;}
 .silence::before, .silence::after { content: ''; height: 1px; flex: 1; background: var(--line); max-width: 90px; }
 
 /* ---------- Draft composer ---------- */
@@ -495,8 +491,7 @@ hr { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
 /* Tone dial */
 .tone-dial { margin: 18px 0 4px; }
 .tone-dial-label, .rw-label {
-  font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--faint); display: block; margin-bottom: 9px;
+  font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0; color: var(--faint); display: block; margin-bottom: 9px;
 }
 .rw-label { margin: 20px 0 9px; }
 .tone-seg-group {
@@ -561,8 +556,7 @@ hr { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
 .fu .task { font-weight: 600; font-size: 13.5px; letter-spacing: -0.005em; }
 .fu .fu-meta { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; align-items: center; }
 .dir {
-  font-family: var(--mono); font-size: 9.5px; font-weight: 600; letter-spacing: 0.06em;
-  text-transform: uppercase; padding: 3px 7px; border-radius: 5px;
+  font-family: var(--mono); font-size: 9.5px; font-weight: 600; letter-spacing: 0; padding: 3px 7px; border-radius: 5px;
   background: var(--panel); border: 1px solid var(--line-2); color: var(--ink-2);
 }
 .conf { font-family: var(--mono); font-size: 10px; color: var(--faint); }
@@ -576,11 +570,11 @@ hr { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
 .a-name { font-size: 15px; font-weight: 700; letter-spacing: -0.015em; }
 .a-meta { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
 .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--line); }
-.stat .k { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+.stat .k { font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0; color: var(--faint); }
 .stat .v { font-weight: 650; font-size: 14px; margin-top: 5px; letter-spacing: -0.01em; }
 
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { text-align: left; font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); padding: 0 14px 12px 0; }
+th { text-align: left; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0; color: var(--faint); padding: 0 14px 12px 0; }
 td { padding: 12px 14px 12px 0; border-top: 1px solid var(--line); }
 td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
@@ -650,7 +644,7 @@ td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 .palette-in input { flex: 1; border: none; outline: none; background: none; font-size: 15px; letter-spacing: -0.01em; }
 .palette-in input::placeholder { color: var(--faint); }
 .palette-list { max-height: 340px; overflow-y: auto; padding: 6px; }
-.palette-group { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); padding: 10px 11px 6px; }
+.palette-group { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0; color: var(--faint); padding: 10px 11px 6px;  font-weight: 600;}
 .pitem {
   display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
   padding: 9px 11px; border-radius: var(--r-sm); font-size: 13.5px; color: var(--ink-2);
@@ -783,8 +777,8 @@ body { background-image: radial-gradient(var(--line-2) 0.7px, transparent 0.7px)
 .brand { padding: 4px 8px 26px; gap: 12px; }
 .brand .mark { width: 30px; height: 30px; border-radius: 50%; background: var(--pop); box-shadow: 0 0 0 3px #17140f, 0 0 0 4.5px var(--pop); }
 .brand .mark span { width: 7px; height: 7px; background: #17140f; }
-.brand h1 { font-family: var(--display); font-size: 22px; font-weight: 500; letter-spacing: -0.025em; color: #f0e9d6; }
-.brand h1 b { font-weight: 500; font-style: italic; color: var(--pop); }
+.brand h1 { font-size: 19px; font-weight: 700; letter-spacing: -0.03em; color: #f0e9d6; }
+.brand h1 b { font-weight: 700; color: var(--pop); }
 .nav { gap: 2px; }
 .nav button { border-radius: 12px; color: #b9b09a; font-weight: 500; padding-top: 9px; padding-bottom: 9px; }
 .nav button:hover { background: #26211a; color: #f0e9d6; }
@@ -805,19 +799,18 @@ body { background-image: radial-gradient(var(--line-2) 0.7px, transparent 0.7px)
 
 /* Headlines */
 .head { margin-bottom: 30px; max-width: 880px; }
-.head h2 { font-size: clamp(42px, 5.4vw, 68px); font-weight: 500; letter-spacing: -0.04em; line-height: 0.98;
-  font-variation-settings: 'wght' 500, 'SOFT' 40, 'WONK' 1, 'opsz' 110; }
-.head p { font-size: 15.5px; max-width: 56ch; margin-top: 14px; }
-.eyebrow { color: var(--pop-ink); letter-spacing: 0.18em; }
-.panel-h h3 { font-family: var(--display); font-size: 19px; font-weight: 500; letter-spacing: -0.015em; }
+.head h2 { font-size: clamp(30px, 3.6vw, 40px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+.head p { font-size: 15px; max-width: 60ch; margin-top: 10px; line-height: 1.55; }
+.eyebrow { color: var(--muted); font-size: 13px; font-weight: 600; letter-spacing: 0; margin-bottom: 8px; }
+.panel-h h3 { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
 .panel-h .more { color: var(--pop-ink); }
 
 /* Four colours, four meanings */
 .stat-row { gap: 14px; }
-.tile { border: 0; border-radius: 24px; min-height: 164px; padding: 20px 22px 18px; display: flex; flex-direction: column; box-shadow: var(--shadow-md); }
-.tile .k { color: inherit; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 650; opacity: 0.85; }
+.tile { border: 0; border-radius: 22px; min-height: 148px; padding: 20px 22px 18px; display: flex; flex-direction: column; box-shadow: var(--shadow-md); }
+.tile .k { color: inherit; font-size: 13px; letter-spacing: 0; font-weight: 600; opacity: 0.9; }
 .tile .k .ic { opacity: 0.9; }
-.tile .n { font-family: var(--display); font-size: 72px; font-weight: 500; letter-spacing: -0.045em; margin-top: auto; font-variation-settings: 'wght' 500, 'SOFT' 40, 'opsz' 120; }
+.tile .n { font-size: 56px; font-weight: 700; letter-spacing: -0.04em; margin-top: auto; font-variant-numeric: tabular-nums; }
 .tile .n.pop { color: inherit; }
 .tile .cap { color: inherit; opacity: 0.78; font-size: 12.5px; margin-top: 8px; }
 .stat-row .tile:nth-child(1) { background: var(--pop); color: #fff6ee; }
@@ -833,7 +826,7 @@ body { background-image: radial-gradient(var(--line-2) 0.7px, transparent 0.7px)
 
 /* Conversations */
 .lrow { transition: background 0.18s var(--ease); }
-.lrow .av { border-radius: 50%; background: transparent; border: 1.5px solid var(--ink); color: var(--ink); font-family: var(--display); font-weight: 600; font-size: 13px; letter-spacing: 0; }
+.lrow .av { border-radius: 50%; background: transparent; border: 1.5px solid var(--ink); color: var(--ink); font-weight: 700; font-size: 12.5px; letter-spacing: 0; }
 .lrow .lr-name { font-size: 14px; font-weight: 650; }
 .chip, .tag, .btn { border-radius: 999px; }
 .tag.solid { background: var(--pop); border-color: var(--pop); color: #fff; }
@@ -850,7 +843,44 @@ body { background-image: radial-gradient(var(--line-2) 0.7px, transparent 0.7px)
 .stat-row > *:nth-child(4) { animation-delay: 0.18s; }
 .dash-cols > * { animation: rise 0.75s var(--ease) 0.22s both; }
 @media (prefers-reduced-motion: reduce) { .stat-row > *, .dash-cols > *, .view { animation: none; } }
-@media (max-width: 900px) { .tile { min-height: 132px; } .tile .n { font-size: 56px; } }
+@media (max-width: 900px) { .tile { min-height: 120px; } .tile .n { font-size: 46px; } }
+
+.head-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.btn.big { padding: 12px 20px; font-size: 14px; font-weight: 700; }
+.btn kbd { margin-left: 8px; background: color-mix(in srgb, currentColor 14%, transparent); border-color: transparent; color: inherit; }
+
+/* ---------- Triage ----------
+   Clear the replies you owe, one conversation at a time. */
+.triage { max-width: 1120px; }
+.tri-bar { display: flex; align-items: center; gap: 18px; margin-bottom: 22px; }
+.tri-prog { display: flex; gap: 6px; flex: 1; max-width: 560px; }
+.tri-prog i { flex: 1; height: 6px; border-radius: 99px; background: var(--line-2); transition: background 0.3s var(--ease); }
+.tri-prog i.done { background: var(--ink); }
+.tri-prog i.now { background: var(--pop); }
+.tri-count { font-size: 13px; font-weight: 600; color: var(--muted); }
+.tri-count b { color: var(--ink); }
+.tri-bar .btn { margin-left: auto; }
+.tri-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 16px; align-items: start; }
+.tri-card { padding: 24px; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-md); }
+.tri-who { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.tri-who .av { width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid var(--ink); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+.tri-who h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+.tri-who p { color: var(--muted); font-size: 13.5px; margin-top: 3px; }
+.tri-card .a-meta { margin-bottom: 14px; }
+.tri-card .convo { margin: 4px 0 14px; }
+.tri-card .d-pulse { margin: 6px 0 0; }
+.tri-card .composer { padding: 0; }
+.tri-actions { position: sticky; bottom: 16px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; align-items: center; margin-top: 18px; padding: 12px; background: color-mix(in srgb, var(--card) 92%, transparent); backdrop-filter: blur(10px); border: 1px solid var(--line-2); border-radius: 999px; box-shadow: var(--shadow-lg); }
+.tri-actions .grow { margin-right: auto; font-size: 12.5px; color: var(--muted); padding-left: 10px; }
+.tri-done { text-align: center; padding: 56px 20px; max-width: 580px; margin: 0 auto; }
+.tri-done h2 { font-size: 42px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.05; }
+.tri-done .sum { color: var(--muted); font-size: 16px; margin-top: 12px; line-height: 1.5; }
+.tri-log { list-style: none; margin: 28px 0 0; padding: 0; text-align: left; border: 1px solid var(--line); border-radius: var(--r); background: var(--card); overflow: hidden; }
+.tri-log li { display: flex; justify-content: space-between; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.tri-log li:last-child { border-bottom: 0; }
+.tri-log .what { color: var(--muted); }
+.tri-done .head-actions { justify-content: center; margin-top: 26px; }
+@media (max-width: 900px) { .tri-grid { grid-template-columns: 1fr; } .tri-actions { border-radius: 22px; } .tri-actions .btn { flex: 1 1 40%; justify-content: center; } .tri-actions .grow { display: none; } }
 /* RG-STYLES-END */
 </style>
 </head>
@@ -909,6 +939,7 @@ const IC = {
   keyboard: S('<rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 13h.01M10 13h.01M14 13h.01M18 13h.01M8 16h8"/>'),
   arrow: S('<line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>'),
   wand: S('<path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8 19 13M17.8 6.2 19 5M3 21l9-9M12.2 6.2 11 5"/>'),
+  triage: S('<path d="M4 6h16M4 12h16M4 18h9"/><path d="m17 15 3 3-3 3"/>'),
   lock: S('<rect x="3" y="11" width="18" height="10" rx="2.5"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'),
 };
 
@@ -1111,10 +1142,10 @@ const DIR_LABEL = {
 const REWRITES = ['shorter', 'nicer', 'more direct', 'less fake', 'more adult', 'casual', 'professional', 'say no politely', 'buy time', 'one clear question', 'calmer', 'less defensive', 'less apologetic'];
 
 const TABS = [
-  ['dashboard', 'Dashboard'], ['inbox', 'Inbox'], ['followups', 'Follow-ups'],
+  ['dashboard', 'Dashboard'], ['triage', 'Triage'], ['inbox', 'Inbox'], ['followups', 'Follow-ups'],
   ['analytics', 'Analytics'], ['exports', 'Exports'], ['settings', 'Settings'],
 ];
-const MTAB = { dashboard: 'Home', inbox: 'Inbox', followups: 'Tasks', analytics: 'Stats', exports: 'Export', settings: 'Settings' };
+const MTAB = { dashboard: 'Home', triage: 'Triage', inbox: 'Inbox', followups: 'Tasks', analytics: 'Stats', exports: 'Export', settings: 'Settings' };
 
 /* ============================================================
    State
@@ -1206,7 +1237,7 @@ function openFollowups() {
 }
 
 function renderNav() {
-  const counts = { inbox: needsCount(), followups: openFollowups().length };
+  const counts = { inbox: needsCount(), triage: needsCount(), followups: openFollowups().length };
   $('#nav').innerHTML = TABS.map(([id, label]) => `
     <button class="${state.tab === id ? 'active' : ''}" onclick="go('${id}')" aria-current="${state.tab === id ? 'page' : 'false'}">
       ${IC[id]}<span>${label}</span>${counts[id] ? `<span class="count">${counts[id]}</span>` : ''}
@@ -1237,7 +1268,7 @@ function renderChrome() {
 }
 
 const VIEWS = {
-  dashboard: viewDashboard, inbox: viewInbox, followups: viewFollowups,
+  dashboard: viewDashboard, triage: viewTriage, inbox: viewInbox, followups: viewFollowups,
   analytics: viewAnalytics, exports: viewExports, settings: viewSettings,
 };
 
@@ -1250,6 +1281,7 @@ function render() {
   $('#view').innerHTML = `<div class="view">${VIEWS[state.tab]()}</div>`;
   if (state.tab === 'dashboard') countUp();
   if (state.tab === 'inbox') afterInbox();
+  if (state.tab === 'triage') positionThumb();
 }
 
 function go(tab) {
@@ -1296,8 +1328,9 @@ function viewDashboard() {
   return `<div class="wrap">
     <div class="head">
       <div class="eyebrow">${NOW.toLocaleDateString('en-US', { weekday: 'long' })} evening</div>
-      <h2>${needs.length} conversations are waiting on you.</h2>
-      <p>One has gone ${dur(waiting)} without a word from you. ${fu.length} follow-ups are still tracked, and ${risk.length} threads are flagged to read before you copy anything.</p>
+      <h2>${needs.length ? `${needs.length} ${needs.length === 1 ? 'person is' : 'people are'} waiting on a reply.` : 'You are all caught up.'}</h2>
+      <p>${needs.length ? `The longest wait is ${dur(waiting)}. ${fu.length} follow-ups are tracked, and ${risk.length} ${risk.length === 1 ? 'thread is' : 'threads are'} flagged to read before you copy anything.` : `${fu.length} follow-ups are still tracked.`}</p>
+      ${needs.length ? `<div class="head-actions"><button class="btn primary big" onclick="startTriage()">Start triage <kbd>R</kbd></button><button class="btn" onclick="go('inbox')">Open inbox</button></div>` : ''}
     </div>
 
     <div class="stat-row">
@@ -1336,6 +1369,107 @@ function viewDashboard() {
         </div>
       </div>
     </div>
+  </div>`;
+}
+
+/* ============================================================
+   Triage: clear the replies you owe, one conversation at a time
+   ============================================================ */
+const TRI_RANK = { urgent: 0, risky_to_answer_fast: 1, emotional: 2 };
+function newTriage() {
+  const queue = THREADS.filter(t => t.needs)
+    .sort((a, b) => (TRI_RANK[a.priority] ?? 3) - (TRI_RANK[b.priority] ?? 3) || sinceLast(b) - sinceLast(a))
+    .map(t => t.id);
+  return { queue, total: queue.length, log: [] };
+}
+function startTriage() { state.triage = newTriage(); go('triage'); }
+
+function viewTriage() {
+  if (!state.triage || (!state.triage.queue.length && !state.triage.log.length)) state.triage = newTriage();
+  const T = state.triage;
+  if (!T.queue.length) return triageDone();
+  const t = THREADS.find(x => x.id === T.queue[0]);
+  state.thread = t.id;
+  const draft = state.drafts[t.id];
+  const sensitive = t.risk.some(f => ['medical', 'money', 'legal', 'conflict', 'work_risk'].includes(f));
+  const bubbles = t.msgs.slice(-3).map(m => `<div class="msg ${m.me ? 'me' : 'them'}"><div class="bubble">${esc(m.t)}</div><div class="time">${tfmt(m.at)}</div></div>`).join('');
+  const why = { urgent: 'Marked urgent', risky_to_answer_fast: 'Read before replying', emotional: 'Needs a gentle reply' }[t.priority] || 'Needs a reply';
+  const segs = Array.from({ length: T.total }, (_, i) => `<i class="${i < T.log.length ? 'done' : i === T.log.length ? 'now' : ''}"></i>`).join('');
+  return `<div class="wrap triage">
+    <div class="tri-bar">
+      <div class="tri-prog" role="progressbar" aria-label="Triage progress" aria-valuenow="${T.log.length}" aria-valuemin="0" aria-valuemax="${T.total}">${segs}</div>
+      <span class="tri-count"><b>${T.log.length + 1}</b> of ${T.total}</span>
+      <button class="btn ghost" onclick="go('dashboard')">Exit</button>
+    </div>
+    <div class="tri-grid">
+      <section class="tri-card" aria-label="Conversation">
+        <div class="tri-who">
+          <span class="av">${initials(t.name)}</span>
+          <div><h2>${esc(t.name)}</h2><p>${why}. Waiting ${dur(sinceLast(t))} for your answer.</p></div>
+        </div>
+        <div class="a-meta">
+          <span class="tag">${esc(t.tone)}</span>
+          ${t.risk.map(f => `<span class="tag flag">${esc(f.replace('_', ' '))}</span>`).join('')}
+        </div>
+        <div class="convo">${bubbles}</div>
+        <div class="d-pulse">
+          <div class="ph"><b>Last 14 days</b><span class="num">${openLabel(t)}</span></div>
+          ${pulse(t.pulse, { h: 44 })}
+        </div>
+      </section>
+      <section class="tri-card" aria-label="Reply">
+        <div class="composer">
+          <span class="rw-label" style="margin-top:0">Suggested reply</span>
+          <div class="reason">${esc(t.draft.reason)}<span class="tag">${t.draft.conf} confidence</span></div>
+          <div class="draft-card" id="draftCard">
+            <textarea id="draft" aria-label="Draft reply" oninput="onDraftInput(${t.id}, this.value)" onkeydown="onDraftKey(event)">${esc(draft)}</textarea>
+            <div class="draft-foot"><span id="wordCount">${wordsOf(draft)}</span><span>${navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}↵ copies and moves on</span></div>
+          </div>
+          ${TONE_VARIANTS[t.id] ? toneDial(t.id) : ''}
+          ${sensitive ? `<div class="notice">${IC.alert}<div><b>Read this one before you copy it.</b> The thread touches ${esc(t.risk.join(', ').replace(/_/g, ' '))}. TextMeBack copies to your clipboard and stops there.</div></div>` : ''}
+          <span class="rw-label">Rewrite</span>
+          <div class="rewrites" id="rewrites">
+            ${REWRITES.slice(0, 8).map(r => `<button class="rw ${state.used[t.id].has(r) ? 'used' : ''}" onclick="rewrite(${t.id}, '${r}')">${r}</button>`).join('')}
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="tri-actions">
+      <span class="grow">${T.queue.length - 1 ? `${T.queue.length - 1} more after this` : 'Last one'}</span>
+      <button class="btn ghost" onclick="triageAct('skip')" ${T.queue.length < 2 ? 'disabled' : ''}>Skip <kbd>S</kbd></button>
+      <button class="btn" onclick="triageAct('snooze')" title="Hide until tomorrow">Snooze <kbd>Z</kbd></button>
+      <button class="btn" onclick="triageAct('none')">No reply needed <kbd>N</kbd></button>
+      <button class="btn primary big" onclick="triageAct('copy')">${IC.copy} Copy and next <kbd>${navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}↵</kbd></button>
+    </div>
+  </div>`;
+}
+
+function triageAct(kind) {
+  const T = state.triage;
+  if (!T || !T.queue.length) return;
+  const id = T.queue[0], t = THREADS.find(x => x.id === id);
+  if (kind === 'skip') { if (T.queue.length > 1) { T.queue.push(T.queue.shift()); render(); } return; }
+  const label = { copy: 'Reply copied', snooze: 'Snoozed to tomorrow', none: 'No reply needed' }[kind];
+  if (kind === 'copy') copyDraft(id); else toast(label);
+  t.needs = false;
+  if (kind === 'snooze') t.snoozed = true;
+  T.queue.shift();
+  T.log.push({ id, kind, label });
+  render();
+  $('#main').scrollTop = 0;
+}
+
+function triageDone() {
+  const T = state.triage;
+  const n = k => T.log.filter(x => x.kind === k).length;
+  const parts = [n('copy') && `${n('copy')} ${n('copy') === 1 ? 'reply' : 'replies'} copied`, n('snooze') && `${n('snooze')} snoozed`, n('none') && `${n('none')} needed no reply`].filter(Boolean);
+  const rows = T.log.map(x => `<li><b>${esc(THREADS.find(y => y.id === x.id).name)}</b><span class="what">${x.label}</span></li>`).join('');
+  return `<div class="wrap tri-done">
+    <div class="eyebrow">Triage</div>
+    <h2>${T.log.length ? 'That is everyone.' : 'Nothing to answer.'}</h2>
+    <p class="sum">${parts.length ? parts.join(', ') + '. Nothing was sent: you paste each reply yourself.' : 'Every conversation is answered or snoozed.'}</p>
+    ${rows ? `<ul class="tri-log">${rows}</ul>` : ''}
+    <div class="head-actions"><button class="btn primary big" onclick="go('dashboard')">Back to home</button><button class="btn" onclick="location.hash='';location.reload()">Reset the demo</button></div>
   </div>`;
 }
 
@@ -1705,8 +1839,13 @@ function viewSettings() {
       <p>Everything here stays on this machine. Nothing leaves it unless you turn off local-only mode and add your own API key.</p>
     </div>
 
-    <div class="ssection"><div class="sec-title">iMessage</div><div class="card">
-      ${row('Database status', 'Reads <span class="num">~/Library/Messages/chat.db</span> read-only. macOS requires Full Disk Access for your terminal.', '<span class="tag">Demo, not connected</span>')}
+    <div class="ssection"><div class="sec-title">Where messages come from</div><div class="card">
+      ${row('This Mac', 'Reads <span class="num">~/Library/Messages/chat.db</span> read-only. macOS requires Full Disk Access for your terminal.', '<span class="tag">Demo, not connected</span>')}
+      ${row('Linux and other devices', 'Run TextMeBack anywhere and connect to a Mac that runs the BlueBubbles server. Read-only: TextMeBack never sends through it. Experimental until tested on a live server.', '<span class="tag pop">Experimental</span>')}
+      ${row('Server address', 'Shown in the BlueBubbles server app, for example <span class="num">192.168.1.20:1234</span>.', '<input class="sinput" placeholder="192.168.1.20:1234" aria-label="BlueBubbles server address" style="width:210px"/>')}
+    </div></div>
+
+    <div class="ssection"><div class="sec-title">Reading limits</div><div class="card">
       ${row('Threads per sync', 'How many recent conversations to pull.', '<input class="sinput" value="50" style="width:90px" aria-label="Threads per sync"/>')}
       ${row('Messages per thread', 'How far back to read in each conversation.', '<input class="sinput" value="50" style="width:90px" aria-label="Messages per thread"/>')}
     </div></div>
@@ -1763,7 +1902,7 @@ function onDraftInput(id, value) {
   if (wc) wc.textContent = wordsOf(value);
 }
 function onDraftKey(e) {
-  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); copyDraft(state.thread); }
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); state.tab === 'triage' ? triageAct('copy') : copyDraft(state.thread); }
 }
 
 /* Type the new draft in rather than swapping it, so it reads as composing.
@@ -1897,6 +2036,7 @@ function paletteItems() {
   const items = [];
   TABS.forEach(([id, label]) => items.push({ group: 'Go to', icon: id, label, hint: 'G ' + label[0].toUpperCase(), run: () => go(id) }));
   THREADS.forEach(t => items.push({ group: 'Threads', icon: 'inbox', label: t.name, hint: t.needs ? 'needs reply' : 'caught up', run: () => openThread(t.id) }));
+  items.push({ group: 'Actions', icon: 'triage', label: 'Start triage', hint: 'R', run: startTriage });
   items.push({ group: 'Actions', icon: 'copy', label: 'Copy the current draft', hint: 'C', run: () => copyDraft(state.thread) });
   items.push({ group: 'Actions', icon: 'refresh', label: 'Sync messages', hint: '', run: doSync });
   const dark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -1923,7 +2063,8 @@ function renderOverlay() {
   if (state.overlay === 'keys') {
     const keys = [
       ['⌘K', 'Command palette'], ['/', 'Search threads'],
-      ['G then D I F A E S', 'Jump to a section'], ['J / K', 'Next / previous thread'],
+      ['R', 'Start triage'], ['S Z N', 'Triage: skip, snooze, no reply needed'],
+      ['G then D T I F A E S', 'Jump to a section'], ['J / K', 'Next / previous thread'],
       ['1 2 3', 'Casual / warm / professional'], ['C', 'Copy the draft'],
       ['T', 'Toggle theme'], ['Esc', 'Close'],
     ];
@@ -1982,7 +2123,7 @@ function runPalette(i) {
    Keyboard
    ============================================================ */
 let gPending = false;
-const G_MAP = { d: 'dashboard', i: 'inbox', f: 'followups', a: 'analytics', e: 'exports', s: 'settings' };
+const G_MAP = { d: 'dashboard', t: 'triage', i: 'inbox', f: 'followups', a: 'analytics', e: 'exports', s: 'settings' };
 
 document.addEventListener('keydown', e => {
   const typingHere = /^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName);
@@ -2021,7 +2162,11 @@ document.addEventListener('keydown', e => {
     case 'g': gPending = true; setTimeout(() => { gPending = false; }, 900); break;
     case '?': showKeys(); break;
     case 't': toggleTheme(); break;
-    case 'c': if (state.tab === 'inbox') copyDraft(state.thread); break;
+    case 'c': if (state.tab === 'inbox') copyDraft(state.thread); else if (state.tab === 'triage') triageAct('copy'); break;
+    case 'r': startTriage(); break;
+    case 's': if (state.tab === 'triage') triageAct('skip'); break;
+    case 'z': if (state.tab === 'triage') triageAct('snooze'); break;
+    case 'n': if (state.tab === 'triage') triageAct('none'); break;
     case '/':
       e.preventDefault();
       if (state.tab !== 'inbox') go('inbox');
@@ -2040,7 +2185,7 @@ document.addEventListener('keydown', e => {
       break;
     }
     case '1': case '2': case '3': {
-      if (state.tab !== 'inbox') break;
+      if (state.tab !== 'inbox' && state.tab !== 'triage') break;
       const tone = ['casual', 'warm', 'professional'][+e.key - 1];
       setTone(state.thread, tone);
       break;

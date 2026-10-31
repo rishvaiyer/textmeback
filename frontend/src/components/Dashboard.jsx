@@ -36,6 +36,12 @@ export default function Dashboard({ ctx }) {
         <div className="eyebrow">Overview</div>
         <h2>{greeting()}</h2>
         <p>{needs.length} conversations need a reply · {fu.length} open follow-ups · {risk.length} flagged to review</p>
+        {needs.length > 0 && (
+          <div className="head-actions">
+            <button className="btn primary big" onClick={() => ctx.go('triage')}>Start triage</button>
+            <button className="btn" onClick={() => ctx.go('inbox')}>Open inbox</button>
+          </div>
+        )}
       </div>
 
       {threads.length === 0 ? (

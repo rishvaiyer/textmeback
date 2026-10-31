@@ -14,6 +14,7 @@ async function req(method, path, body) {
 export const api = {
   health: () => req('GET', '/health'),
   syncImessage: () => req('POST', '/sync/imessage'),
+  testSource: (url, password) => req('POST', '/source/test', { url, password }),
   getThreads: () => req('GET', '/threads'),
   getThread: (id) => req('GET', `/threads/${id}`),
   generateDraft: (id) => req('POST', `/threads/${id}/draft`),

@@ -75,3 +75,8 @@ class FollowupOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class SourceTestIn(BaseModel):
+    url: str
+    password: str = ""
